@@ -19,6 +19,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
     with SingleTickerProviderStateMixin {
   AnimationController? _pulseController;
   Animation<Color?>? _pulseAnimation;
+  bool _isHovered = false;
 
   @override
   void initState() {
@@ -139,109 +140,122 @@ class _RoomCardState extends ConsumerState<RoomCard>
     return AnimatedBuilder(
       animation: _pulseController ?? const AlwaysStoppedAnimation(0),
       builder: (context, child) {
-        return Card(
-          color: isExpired ? (_pulseAnimation?.value ?? bgColor) : bgColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 4,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: widget.onTap,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Icon(
-                    isExpired
-                        ? Icons.warning_amber_rounded
-                        : Icons.videogame_asset,
-                    size: 48,
-                    color: textColor.withValues(alpha: 0.2),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const SizedBox(height: 24),
-                      Center(
-                        child: Text(
-                          widget.room.name,
-                          style: Theme.of(context).textTheme.headlineMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: textColor,
-                              ),
-                          textAlign: TextAlign.center,
-                        ),
+        return MouseRegion(
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            child: Card(
+              color: isExpired ? (_pulseAnimation?.value ?? bgColor) : bgColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: _isHovered
+                    ? BorderSide(
+                        color: Theme.of(context).primaryColor,
+                        width: 2,
+                      )
+                    : BorderSide.none,
+              ),
+              elevation: _isHovered ? 8 : 4,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: widget.onTap,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Icon(
+                        isExpired
+                            ? Icons.warning_amber_rounded
+                            : Icons.videogame_asset,
+                        size: 48,
+                        color: textColor.withValues(alpha: 0.2),
                       ),
-                      Column(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          if (isExpired)
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 8.0),
-                                child: Text(
-                                  "TIME UP!",
-                                  style: TextStyle(
-                                    color: textColor,
+                          const SizedBox(height: 24),
+                          Center(
+                            child: Text(
+                              widget.room.name,
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 18,
+                                    color: textColor,
                                   ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (isExpired)
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: Text(
+                                      "TIME UP!",
+                                      style: TextStyle(
+                                        color: textColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Chip(
+                                    label: Text(
+                                      widget.room.deviceType.displayTitle,
+                                      style: TextStyle(
+                                        color: textColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    backgroundColor: Colors.white.withValues(
+                                      alpha: 0.5,
+                                    ),
+                                    side: BorderSide.none,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Center(
+                                child: Text(
+                                  '${widget.room.singleMatchHourlyRate} / ${widget.room.multiMatchHourlyRate} EGP',
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: textColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                 ),
                               ),
-                            ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Chip(
-                                label: Text(
-                                  widget.room.deviceType.displayTitle,
-                                  style: TextStyle(
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold,
+                              const SizedBox(height: 4),
+                              Center(
+                                child: Text(
+                                  _getStatusText(
+                                    context,
+                                    widget.room.currentStatus,
                                   ),
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(color: textColor),
                                 ),
-                                backgroundColor: Colors.white.withValues(
-                                  alpha: 0.5,
-                                ),
-                                side: BorderSide.none,
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
-                          Center(
-                            child: Text(
-                              '${widget.room.singleMatchHourlyRate} / ${widget.room.multiMatchHourlyRate} EGP',
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: textColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Center(
-                            child: Text(
-                              _getStatusText(
-                                context,
-                                widget.room.currentStatus,
-                              ),
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(color: textColor),
-                            ),
-                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         );

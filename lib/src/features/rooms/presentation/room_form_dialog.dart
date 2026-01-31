@@ -84,86 +84,94 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
 
     return AlertDialog(
       title: Text(isEditing ? loc.editRoom : loc.addRoom),
-      content: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: InputDecoration(labelText: loc.roomName),
-                validator: (value) =>
-                    value == null || value.isEmpty ? loc.roomName : null,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<DeviceType>(
-                initialValue: _selectedDeviceType,
-                decoration: InputDecoration(labelText: loc.deviceType),
-                items: DeviceType.values
-                    .map(
-                      (type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type.displayTitle),
+      content: SizedBox(
+        width: 600,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _nameController,
+                  autofocus: true,
+                  textInputAction: TextInputAction.next,
+                  decoration: InputDecoration(labelText: loc.roomName),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? loc.roomName : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<DeviceType>(
+                  initialValue: _selectedDeviceType,
+                  decoration: InputDecoration(labelText: loc.deviceType),
+                  items: DeviceType.values
+                      .map(
+                        (type) => DropdownMenuItem(
+                          value: type,
+                          child: Text(type.displayTitle),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedDeviceType = value;
+                    });
+                  },
+                  validator: (value) => value == null ? loc.deviceType : null,
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _singleRateController,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: loc.singleRate,
+                          hintText: loc.twoPlayers,
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return loc.singleRate;
+                          }
+                          if (double.tryParse(value) == null) {
+                            return loc.singleRate;
+                          }
+                          return null;
+                        },
                       ),
-                    )
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedDeviceType = value;
-                  });
-                },
-                validator: (value) => value == null ? loc.deviceType : null,
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _singleRateController,
-                      decoration: InputDecoration(
-                        labelText: loc.singleRate,
-                        hintText: loc.twoPlayers,
-                      ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return loc.singleRate;
-                        }
-                        if (double.tryParse(value) == null) {
-                          return loc.singleRate;
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _multiRateController,
-                      decoration: InputDecoration(
-                        labelText: loc.multiRate,
-                        hintText: loc.fourPlayers,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: TextFormField(
+                        controller: _multiRateController,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _submit(),
+                        decoration: InputDecoration(
+                          labelText: loc.multiRate,
+                          hintText: loc.fourPlayers,
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return loc.multiRate;
+                          }
+                          if (double.tryParse(value) == null) {
+                            return loc.multiRate;
+                          }
+                          return null;
+                        },
                       ),
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return loc.multiRate;
-                        }
-                        if (double.tryParse(value) == null) {
-                          return loc.multiRate;
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

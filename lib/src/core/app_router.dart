@@ -8,9 +8,9 @@ import 'package:arcade_cashier/src/features/authentication/presentation/splash_s
 import 'package:arcade_cashier/src/features/rooms/presentation/dashboard_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/manage_rooms_screen.dart';
 import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
-import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+
 import 'package:arcade_cashier/src/utils/go_router_refresh_stream.dart';
-import 'package:flutter/material.dart';
+import 'package:arcade_cashier/src/common_widgets/scaffold_with_navigation.dart';
 
 part 'app_router.g.dart';
 
@@ -45,40 +45,38 @@ GoRouter goRouter(Ref ref) {
         builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const _PlaceholderHome(),
-      ),
-      GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
-      GoRoute(
-        path: AppRoutes.dashboard,
-        builder: (context, state) => const DashboardScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.settings,
-        builder: (context, state) => const SettingsScreen(),
-        routes: [
-          GoRoute(
-            path: 'rooms',
-            builder: (context, state) => const ManageRoomsScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return ScaffoldWithNavigation(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.dashboard,
+                builder: (context, state) => const DashboardScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.settings,
+                builder: (context, state) => const SettingsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'rooms',
+                    builder: (context, state) => const ManageRoomsScreen(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
     ],
   );
-}
-
-// Temporary placeholder until dashboard feature is ready
-
-class _PlaceholderHome extends StatelessWidget {
-  const _PlaceholderHome();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text(AppLocalizations.of(context)!.appTitle)),
-    );
-  }
 }

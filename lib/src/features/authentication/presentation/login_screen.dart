@@ -1,6 +1,7 @@
 import 'package:arcade_cashier/src/features/authentication/presentation/auth_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
+import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -52,78 +53,76 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(loc.appTitle)),
-      body: Center(
+      body: ResponsiveCenter(
+        maxContentWidth: 400,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        loc.loginTitle,
-                        style: Theme.of(context).textTheme.headlineSmall,
-                        textAlign: TextAlign.center,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      loc.loginTitle,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 24),
+                    TextFormField(
+                      controller: _emailController,
+                      focusNode: _emailFocusNode,
+                      decoration: InputDecoration(
+                        labelText: loc.emailLabel,
+                        prefixIcon: const Icon(Icons.email),
+                        border: const OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 24),
-                      TextFormField(
-                        controller: _emailController,
-                        focusNode: _emailFocusNode,
-                        decoration: InputDecoration(
-                          labelText: loc.emailLabel,
-                          prefixIcon: const Icon(Icons.email),
-                          border: const OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.emailAddress,
-                        autocorrect: false,
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return loc.emailRequired;
-                          }
-                          return null;
-                        },
-                        onEditingComplete: () => FocusScope.of(
-                          context,
-                        ).requestFocus(_passwordFocusNode),
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return loc.emailRequired;
+                        }
+                        return null;
+                      },
+                      onEditingComplete: () => FocusScope.of(
+                        context,
+                      ).requestFocus(_passwordFocusNode),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      focusNode: _passwordFocusNode,
+                      decoration: InputDecoration(
+                        labelText: loc.passwordLabel,
+                        prefixIcon: const Icon(Icons.lock),
+                        border: const OutlineInputBorder(),
                       ),
-                      const SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        focusNode: _passwordFocusNode,
-                        decoration: InputDecoration(
-                          labelText: loc.passwordLabel,
-                          prefixIcon: const Icon(Icons.lock),
-                          border: const OutlineInputBorder(),
-                        ),
-                        obscureText: true,
-                        textInputAction: TextInputAction.done,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return loc.passwordRequired;
-                          }
-                          return null;
-                        },
-                        onEditingComplete: _submit,
+                      obscureText: true,
+                      textInputAction: TextInputAction.done,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return loc.passwordRequired;
+                        }
+                        return null;
+                      },
+                      onEditingComplete: _submit,
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      height: 48,
+                      child: FilledButton(
+                        onPressed: state.isLoading ? null : _submit,
+                        child: state.isLoading
+                            ? const CircularProgressIndicator.adaptive()
+                            : Text(loc.loginButton),
                       ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        height: 48,
-                        child: FilledButton(
-                          onPressed: state.isLoading ? null : _submit,
-                          child: state.isLoading
-                              ? const CircularProgressIndicator.adaptive()
-                              : Text(loc.loginButton),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
