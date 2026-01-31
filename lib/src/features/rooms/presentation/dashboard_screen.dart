@@ -1,7 +1,10 @@
 import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
+import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_card.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/rooms_controller.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/active_session_dialog.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/start_session_dialog.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -52,10 +55,18 @@ class DashboardScreen extends ConsumerWidget {
                   final room = rooms[index];
                   return RoomCard(
                     room: room,
-                    onStatusChanged: (newStatus) {
-                      ref
-                          .read(roomsControllerProvider.notifier)
-                          .updateRoomStatus(room.id, newStatus);
+                    onTap: () {
+                      if (room.currentStatus == RoomStatus.available) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => StartSessionDialog(room: room),
+                        );
+                      } else if (room.currentStatus == RoomStatus.occupied) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => ActiveSessionDialog(room: room),
+                        );
+                      }
                     },
                   );
                 },

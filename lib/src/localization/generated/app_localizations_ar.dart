@@ -103,4 +103,43 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fourPlayers => '4 لاعبين';
+
+  @override
+  String get startSession => 'بدء الجلسة';
+
+  @override
+  String get stopSession => 'إنهاء الجلسة';
+
+  @override
+  String get timeElapsed => 'الوقت المنقضي';
+
+  @override
+  String get singleMatch => 'لعب فردي';
+
+  @override
+  String get multiMatch => 'لعب زوجي';
+
+  @override
+  String get activeSession => 'جلسة نشطة';
+
+  @override
+  String get openTime => 'وقت مفتوح';
+
+  @override
+  String get fixedTime => 'وقت محدد';
+
+  @override
+  String get extendTime => 'تمديد الوقت';
+
+  @override
+  String get timeUp => 'انتهى الوقت!';
+
+  @override
+  String get minutes => 'دقيقة';
+
+  @override
+  String get custom => 'مخصص';
+
+  @override
+  String get duration => 'المدة';
 }

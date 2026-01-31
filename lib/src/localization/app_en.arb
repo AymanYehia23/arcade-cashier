@@ -33,5 +33,18 @@
   "singleRate": "Single Rate",
   "multiRate": "Multi Rate",
   "twoPlayers": "2 Players",
-  "fourPlayers": "4 Players"
+  "fourPlayers": "4 Players",
+  "startSession": "Start Session",
+  "stopSession": "Stop Session",
+  "timeElapsed": "Time Elapsed",
+  "singleMatch": "Single Match",
+  "multiMatch": "Multi Match",
+  "activeSession": "Active Session",
+  "openTime": "Open Time",
+  "fixedTime": "Fixed Time",
+  "extendTime": "Extend Time",
+  "timeUp": "TIME UP!",
+  "minutes": "min",
+  "custom": "Custom",
+  "duration": "Duration"
 }

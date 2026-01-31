@@ -289,6 +289,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'4 Players'**
   String get fourPlayers;
+
+  /// No description provided for @startSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Session'**
+  String get startSession;
+
+  /// No description provided for @stopSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop Session'**
+  String get stopSession;
+
+  /// No description provided for @timeElapsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Elapsed'**
+  String get timeElapsed;
+
+  /// No description provided for @singleMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Single Match'**
+  String get singleMatch;
+
+  /// No description provided for @multiMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi Match'**
+  String get multiMatch;
+
+  /// No description provided for @activeSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Active Session'**
+  String get activeSession;
+
+  /// No description provided for @openTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Time'**
+  String get openTime;
+
+  /// No description provided for @fixedTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed Time'**
+  String get fixedTime;
+
+  /// No description provided for @extendTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Extend Time'**
+  String get extendTime;
+
+  /// No description provided for @timeUp.
+  ///
+  /// In en, this message translates to:
+  /// **'TIME UP!'**
+  String get timeUp;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'min'**
+  String get minutes;
+
+  /// No description provided for @custom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get custom;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
 }
 
 class _AppLocalizationsDelegate

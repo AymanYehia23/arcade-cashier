@@ -30,5 +30,18 @@
   "singleRate": "سعر الفردي",
   "multiRate": "سعر الزوجي",
   "twoPlayers": "2 لاعبين",
-  "fourPlayers": "4 لاعبين"
+  "fourPlayers": "4 لاعبين",
+  "startSession": "بدء الجلسة",
+  "stopSession": "إنهاء الجلسة",
+  "timeElapsed": "الوقت المنقضي",
+  "singleMatch": "لعب فردي",
+  "multiMatch": "لعب زوجي",
+  "activeSession": "جلسة نشطة",
+  "openTime": "وقت مفتوح",
+  "fixedTime": "وقت محدد",
+  "extendTime": "تمديد الوقت",
+  "timeUp": "انتهى الوقت!",
+  "minutes": "دقيقة",
+  "custom": "مخصص",
+  "duration": "المدة"
 }

@@ -103,4 +103,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fourPlayers => '4 Players';
+
+  @override
+  String get startSession => 'Start Session';
+
+  @override
+  String get stopSession => 'Stop Session';
+
+  @override
+  String get timeElapsed => 'Time Elapsed';
+
+  @override
+  String get singleMatch => 'Single Match';
+
+  @override
+  String get multiMatch => 'Multi Match';
+
+  @override
+  String get activeSession => 'Active Session';
+
+  @override
+  String get openTime => 'Open Time';
+
+  @override
+  String get fixedTime => 'Fixed Time';
+
+  @override
+  String get extendTime => 'Extend Time';
+
+  @override
+  String get timeUp => 'TIME UP!';
+
+  @override
+  String get minutes => 'min';
+
+  @override
+  String get custom => 'Custom';
+
+  @override
+  String get duration => 'Duration';
 }
