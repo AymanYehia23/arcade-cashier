@@ -31,7 +31,7 @@ class ManageRoomsScreen extends ConsumerWidget {
       body: roomsValue.when(
         data: (rooms) {
           if (rooms.isEmpty) {
-            return const Center(child: Text('No rooms found'));
+            return Center(child: Text(loc.noRoomsFound));
           }
           return ListView.builder(
             padding: const EdgeInsets.only(bottom: 80),
@@ -116,7 +116,7 @@ class ManageRoomsScreen extends ConsumerWidget {
             },
           );
         },
-        error: (e, st) => Center(child: Text('Error: $e')),
+        error: (e, st) => Center(child: Text(loc.errorMessage(e.toString()))),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );

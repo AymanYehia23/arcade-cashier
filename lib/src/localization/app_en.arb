@@ -46,5 +46,25 @@
   "timeUp": "TIME UP!",
   "minutes": "min",
   "custom": "Custom",
-  "duration": "Duration"
+  "duration": "Duration",
+  "settings": "Settings",
+  "language": "Language",
+  "logout": "Logout",
+  "account": "Account",
+  "general": "General",
+  "loading": "Loading...",
+  "manageInventory": "Manage Inventory",
+  "noRoomsFound": "No rooms found",
+  "retry": "Retry",
+  "connectionError": "Connection validation failed. Please try again.",
+  "errorMessage": "Error: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionStopped": "Session stopped",
+  "noActiveSessionFound": "No active session found."
 }

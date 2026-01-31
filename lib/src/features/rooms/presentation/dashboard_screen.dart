@@ -37,7 +37,7 @@ class DashboardScreen extends ConsumerWidget {
       body: roomsValue.when(
         data: (rooms) {
           if (rooms.isEmpty) {
-            return const Center(child: Text('No rooms found'));
+            return Center(child: Text(loc.noRoomsFound));
           }
           return LayoutBuilder(
             builder: (context, constraints) {
@@ -74,7 +74,35 @@ class DashboardScreen extends ConsumerWidget {
             },
           );
         },
-        error: (e, st) => Center(child: Text('Error: $e')),
+        error: (e, st) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                loc.errorTitle,
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Text(
+                  e.toString().contains('RealtimeSubscribeException')
+                      ? loc.connectionError
+                      : loc.errorMessage(e.toString()),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(height: 16),
+              FilledButton.icon(
+                onPressed: () => ref.refresh(roomsValuesProvider),
+                icon: const Icon(Icons.refresh),
+                label: Text(loc.retry),
+              ),
+            ],
+          ),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
     );

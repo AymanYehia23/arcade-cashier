@@ -367,6 +367,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Duration'**
   String get duration;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @general.
+  ///
+  /// In en, this message translates to:
+  /// **'General'**
+  String get general;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loading;
+
+  /// No description provided for @manageInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Inventory'**
+  String get manageInventory;
+
+  /// No description provided for @noRoomsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No rooms found'**
+  String get noRoomsFound;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @connectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection validation failed. Please try again.'**
+  String get connectionError;
+
+  /// No description provided for @errorMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String errorMessage(String error);
+
+  /// No description provided for @sessionStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Session stopped'**
+  String get sessionStopped;
+
+  /// No description provided for @noActiveSessionFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No active session found.'**
+  String get noActiveSessionFound;
 }
 
 class _AppLocalizationsDelegate

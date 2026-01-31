@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/features/settings/application/locale_controller.dart';
 import 'package:arcade_cashier/src/constants/app_constants.dart';
 import 'package:arcade_cashier/src/core/app_router.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
+    final locale = ref.watch(localeControllerProvider);
 
     return MaterialApp.router(
       routerConfig: goRouter,
@@ -26,6 +28,7 @@ class MyApp extends ConsumerWidget {
         Locale('en'), // English
         Locale('ar'), // Arabic
       ],
+      locale: locale,
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.appTitle,
       theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),

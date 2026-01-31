@@ -99,14 +99,14 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       state.whenOrNull(
         data: (_) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('${loc.activeSession} stopped')),
-          );
-        },
-        error: (err, stack) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('Error: $err')));
+          ).showSnackBar(SnackBar(content: Text(loc.sessionStopped)));
+        },
+        error: (err, stack) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(loc.errorMessage(err.toString()))),
+          );
         },
       );
     });
@@ -119,7 +119,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       content: sessionAsync.when(
         data: (session) {
           if (session == null) {
-            return const Text('No active session found.');
+            return Text(loc.noActiveSessionFound);
           }
 
           final now = DateTime.now();
@@ -199,7 +199,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             ],
           );
         },
-        error: (e, st) => Text('Error: $e'),
+        error: (e, st) => Text(loc.errorMessage(e.toString())),
         loading: () => const SizedBox(
           height: 100,
           child: Center(child: CircularProgressIndicator()),

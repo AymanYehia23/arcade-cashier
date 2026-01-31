@@ -43,5 +43,18 @@
   "timeUp": "انتهى الوقت!",
   "minutes": "دقيقة",
   "custom": "مخصص",
-  "duration": "المدة"
+  "duration": "المدة",
+  "settings": "الإعدادات",
+  "language": "اللغة",
+  "logout": "تسجيل الخروج",
+  "account": "الحساب",
+  "general": "عام",
+  "loading": "جاري التحميل...",
+  "manageInventory": "إدارة المخزون",
+  "noRoomsFound": "لا توجد غرف",
+  "retry": "إعادة المحاولة",
+  "connectionError": "فشل التحقق من الاتصال. يرجى المحاولة مرة أخرى.",
+  "errorMessage": "خطأ: {error}",
+  "sessionStopped": "تم إيقاف الجلسة",
+  "noActiveSessionFound": "لا توجد جلسة نشطة."
 }

@@ -142,4 +142,46 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get duration => 'المدة';
+
+  @override
+  String get settings => 'الإعدادات';
+
+  @override
+  String get language => 'اللغة';
+
+  @override
+  String get logout => 'تسجيل الخروج';
+
+  @override
+  String get account => 'الحساب';
+
+  @override
+  String get general => 'عام';
+
+  @override
+  String get loading => 'جاري التحميل...';
+
+  @override
+  String get manageInventory => 'إدارة المخزون';
+
+  @override
+  String get noRoomsFound => 'لا توجد غرف';
+
+  @override
+  String get retry => 'إعادة المحاولة';
+
+  @override
+  String get connectionError =>
+      'فشل التحقق من الاتصال. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String errorMessage(String error) {
+    return 'خطأ: $error';
+  }
+
+  @override
+  String get sessionStopped => 'تم إيقاف الجلسة';
+
+  @override
+  String get noActiveSessionFound => 'لا توجد جلسة نشطة.';
 }

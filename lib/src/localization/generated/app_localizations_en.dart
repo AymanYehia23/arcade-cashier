@@ -142,4 +142,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get duration => 'Duration';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get general => 'General';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get manageInventory => 'Manage Inventory';
+
+  @override
+  String get noRoomsFound => 'No rooms found';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get connectionError =>
+      'Connection validation failed. Please try again.';
+
+  @override
+  String errorMessage(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get sessionStopped => 'Session stopped';
+
+  @override
+  String get noActiveSessionFound => 'No active session found.';
 }
