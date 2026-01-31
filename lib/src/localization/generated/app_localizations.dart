@@ -157,6 +157,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @dashboardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Dashboard'**
+  String get dashboardTitle;
+
+  /// No description provided for @statusAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available'**
+  String get statusAvailable;
+
+  /// No description provided for @statusOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied'**
+  String get statusOccupied;
+
+  /// No description provided for @statusMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get statusMaintenance;
+
+  /// No description provided for @statusHeld.
+  ///
+  /// In en, this message translates to:
+  /// **'Held'**
+  String get statusHeld;
 }
 
 class _AppLocalizationsDelegate

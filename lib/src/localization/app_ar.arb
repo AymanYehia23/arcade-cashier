@@ -8,5 +8,10 @@
   "emailRequired": "يرجى إدخال البريد الإلكتروني",
   "passwordRequired": "يرجى إدخال كلمة المرور",
   "errorTitle": "خطأ",
-  "ok": "موافق"
+  "ok": "موافق",
+  "dashboardTitle": "لوحة التحكم",
+  "statusAvailable": "متاح",
+  "statusOccupied": "مشغول",
+  "statusMaintenance": "صيانة",
+  "statusHeld": "محجوز"
 }

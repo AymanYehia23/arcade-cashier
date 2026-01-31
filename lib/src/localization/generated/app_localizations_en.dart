@@ -37,4 +37,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get dashboardTitle => 'Dashboard';
+
+  @override
+  String get statusAvailable => 'Available';
+
+  @override
+  String get statusOccupied => 'Occupied';
+
+  @override
+  String get statusMaintenance => 'Maintenance';
+
+  @override
+  String get statusHeld => 'Held';
 }

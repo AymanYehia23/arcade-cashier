@@ -11,5 +11,10 @@
   "emailRequired": "Please enter your email",
   "passwordRequired": "Please enter your password",
   "errorTitle": "Error",
-  "ok": "OK"
+  "ok": "OK",
+  "dashboardTitle": "Dashboard",
+  "statusAvailable": "Available",
+  "statusOccupied": "Occupied",
+  "statusMaintenance": "Maintenance",
+  "statusHeld": "Held"
 }

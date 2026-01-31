@@ -37,4 +37,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get ok => 'موافق';
+
+  @override
+  String get dashboardTitle => 'لوحة التحكم';
+
+  @override
+  String get statusAvailable => 'متاح';
+
+  @override
+  String get statusOccupied => 'مشغول';
+
+  @override
+  String get statusMaintenance => 'صيانة';
+
+  @override
+  String get statusHeld => 'محجوز';
 }
