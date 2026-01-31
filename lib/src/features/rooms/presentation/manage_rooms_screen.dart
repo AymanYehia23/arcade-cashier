@@ -34,51 +34,83 @@ class ManageRoomsScreen extends ConsumerWidget {
             return const Center(child: Text('No rooms found'));
           }
           return ListView.builder(
+            padding: const EdgeInsets.only(bottom: 80),
             itemCount: rooms.length,
             itemBuilder: (context, index) {
               final room = rooms[index];
-              return ListTile(
-                title: Text(room.name),
-                subtitle: Text(
-                  '${room.deviceType.displayTitle} \n${room.singleMatchHourlyRate} / ${room.multiMatchHourlyRate} EGP',
-                ),
-                isThreeLine: true,
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => RoomFormDialog(room: room),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(loc.deleteRoom),
-                          content: Text(loc.confirmDelete),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text(loc.cancel),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                ref
-                                    .read(roomFormControllerProvider.notifier)
-                                    .deleteRoom(room.id);
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(loc.deleteRoom),
-                            ),
-                          ],
+              return Card(
+                elevation: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        room.name,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 8),
+                      Text(
+                        '${room.deviceType.displayTitle} \n${loc.singleRate}: ${room.singleMatchHourlyRate} | ${loc.multiRate}: ${room.multiMatchHourlyRate}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FilledButton.tonalIcon(
+                            icon: const Icon(Icons.edit),
+                            label: Text(loc.editRoom),
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => RoomFormDialog(room: room),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          FilledButton.icon(
+                            style: FilledButton.styleFrom(
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.error,
+                              foregroundColor: Theme.of(
+                                context,
+                              ).colorScheme.onError,
+                            ),
+                            icon: const Icon(Icons.delete),
+                            label: Text(loc.deleteRoom),
+                            onPressed: () => showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text(loc.deleteRoom),
+                                content: Text(loc.confirmDelete),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: Text(loc.cancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                            roomFormControllerProvider.notifier,
+                                          )
+                                          .deleteRoom(room.id);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text(loc.deleteRoom),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },

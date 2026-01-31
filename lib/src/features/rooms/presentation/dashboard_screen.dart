@@ -45,7 +45,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 16.0,
                   mainAxisSpacing: 16.0,
-                  childAspectRatio: 0.9,
+                  childAspectRatio: 0.8,
                 ),
                 itemCount: rooms.length,
                 itemBuilder: (context, index) {

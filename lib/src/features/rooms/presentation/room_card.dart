@@ -25,6 +25,19 @@ class RoomCard extends StatelessWidget {
     }
   }
 
+  Color _getStatusTextColor(RoomStatus status) {
+    switch (status) {
+      case RoomStatus.available:
+        return Colors.green.shade900;
+      case RoomStatus.occupied:
+        return Colors.red.shade900;
+      case RoomStatus.maintenance:
+        return Colors.grey.shade800;
+      case RoomStatus.held:
+        return Colors.orange.shade900;
+    }
+  }
+
   String _getStatusText(BuildContext context, RoomStatus status) {
     final loc = AppLocalizations.of(context)!;
     switch (status) {
@@ -41,44 +54,98 @@ class RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusColor = _getStatusColor(room.currentStatus);
+    final textColor = _getStatusTextColor(room.currentStatus);
+
     return Card(
-      color: _getStatusColor(room.currentStatus),
+      color: statusColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
       child: InkWell(
+        borderRadius: BorderRadius.circular(16),
         onTap: () {
-          // TODO: Implement status change dialog or bottom sheet
-          // For now, toggle between Available and Occupied for testing
+          // Toggle status logic
           final newStatus = room.currentStatus == RoomStatus.available
               ? RoomStatus.occupied
               : RoomStatus.available;
           onStatusChanged(newStatus);
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                room.name,
-                style: Theme.of(context).textTheme.titleLarge,
-                textAlign: TextAlign.center,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 12,
+              right: 12,
+              child: Icon(
+                Icons.videogame_asset,
+                size: 48,
+                color: textColor.withValues(alpha: 0.2),
               ),
-              const SizedBox(height: 8),
-              Text(
-                room.deviceType.displayTitle,
-                style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(height: 24),
+                  Center(
+                    child: Text(
+                      room.name,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Chip(
+                            label: Text(
+                              room.deviceType.displayTitle,
+                              style: TextStyle(
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            backgroundColor: Colors.white.withValues(
+                              alpha: 0.5,
+                            ),
+                            side: BorderSide.none,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Center(
+                        child: Text(
+                          '${room.singleMatchHourlyRate} / ${room.multiMatchHourlyRate} EGP',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: textColor,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Center(
+                        child: Text(
+                          _getStatusText(context, room.currentStatus),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(color: textColor),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                '${room.singleMatchHourlyRate} / ${room.multiMatchHourlyRate} EGP',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 8),
-              Chip(
-                label: Text(_getStatusText(context, room.currentStatus)),
-                backgroundColor: Colors.white.withValues(alpha: 0.5),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -28,6 +28,9 @@ class RoomFormController extends _$RoomFormController {
             multiMatchHourlyRate: multiMatchHourlyRate,
           ),
     );
+    if (!state.hasError) {
+      ref.invalidate(roomsValuesProvider);
+    }
     return !state.hasError;
   }
 
@@ -50,6 +53,9 @@ class RoomFormController extends _$RoomFormController {
             multiMatchHourlyRate: multiMatchHourlyRate,
           ),
     );
+    if (!state.hasError) {
+      ref.invalidate(roomsValuesProvider);
+    }
     return !state.hasError;
   }
 
@@ -58,6 +64,9 @@ class RoomFormController extends _$RoomFormController {
     state = await AsyncValue.guard(
       () => ref.read(roomsRepositoryProvider).deleteRoom(roomId),
     );
+    if (!state.hasError) {
+      ref.invalidate(roomsValuesProvider);
+    }
     return !state.hasError;
   }
 }
