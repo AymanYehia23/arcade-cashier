@@ -52,4 +52,55 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusHeld => 'Held';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get manageRooms => 'Manage Rooms';
+
+  @override
+  String get addRoom => 'Add Room';
+
+  @override
+  String get editRoom => 'Edit Room';
+
+  @override
+  String get deleteRoom => 'Delete Room';
+
+  @override
+  String get roomName => 'Room Name';
+
+  @override
+  String get deviceType => 'Device Type';
+
+  @override
+  String get hourlyRate => 'Hourly Rate';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get confirmDelete => 'Are you sure you want to delete this room?';
+
+  @override
+  String get roomSaved => 'Room saved successfully';
+
+  @override
+  String get roomDeleted => 'Room deleted successfully';
+
+  @override
+  String get singleRate => 'Single Rate';
+
+  @override
+  String get multiRate => 'Multi Rate';
+
+  @override
+  String get twoPlayers => '2 Players';
+
+  @override
+  String get fourPlayers => '4 Players';
 }

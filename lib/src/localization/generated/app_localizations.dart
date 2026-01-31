@@ -187,6 +187,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Held'**
   String get statusHeld;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @manageRooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Rooms'**
+  String get manageRooms;
+
+  /// No description provided for @addRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Room'**
+  String get addRoom;
+
+  /// No description provided for @editRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Room'**
+  String get editRoom;
+
+  /// No description provided for @deleteRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Room'**
+  String get deleteRoom;
+
+  /// No description provided for @roomName.
+  ///
+  /// In en, this message translates to:
+  /// **'Room Name'**
+  String get roomName;
+
+  /// No description provided for @deviceType.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Type'**
+  String get deviceType;
+
+  /// No description provided for @hourlyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly Rate'**
+  String get hourlyRate;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this room?'**
+  String get confirmDelete;
+
+  /// No description provided for @roomSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Room saved successfully'**
+  String get roomSaved;
+
+  /// No description provided for @roomDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Room deleted successfully'**
+  String get roomDeleted;
+
+  /// No description provided for @singleRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Single Rate'**
+  String get singleRate;
+
+  /// No description provided for @multiRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Multi Rate'**
+  String get multiRate;
+
+  /// No description provided for @twoPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'2 Players'**
+  String get twoPlayers;
+
+  /// No description provided for @fourPlayers.
+  ///
+  /// In en, this message translates to:
+  /// **'4 Players'**
+  String get fourPlayers;
 }
 
 class _AppLocalizationsDelegate

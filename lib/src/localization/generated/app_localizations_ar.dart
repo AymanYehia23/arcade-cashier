@@ -52,4 +52,55 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get statusHeld => 'محجوز';
+
+  @override
+  String get settingsTitle => 'الإعدادات';
+
+  @override
+  String get manageRooms => 'إدارة الغرف';
+
+  @override
+  String get addRoom => 'إضافة غرفة';
+
+  @override
+  String get editRoom => 'تعديل الغرفة';
+
+  @override
+  String get deleteRoom => 'حذف الغرفة';
+
+  @override
+  String get roomName => 'اسم الغرفة';
+
+  @override
+  String get deviceType => 'نوع الجهاز';
+
+  @override
+  String get hourlyRate => 'السعر بالساعة';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get cancel => 'إلغاء';
+
+  @override
+  String get confirmDelete => 'هل أنت متأكد أنك تريد حذف هذه الغرفة؟';
+
+  @override
+  String get roomSaved => 'تم حفظ الغرفة بنجاح';
+
+  @override
+  String get roomDeleted => 'تم حذف الغرفة بنجاح';
+
+  @override
+  String get singleRate => 'سعر الفردي';
+
+  @override
+  String get multiRate => 'سعر الزوجي';
+
+  @override
+  String get twoPlayers => '2 لاعبين';
+
+  @override
+  String get fourPlayers => '4 لاعبين';
 }

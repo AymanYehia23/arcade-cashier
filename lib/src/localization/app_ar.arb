@@ -13,5 +13,22 @@
   "statusAvailable": "متاح",
   "statusOccupied": "مشغول",
   "statusMaintenance": "صيانة",
-  "statusHeld": "محجوز"
+  "statusHeld": "محجوز",
+  "settingsTitle": "الإعدادات",
+  "manageRooms": "إدارة الغرف",
+  "addRoom": "إضافة غرفة",
+  "editRoom": "تعديل الغرفة",
+  "deleteRoom": "حذف الغرفة",
+  "roomName": "اسم الغرفة",
+  "deviceType": "نوع الجهاز",
+  "hourlyRate": "السعر بالساعة",
+  "save": "حفظ",
+  "cancel": "إلغاء",
+  "confirmDelete": "هل أنت متأكد أنك تريد حذف هذه الغرفة؟",
+  "roomSaved": "تم حفظ الغرفة بنجاح",
+  "roomDeleted": "تم حذف الغرفة بنجاح",
+  "singleRate": "سعر الفردي",
+  "multiRate": "سعر الزوجي",
+  "twoPlayers": "2 لاعبين",
+  "fourPlayers": "4 لاعبين"
 }

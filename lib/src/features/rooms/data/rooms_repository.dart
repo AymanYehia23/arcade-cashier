@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
+import 'package:arcade_cashier/src/features/rooms/domain/device_type.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,6 +23,43 @@ class RoomsRepository {
     await _supabase.from('rooms').update({'current_status': status.name}).match(
       {'id': roomId},
     );
+  }
+
+  Future<void> createRoom({
+    required String name,
+    required DeviceType deviceType,
+    required double singleMatchHourlyRate,
+    required double multiMatchHourlyRate,
+  }) async {
+    await _supabase.from('rooms').insert({
+      'name': name,
+      'device_type': deviceType.jsonValue,
+      'hourly_rate': singleMatchHourlyRate,
+      'multi_player_hourly_rate': multiMatchHourlyRate,
+      'current_status': RoomStatus.available.name,
+    });
+  }
+
+  Future<void> updateRoomDetails({
+    required int roomId,
+    required String name,
+    required DeviceType deviceType,
+    required double singleMatchHourlyRate,
+    required double multiMatchHourlyRate,
+  }) async {
+    await _supabase
+        .from('rooms')
+        .update({
+          'name': name,
+          'device_type': deviceType.jsonValue,
+          'hourly_rate': singleMatchHourlyRate,
+          'multi_player_hourly_rate': multiMatchHourlyRate,
+        })
+        .match({'id': roomId});
+  }
+
+  Future<void> deleteRoom(int roomId) async {
+    await _supabase.from('rooms').delete().match({'id': roomId});
   }
 }
 

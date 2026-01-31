@@ -64,7 +64,12 @@ class RoomCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                room.deviceType,
+                room.deviceType.displayTitle,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${room.singleMatchHourlyRate} / ${room.multiMatchHourlyRate} EGP',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 8),

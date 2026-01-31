@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_card.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/rooms_controller.dart';
@@ -5,6 +6,7 @@ import 'package:arcade_cashier/src/localization/generated/app_localizations.dart
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -20,7 +22,15 @@ class DashboardScreen extends ConsumerWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(loc.dashboardTitle)),
+      appBar: AppBar(
+        title: Text(loc.dashboardTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push(AppRoutes.settings),
+          ),
+        ],
+      ),
       body: roomsValue.when(
         data: (rooms) {
           if (rooms.isEmpty) {
@@ -35,7 +45,7 @@ class DashboardScreen extends ConsumerWidget {
                   crossAxisCount: crossAxisCount,
                   crossAxisSpacing: 16.0,
                   mainAxisSpacing: 16.0,
-                  childAspectRatio: 1.2,
+                  childAspectRatio: 0.9,
                 ),
                 itemCount: rooms.length,
                 itemBuilder: (context, index) {

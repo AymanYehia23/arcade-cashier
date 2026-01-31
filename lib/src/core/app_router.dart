@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/authentication/presentation/login_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/dashboard_screen.dart';
+import 'package:arcade_cashier/src/features/rooms/presentation/manage_rooms_screen.dart';
+import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +27,16 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.dashboard,
         builder: (context, state) => const DashboardScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => const SettingsScreen(),
+        routes: [
+          GoRoute(
+            path: 'rooms',
+            builder: (context, state) => const ManageRoomsScreen(),
+          ),
+        ],
       ),
     ],
   );
