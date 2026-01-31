@@ -1,0 +1,15 @@
+{
+  "appTitle": "Arcade Shop ERP",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "loginTitle": "Login to Arcade Shop",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "loginButton": "Login",
+  "loginError": "Failed to login. Please check your credentials.",
+  "emailRequired": "Please enter your email",
+  "passwordRequired": "Please enter your password",
+  "errorTitle": "Error",
+  "ok": "OK"
+}

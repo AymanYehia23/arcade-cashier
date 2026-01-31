@@ -1,0 +1,12 @@
+{
+  "appTitle": "إدارة متجر الألعاب",
+  "loginTitle": "تسجيل الدخول",
+  "emailLabel": "البريد الإلكتروني",
+  "passwordLabel": "كلمة المرور",
+  "loginButton": "دخول",
+  "loginError": "فشل تسجيل الدخول. يرجى التحقق من البيانات.",
+  "emailRequired": "يرجى إدخال البريد الإلكتروني",
+  "passwordRequired": "يرجى إدخال كلمة المرور",
+  "errorTitle": "خطأ",
+  "ok": "موافق"
+}
