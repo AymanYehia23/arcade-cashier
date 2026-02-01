@@ -22,12 +22,19 @@ Session _$SessionFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Session {
   int get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'room_id')
   int get roomId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'start_time')
   DateTime get startTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'end_time')
   DateTime? get endTime => throw _privateConstructorUsedError;
+  @JsonKey(name: 'applied_hourly_rate')
   double get appliedHourlyRate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'is_multi_match')
   bool get isMultiMatch => throw _privateConstructorUsedError;
+  @JsonKey(name: 'session_type')
   SessionType get sessionType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'planned_duration_minutes')
   int? get plannedDurationMinutes => throw _privateConstructorUsedError;
   String get source => throw _privateConstructorUsedError;
   SessionStatus get status => throw _privateConstructorUsedError;
@@ -48,13 +55,13 @@ abstract class $SessionCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    int roomId,
-    DateTime startTime,
-    DateTime? endTime,
-    double appliedHourlyRate,
-    bool isMultiMatch,
-    SessionType sessionType,
-    int? plannedDurationMinutes,
+    @JsonKey(name: 'room_id') int roomId,
+    @JsonKey(name: 'start_time') DateTime startTime,
+    @JsonKey(name: 'end_time') DateTime? endTime,
+    @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
+    @JsonKey(name: 'is_multi_match') bool isMultiMatch,
+    @JsonKey(name: 'session_type') SessionType sessionType,
+    @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
     SessionStatus status,
   });
@@ -144,13 +151,13 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    int roomId,
-    DateTime startTime,
-    DateTime? endTime,
-    double appliedHourlyRate,
-    bool isMultiMatch,
-    SessionType sessionType,
-    int? plannedDurationMinutes,
+    @JsonKey(name: 'room_id') int roomId,
+    @JsonKey(name: 'start_time') DateTime startTime,
+    @JsonKey(name: 'end_time') DateTime? endTime,
+    @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
+    @JsonKey(name: 'is_multi_match') bool isMultiMatch,
+    @JsonKey(name: 'session_type') SessionType sessionType,
+    @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
     SessionStatus status,
   });
@@ -233,13 +240,13 @@ class __$$SessionImplCopyWithImpl<$Res>
 class _$SessionImpl implements _Session {
   const _$SessionImpl({
     required this.id,
-    required this.roomId,
-    required this.startTime,
-    this.endTime,
-    required this.appliedHourlyRate,
-    required this.isMultiMatch,
-    this.sessionType = SessionType.open,
-    this.plannedDurationMinutes,
+    @JsonKey(name: 'room_id') required this.roomId,
+    @JsonKey(name: 'start_time') required this.startTime,
+    @JsonKey(name: 'end_time') this.endTime,
+    @JsonKey(name: 'applied_hourly_rate') required this.appliedHourlyRate,
+    @JsonKey(name: 'is_multi_match') required this.isMultiMatch,
+    @JsonKey(name: 'session_type') this.sessionType = SessionType.open,
+    @JsonKey(name: 'planned_duration_minutes') this.plannedDurationMinutes,
     this.source = 'walk_in',
     this.status = SessionStatus.active,
   });
@@ -250,19 +257,25 @@ class _$SessionImpl implements _Session {
   @override
   final int id;
   @override
+  @JsonKey(name: 'room_id')
   final int roomId;
   @override
+  @JsonKey(name: 'start_time')
   final DateTime startTime;
   @override
+  @JsonKey(name: 'end_time')
   final DateTime? endTime;
   @override
+  @JsonKey(name: 'applied_hourly_rate')
   final double appliedHourlyRate;
   @override
+  @JsonKey(name: 'is_multi_match')
   final bool isMultiMatch;
   @override
-  @JsonKey()
+  @JsonKey(name: 'session_type')
   final SessionType sessionType;
   @override
+  @JsonKey(name: 'planned_duration_minutes')
   final int? plannedDurationMinutes;
   @override
   @JsonKey()
@@ -331,12 +344,14 @@ class _$SessionImpl implements _Session {
 abstract class _Session implements Session {
   const factory _Session({
     required final int id,
-    required final int roomId,
-    required final DateTime startTime,
-    final DateTime? endTime,
+    @JsonKey(name: 'room_id') required final int roomId,
+    @JsonKey(name: 'start_time') required final DateTime startTime,
+    @JsonKey(name: 'end_time') final DateTime? endTime,
+    @JsonKey(name: 'applied_hourly_rate')
     required final double appliedHourlyRate,
-    required final bool isMultiMatch,
-    final SessionType sessionType,
+    @JsonKey(name: 'is_multi_match') required final bool isMultiMatch,
+    @JsonKey(name: 'session_type') final SessionType sessionType,
+    @JsonKey(name: 'planned_duration_minutes')
     final int? plannedDurationMinutes,
     final String source,
     final SessionStatus status,
@@ -347,18 +362,25 @@ abstract class _Session implements Session {
   @override
   int get id;
   @override
+  @JsonKey(name: 'room_id')
   int get roomId;
   @override
+  @JsonKey(name: 'start_time')
   DateTime get startTime;
   @override
+  @JsonKey(name: 'end_time')
   DateTime? get endTime;
   @override
+  @JsonKey(name: 'applied_hourly_rate')
   double get appliedHourlyRate;
   @override
+  @JsonKey(name: 'is_multi_match')
   bool get isMultiMatch;
   @override
+  @JsonKey(name: 'session_type')
   SessionType get sessionType;
   @override
+  @JsonKey(name: 'planned_duration_minutes')
   int? get plannedDurationMinutes;
   @override
   String get source;

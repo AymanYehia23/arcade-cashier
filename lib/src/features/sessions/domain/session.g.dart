@@ -9,17 +9,18 @@ part of 'session.dart';
 _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
     _$SessionImpl(
       id: (json['id'] as num).toInt(),
-      roomId: (json['roomId'] as num).toInt(),
-      startTime: DateTime.parse(json['startTime'] as String),
-      endTime: json['endTime'] == null
+      roomId: (json['room_id'] as num).toInt(),
+      startTime: DateTime.parse(json['start_time'] as String),
+      endTime: json['end_time'] == null
           ? null
-          : DateTime.parse(json['endTime'] as String),
-      appliedHourlyRate: (json['appliedHourlyRate'] as num).toDouble(),
-      isMultiMatch: json['isMultiMatch'] as bool,
+          : DateTime.parse(json['end_time'] as String),
+      appliedHourlyRate: (json['applied_hourly_rate'] as num).toDouble(),
+      isMultiMatch: json['is_multi_match'] as bool,
       sessionType:
-          $enumDecodeNullable(_$SessionTypeEnumMap, json['sessionType']) ??
+          $enumDecodeNullable(_$SessionTypeEnumMap, json['session_type']) ??
           SessionType.open,
-      plannedDurationMinutes: (json['plannedDurationMinutes'] as num?)?.toInt(),
+      plannedDurationMinutes: (json['planned_duration_minutes'] as num?)
+          ?.toInt(),
       source: json['source'] as String? ?? 'walk_in',
       status:
           $enumDecodeNullable(_$SessionStatusEnumMap, json['status']) ??
@@ -29,13 +30,13 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'roomId': instance.roomId,
-      'startTime': instance.startTime.toIso8601String(),
-      'endTime': instance.endTime?.toIso8601String(),
-      'appliedHourlyRate': instance.appliedHourlyRate,
-      'isMultiMatch': instance.isMultiMatch,
-      'sessionType': _$SessionTypeEnumMap[instance.sessionType]!,
-      'plannedDurationMinutes': instance.plannedDurationMinutes,
+      'room_id': instance.roomId,
+      'start_time': instance.startTime.toIso8601String(),
+      'end_time': instance.endTime?.toIso8601String(),
+      'applied_hourly_rate': instance.appliedHourlyRate,
+      'is_multi_match': instance.isMultiMatch,
+      'session_type': _$SessionTypeEnumMap[instance.sessionType]!,
+      'planned_duration_minutes': instance.plannedDurationMinutes,
       'source': instance.source,
       'status': _$SessionStatusEnumMap[instance.status]!,
     };

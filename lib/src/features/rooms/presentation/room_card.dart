@@ -18,7 +18,6 @@ class RoomCard extends ConsumerStatefulWidget {
 class _RoomCardState extends ConsumerState<RoomCard>
     with SingleTickerProviderStateMixin {
   AnimationController? _pulseController;
-  Animation<Color?>? _pulseAnimation;
   bool _isHovered = false;
 
   @override
@@ -28,10 +27,6 @@ class _RoomCardState extends ConsumerState<RoomCard>
       vsync: this,
       duration: const Duration(seconds: 1),
     );
-    _pulseAnimation = ColorTween(
-      begin: Colors.red.shade100,
-      end: Colors.red.shade400,
-    ).animate(_pulseController!);
   }
 
   @override
@@ -47,29 +42,16 @@ class _RoomCardState extends ConsumerState<RoomCard>
     // so this block is no longer needed.
   }
 
-  Color _getStatusColor(RoomStatus status) {
-    switch (status) {
-      case RoomStatus.available:
-        return Colors.green.shade100;
-      case RoomStatus.occupied:
-        return Colors.red.shade100;
-      case RoomStatus.maintenance:
-        return Colors.grey.shade300;
-      case RoomStatus.held:
-        return Colors.orange.shade100;
-    }
-  }
-
   Color _getStatusTextColor(RoomStatus status) {
     switch (status) {
       case RoomStatus.available:
-        return Colors.green.shade900;
+        return const Color(0xFF39FF14); // Neon Green
       case RoomStatus.occupied:
-        return Colors.red.shade900;
+        return const Color(0xFFFF0033); // Bright Red
       case RoomStatus.maintenance:
-        return Colors.grey.shade800;
+        return Colors.grey;
       case RoomStatus.held:
-        return Colors.orange.shade900;
+        return Colors.orangeAccent;
     }
   }
 
@@ -89,8 +71,12 @@ class _RoomCardState extends ConsumerState<RoomCard>
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(widget.room.currentStatus);
+    final statusColor = Theme.of(context).cardColor;
     final textColor = _getStatusTextColor(widget.room.currentStatus);
+    final pulseColorAnimation = ColorTween(
+      begin: statusColor,
+      end: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+    ).animate(_pulseController!);
 
     // Check for expiration if occupied
     final activeSessionAsync = widget.room.currentStatus == RoomStatus.occupied
@@ -120,7 +106,9 @@ class _RoomCardState extends ConsumerState<RoomCard>
 
             return _buildCard(
               context,
-              isExpired ? (_pulseAnimation?.value ?? Colors.red) : statusColor,
+              isExpired
+                  ? (pulseColorAnimation.value ?? Colors.red)
+                  : statusColor,
               textColor,
               isExpired,
             );
@@ -146,7 +134,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             child: Card(
-              color: isExpired ? (_pulseAnimation?.value ?? bgColor) : bgColor,
+              color: bgColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
                 side: _isHovered
@@ -219,9 +207,9 @@ class _RoomCardState extends ConsumerState<RoomCard>
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    backgroundColor: Colors.white.withValues(
-                                      alpha: 0.5,
-                                    ),
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.surfaceContainerHighest,
                                     side: BorderSide.none,
                                   ),
                                 ],

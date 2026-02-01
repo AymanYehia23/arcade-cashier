@@ -10,14 +10,15 @@ enum SessionStatus { active, completed }
 class Session with _$Session {
   const factory Session({
     required int id,
-    required int roomId,
-    required DateTime startTime,
-    DateTime? endTime,
-    required double appliedHourlyRate,
-    required bool isMultiMatch,
+    @JsonKey(name: 'room_id') required int roomId,
+    @JsonKey(name: 'start_time') required DateTime startTime,
+    @JsonKey(name: 'end_time') DateTime? endTime,
+    @JsonKey(name: 'applied_hourly_rate') required double appliedHourlyRate,
+    @JsonKey(name: 'is_multi_match') required bool isMultiMatch,
+    @JsonKey(name: 'session_type')
     @Default(SessionType.open)
     SessionType sessionType,
-    int? plannedDurationMinutes,
+    @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     @Default('walk_in') String source,
     @Default(SessionStatus.active) SessionStatus status,
   }) = _Session;

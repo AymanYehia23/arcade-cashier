@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/features/settings/application/locale_controller.dart';
 import 'package:arcade_cashier/src/constants/app_constants.dart';
+import 'package:arcade_cashier/src/constants/app_theme.dart';
 import 'package:arcade_cashier/src/core/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -31,7 +32,9 @@ class MyApp extends ConsumerWidget {
       locale: locale,
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.appTitle,
-      theme: ThemeData(useMaterial3: true, primarySwatch: Colors.blue),
+      themeMode: ThemeMode.dark,
+      theme: AppTheme.darkTheme,
+      darkTheme: AppTheme.darkTheme,
     );
   }
 }
