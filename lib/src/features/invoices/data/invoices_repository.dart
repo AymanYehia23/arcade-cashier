@@ -9,6 +9,12 @@ part 'invoices_repository.g.dart';
 abstract class InvoicesRepository {
   Future<Invoice> createInvoice(Invoice invoice);
   Stream<List<Invoice>> watchInvoiceHistory();
+  Future<List<Invoice>> fetchInvoices({
+    DateTime? startDate,
+    DateTime? endDate,
+    int page = 0,
+    int pageSize = 20,
+  });
   Future<Invoice?> getInvoiceById(int id);
   Future<String> generateInvoiceNumber();
 }
@@ -51,6 +57,29 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
   }
 
   @override
+  Future<List<Invoice>> fetchInvoices({
+    DateTime? startDate,
+    DateTime? endDate,
+    int page = 0,
+    int pageSize = 20,
+  }) async {
+    var query = _supabase.from('invoices').select();
+
+    if (startDate != null) {
+      query = query.gte('issued_at', startDate.toIso8601String());
+    }
+    if (endDate != null) {
+      query = query.lte('issued_at', endDate.toIso8601String());
+    }
+
+    final data = await query
+        .order('issued_at', ascending: false)
+        .range(page * pageSize, (page + 1) * pageSize - 1);
+
+    return (data as List).map((e) => Invoice.fromJson(e)).toList();
+  }
+
+  @override
   Future<String> generateInvoiceNumber() async {
     final now = DateTime.now();
     final datePrefix =
@@ -74,9 +103,4 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
 @Riverpod(keepAlive: true)
 InvoicesRepository invoicesRepository(Ref ref) {
   return SupabaseInvoicesRepository(ref.watch(supabaseProvider));
-}
-
-@riverpod
-Stream<List<Invoice>> invoiceHistoryStream(Ref ref) {
-  return ref.watch(invoicesRepositoryProvider).watchInvoiceHistory();
 }

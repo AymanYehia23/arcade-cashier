@@ -24,24 +24,5 @@ final invoicesRepositoryProvider = Provider<InvoicesRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef InvoicesRepositoryRef = ProviderRef<InvoicesRepository>;
-String _$invoiceHistoryStreamHash() =>
-    r'531b7ceda6372a951006cec817f886a31e123855';
-
-/// See also [invoiceHistoryStream].
-@ProviderFor(invoiceHistoryStream)
-final invoiceHistoryStreamProvider =
-    AutoDisposeStreamProvider<List<Invoice>>.internal(
-      invoiceHistoryStream,
-      name: r'invoiceHistoryStreamProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$invoiceHistoryStreamHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef InvoiceHistoryStreamRef = AutoDisposeStreamProviderRef<List<Invoice>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

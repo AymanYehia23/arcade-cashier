@@ -1,11 +1,11 @@
 import 'dart:typed_data';
 
-import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
-
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -69,7 +69,7 @@ class SessionCompletionController extends _$SessionCompletionController {
           .createInvoice(invoice);
 
       // Invalidate history to ensure it updates (in case Realtime is off)
-      ref.invalidate(invoiceHistoryStreamProvider);
+      ref.invalidate(invoicesPaginationProvider);
 
       // 4. Generate PDF
       // Calculate the actual session duration before generating PDF
