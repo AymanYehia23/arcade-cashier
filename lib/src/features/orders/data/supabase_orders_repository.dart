@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/features/orders/data/orders_repository.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -28,13 +29,13 @@ class SupabaseOrdersRepository implements OrdersRepository {
   @override
   Stream<List<Order>> watchSessionOrders(int sessionId) {
     return _supabase
-        .from('session_orders')
+        .from(DbTables.sessionOrders)
         .stream(primaryKey: ['id'])
         .eq('session_id', sessionId)
         .asyncMap((_) async {
           final data = await _supabase
-              .from('session_orders')
-              .select('*, products(*)')
+              .from(DbTables.sessionOrders)
+              .select('*, ${DbTables.products}(*)')
               .eq('session_id', sessionId)
               .order('created_at', ascending: true);
           return (data as List).map((json) => Order.fromJson(json)).toList();
@@ -44,8 +45,8 @@ class SupabaseOrdersRepository implements OrdersRepository {
   @override
   Future<List<Order>> getOrdersForSession(int sessionId) async {
     final data = await _supabase
-        .from('session_orders')
-        .select('*, products(*)')
+        .from(DbTables.sessionOrders)
+        .select('*, ${DbTables.products}(*)')
         .eq('session_id', sessionId)
         .order('created_at', ascending: true);
     return (data as List).map((json) => Order.fromJson(json)).toList();
@@ -54,7 +55,7 @@ class SupabaseOrdersRepository implements OrdersRepository {
   @override
   Future<void> deleteOrder(int orderId) async {
     final response = await _supabase
-        .from('session_orders')
+        .from(DbTables.sessionOrders)
         .select('quantity')
         .eq('id', orderId)
         .single();
@@ -63,11 +64,11 @@ class SupabaseOrdersRepository implements OrdersRepository {
 
     if (quantity > 1) {
       await _supabase
-          .from('session_orders')
+          .from(DbTables.sessionOrders)
           .update({'quantity': quantity - 1})
           .eq('id', orderId);
     } else {
-      await _supabase.from('session_orders').delete().eq('id', orderId);
+      await _supabase.from(DbTables.sessionOrders).delete().eq('id', orderId);
     }
   }
 }

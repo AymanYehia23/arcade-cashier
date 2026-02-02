@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,7 +28,7 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
   @override
   Future<Invoice> createInvoice(Invoice invoice) async {
     final data = await _supabase
-        .from('invoices')
+        .from(DbTables.invoices)
         .insert(invoice.toJson())
         .select()
         .single();
@@ -38,7 +39,7 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
   @override
   Stream<List<Invoice>> watchInvoiceHistory() {
     return _supabase
-        .from('invoices')
+        .from(DbTables.invoices)
         .stream(primaryKey: ['id'])
         .order('issued_at', ascending: false)
         .map((data) => data.map((e) => Invoice.fromJson(e)).toList());
@@ -47,7 +48,7 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
   @override
   Future<Invoice?> getInvoiceById(int id) async {
     final data = await _supabase
-        .from('invoices')
+        .from(DbTables.invoices)
         .select()
         .eq('id', id)
         .maybeSingle();
@@ -63,7 +64,7 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
     int page = 0,
     int pageSize = 20,
   }) async {
-    var query = _supabase.from('invoices').select();
+    var query = _supabase.from(DbTables.invoices).select();
 
     if (startDate != null) {
       query = query.gte('issued_at', startDate.toIso8601String());
@@ -90,7 +91,7 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
     final endOfDay = startOfDay.add(const Duration(days: 1));
 
     final response = await _supabase
-        .from('invoices')
+        .from(DbTables.invoices)
         .select('id')
         .gte('issued_at', startOfDay.toUtc().toIso8601String())
         .lt('issued_at', endOfDay.toUtc().toIso8601String());

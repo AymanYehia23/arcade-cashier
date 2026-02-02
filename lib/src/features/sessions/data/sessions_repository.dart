@@ -1,5 +1,6 @@
+import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
-import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
+
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart'
     as domain;
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
@@ -44,7 +45,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   }) async {
     // 1. Insert session
     final sessionData = await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .insert({
           'room_id': roomId,
           'start_time': DateTime.now().toUtc().toIso8601String(),
@@ -52,10 +53,10 @@ class SupabaseSessionsRepository implements SessionsRepository {
           'is_multi_match': isMultiMatch,
           // Force 'open' if room_id is null (Quick Order), otherwise use provided type
           'session_type': roomId == null
-              ? SessionType.open.name
+              ? SessionConstants.open
               : sessionType.name,
           'planned_duration_minutes': plannedDurationMinutes,
-          'status': domain.SessionStatus.active.name,
+          'status': SessionConstants.active,
         })
         .select()
         .single();
@@ -63,8 +64,8 @@ class SupabaseSessionsRepository implements SessionsRepository {
     // 2. Update room status (ONLY if room assigned)
     if (roomId != null) {
       await _supabase
-          .from('rooms')
-          .update({'current_status': RoomStatus.occupied.name})
+          .from(DbTables.rooms)
+          .update({'current_status': RoomConstants.occupied})
           .match({'id': roomId});
     }
 
@@ -83,7 +84,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
 
     // Fetch current session
     final session = await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .select('planned_duration_minutes')
         .eq('id', sessionId)
         .single();
@@ -91,7 +92,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
     final currentDuration = session['planned_duration_minutes'] as int? ?? 0;
 
     await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .update({
           'planned_duration_minutes': currentDuration + additionalMinutes,
         })
@@ -101,9 +102,9 @@ class SupabaseSessionsRepository implements SessionsRepository {
   @override
   Future<void> pauseSession(int sessionId) async {
     await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .update({
-          'status': domain.SessionStatus.paused.name,
+          'status': SessionConstants.paused,
           'paused_at': DateTime.now().toUtc().toIso8601String(),
         })
         .match({'id': sessionId});
@@ -113,7 +114,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   Future<void> resumeSession(int sessionId) async {
     // 1. Fetch current session to get paused_at and total_paused_duration_seconds
     final sessionData = await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .select('paused_at, total_paused_duration_seconds')
         .eq('id', sessionId)
         .single();
@@ -132,9 +133,9 @@ class SupabaseSessionsRepository implements SessionsRepository {
     }
 
     await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .update({
-          'status': domain.SessionStatus.active.name,
+          'status': SessionConstants.active,
           'paused_at': null,
           'total_paused_duration_seconds':
               currentTotalPaused + additionalPausedSeconds,
@@ -146,18 +147,18 @@ class SupabaseSessionsRepository implements SessionsRepository {
   Future<void> stopSession({required int sessionId, int? roomId}) async {
     // 1. Update session
     await _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .update({
           'end_time': DateTime.now().toUtc().toIso8601String(),
-          'status': domain.SessionStatus.completed.name,
+          'status': SessionConstants.completed,
         })
         .match({'id': sessionId});
 
     // 2. Update room status (ONLY if room assigned)
     if (roomId != null) {
       await _supabase
-          .from('rooms')
-          .update({'current_status': RoomStatus.available.name})
+          .from(DbTables.rooms)
+          .update({'current_status': RoomConstants.available})
           .match({'id': roomId});
     }
   }
@@ -166,7 +167,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   Future<domain.Session?> getActiveSession(int roomId) async {
     try {
       final sessionData = await _supabase
-          .from('sessions')
+          .from(DbTables.sessions)
           .select()
           .eq('room_id', roomId)
           .filter('end_time', 'is', null) // Use filter for IS NULL
@@ -186,7 +187,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   Future<domain.Session?> getSessionById(int sessionId) async {
     try {
       final sessionData = await _supabase
-          .from('sessions')
+          .from(DbTables.sessions)
           .select()
           .eq('id', sessionId)
           .maybeSingle();
@@ -201,7 +202,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   @override
   Stream<List<domain.Session>> watchActiveSessions() {
     return _supabase
-        .from('sessions')
+        .from(DbTables.sessions)
         .stream(primaryKey: ['id'])
         .order('start_time')
         .map(

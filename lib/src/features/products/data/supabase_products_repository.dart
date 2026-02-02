@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/features/products/data/products_repository.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -10,7 +11,7 @@ class SupabaseProductsRepository implements ProductsRepository {
   @override
   Stream<List<Product>> watchProducts() {
     return _supabase
-        .from('products')
+        .from(DbTables.products)
         .stream(primaryKey: ['id'])
         .eq('is_active', true)
         .order('category', ascending: true)
@@ -20,7 +21,7 @@ class SupabaseProductsRepository implements ProductsRepository {
 
   @override
   Future<void> createProduct(Product product) async {
-    await _supabase.from('products').insert({
+    await _supabase.from(DbTables.products).insert({
       'name': product.name,
       'category': product.category,
       'selling_price': product.sellingPrice,
@@ -32,7 +33,7 @@ class SupabaseProductsRepository implements ProductsRepository {
   @override
   Future<void> updateProduct(Product product) async {
     await _supabase
-        .from('products')
+        .from(DbTables.products)
         .update({
           'name': product.name,
           'category': product.category,
@@ -44,6 +45,9 @@ class SupabaseProductsRepository implements ProductsRepository {
 
   @override
   Future<void> deleteProduct(int id) async {
-    await _supabase.from('products').update({'is_active': false}).eq('id', id);
+    await _supabase
+        .from(DbTables.products)
+        .update({'is_active': false})
+        .eq('id', id);
   }
 }

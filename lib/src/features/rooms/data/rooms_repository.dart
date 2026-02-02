@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/device_type.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
@@ -14,7 +15,7 @@ class RoomsRepository {
 
   Future<List<Room>> fetchRooms() async {
     final data = await _supabase
-        .from('rooms')
+        .from(DbTables.rooms)
         .select()
         .order('name', ascending: true);
     return data.map((json) => Room.fromJson(json)).toList();
@@ -22,16 +23,17 @@ class RoomsRepository {
 
   Stream<List<Room>> watchRooms() {
     return _supabase
-        .from('rooms')
+        .from(DbTables.rooms)
         .stream(primaryKey: ['id'])
         .order('name', ascending: true)
         .map((data) => data.map((json) => Room.fromJson(json)).toList());
   }
 
   Future<void> updateRoomStatus(int roomId, RoomStatus status) async {
-    await _supabase.from('rooms').update({'current_status': status.name}).match(
-      {'id': roomId},
-    );
+    await _supabase
+        .from(DbTables.rooms)
+        .update({'current_status': status.name})
+        .match({'id': roomId});
   }
 
   Future<void> createRoom({
@@ -40,12 +42,12 @@ class RoomsRepository {
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
   }) async {
-    await _supabase.from('rooms').insert({
+    await _supabase.from(DbTables.rooms).insert({
       'name': name,
       'device_type': deviceType.jsonValue,
       'hourly_rate': singleMatchHourlyRate,
       'multi_player_hourly_rate': multiMatchHourlyRate,
-      'current_status': RoomStatus.available.name,
+      'current_status': RoomConstants.available,
     });
   }
 
@@ -57,7 +59,7 @@ class RoomsRepository {
     required double multiMatchHourlyRate,
   }) async {
     await _supabase
-        .from('rooms')
+        .from(DbTables.rooms)
         .update({
           'name': name,
           'device_type': deviceType.jsonValue,
@@ -68,7 +70,7 @@ class RoomsRepository {
   }
 
   Future<void> deleteRoom(int roomId) async {
-    await _supabase.from('rooms').delete().match({'id': roomId});
+    await _supabase.from(DbTables.rooms).delete().match({'id': roomId});
   }
 }
 
