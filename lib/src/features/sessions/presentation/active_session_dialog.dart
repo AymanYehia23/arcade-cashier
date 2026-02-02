@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
+import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
+import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
@@ -104,8 +106,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     required BuildContext context,
     required Session session,
     required List<Order> orders,
-    required double timeCost,
-    required double grandTotal,
+    required SessionBill bill,
   }) async {
     final loc = AppLocalizations.of(context)!;
 
@@ -114,7 +115,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       builder: (dialogContext) {
         return AlertDialog(
           title: Text(loc.completeSession),
-          content: Text(loc.totalBillAmount(grandTotal.toStringAsFixed(2))),
+          content: Text(
+            loc.totalBillAmount(bill.totalAmount.toStringAsFixed(2)),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
@@ -136,8 +139,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             session: session,
             roomId: widget.room?.id,
             orders: orders,
-            timeCost: timeCost,
-            totalAmount: grandTotal,
+            bill: bill,
           );
 
       if (result != null && context.mounted) {
@@ -195,22 +197,34 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
             final now = DateTime.now();
             final startTimeLocal = session.startTime.toLocal();
-            String timeText = '';
-            Color? timeColor;
-            double timeCost = 0.0;
+
+            // Orders
+            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+            final ordersList = ordersAsync.valueOrNull ?? [];
+
+            // Calculate Bill
+            final billingService = ref.watch(billingServiceProvider);
+            final bill = billingService.calculateSessionBill(
+              session,
+              ordersList,
+            );
+
+            // Re-evaluating time text logic relative to usage.
+            // The previous code had complex logic for display text (Open vs Fixed remaining vs Overtime).
+            // BillingService gives us COST duration. Display might need running time.
+            // Let's keep the display logic for timeText separated if it's purely visual (like "remaining time"),
+            // but use bill properties for costs.
+
+            String displayTimeText;
+            Color? displayTimeColor;
 
             if (session.isQuickOrder) {
-              // Quick Order: Time is free/irrelevant
-              timeText = 'Walk-in';
-              timeColor = Colors.blue;
-              timeCost = 0.0;
+              displayTimeText = 'Walk-in';
+              displayTimeColor = Colors.blue;
             } else if (session.sessionType == SessionType.open) {
               final elapsed = now.difference(startTimeLocal);
-              timeText = _formatDuration(elapsed);
-              timeColor = Colors.green;
-
-              final hours = elapsed.inMinutes / 60.0;
-              timeCost = hours * session.appliedHourlyRate;
+              displayTimeText = _formatDuration(elapsed);
+              displayTimeColor = Colors.green;
             } else {
               final planned = Duration(
                 minutes: session.plannedDurationMinutes ?? 0,
@@ -219,27 +233,14 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               final remaining = endTime.difference(now);
 
               if (remaining.isNegative) {
-                timeText = "${loc.timeUp} -${_formatDuration(remaining.abs())}";
-                timeColor = Theme.of(context).colorScheme.error;
+                displayTimeText =
+                    "${loc.timeUp} -${_formatDuration(remaining.abs())}";
+                displayTimeColor = Theme.of(context).colorScheme.error;
               } else {
-                timeText = "${_formatDuration(remaining)} remaining";
-                timeColor = Colors.orange;
+                displayTimeText = "${_formatDuration(remaining)} remaining";
+                displayTimeColor = Colors.orange;
               }
-
-              final plannedHours = (session.plannedDurationMinutes ?? 0) / 60.0;
-              timeCost = plannedHours * session.appliedHourlyRate;
             }
-
-            // Orders
-            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-            double ordersTotal = 0;
-            List<Order> ordersList = [];
-            if (ordersAsync.hasValue) {
-              ordersList = ordersAsync.value!;
-              ordersTotal = ordersList.fold(0, (sum, x) => sum + x.totalPrice);
-            }
-
-            final grandTotal = timeCost + ordersTotal;
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -273,8 +274,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                     children: [
                       if (!session.isQuickOrder) ...[
                         _SessionInfoSection(
-                          timeText: timeText,
-                          timeColor: timeColor,
+                          timeText: displayTimeText,
+                          timeColor: displayTimeColor,
                           session: session,
                           loc: loc,
                           onExtend: () =>
@@ -298,9 +299,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       ),
                       const Divider(),
                       _BillSection(
-                        timeCost: timeCost,
-                        ordersTotal: ordersTotal,
-                        grandTotal: grandTotal,
+                        timeCost: bill.timeCost,
+                        ordersTotal: bill.ordersTotal,
+                        grandTotal: bill.totalAmount,
                         loc: loc,
                       ),
                     ],
@@ -327,26 +328,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               final orders = ordersAsync.valueOrNull ?? [];
 
               // Calculate costs (duplicated logic, should be extracted but keeping inline for now)
-              double timeCost = 0.0;
-              if (session.isQuickOrder) {
-                timeCost = 0.0;
-              } else if (session.sessionType == SessionType.open) {
-                final elapsed = DateTime.now().difference(
-                  session.startTime.toLocal(),
-                );
-                final hours = elapsed.inMinutes / 60.0;
-                timeCost = hours * session.appliedHourlyRate;
-              } else {
-                final plannedHours =
-                    (session.plannedDurationMinutes ?? 0) / 60.0;
-                timeCost = plannedHours * session.appliedHourlyRate;
-              }
-
-              final ordersTotal = orders.fold(
-                0.0,
-                (sum, x) => sum + x.totalPrice,
-              );
-              final grandTotal = timeCost + ordersTotal;
+              // Calculate costs using BillingService
+              final billingService = ref.watch(billingServiceProvider);
+              final bill = billingService.calculateSessionBill(session, orders);
 
               return FilledButton(
                 style: FilledButton.styleFrom(
@@ -356,8 +340,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   context: context,
                   session: session,
                   orders: orders,
-                  timeCost: timeCost,
-                  grandTotal: grandTotal,
+                  bill: bill,
                 ),
                 child: Text(
                   session.isQuickOrder ? 'Checkout & Print' : loc.stopSession,

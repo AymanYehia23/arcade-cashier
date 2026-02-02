@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
@@ -53,14 +54,24 @@ class InvoiceReprintController extends _$InvoiceReprintController {
       );
 
       // Time cost is total minus orders
+      // Time cost is total minus orders
       final timeCost = invoice.totalAmount - ordersTotal;
+
+      final bill = SessionBill(
+        timeCost: timeCost,
+        ordersTotal: ordersTotal,
+        totalAmount: invoice.totalAmount,
+        duration: session.endTime != null
+            ? session.endTime!.difference(session.startTime)
+            : Duration.zero,
+      );
 
       final pdfService = PdfInvoiceService();
       final Uint8List pdfBytes = await pdfService.generateInvoicePdf(
         invoice: invoice,
         session: session,
         orders: orders,
-        timeCost: timeCost,
+        bill: bill,
       );
 
       state = const AsyncData(null);

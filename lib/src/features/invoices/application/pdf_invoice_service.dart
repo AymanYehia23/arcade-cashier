@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
@@ -13,18 +14,15 @@ class PdfInvoiceService {
   /// Generates a PDF invoice optimized for 80mm thermal printer roll.
   Future<Uint8List> generateInvoicePdf({
     required Invoice invoice,
-    required Session session,
+    required Session
+    session, // Still needed for specific session details if any, but duration comes from bill
     required List<Order> orders,
-    required double timeCost,
+    required SessionBill bill,
   }) async {
     final pdf = pw.Document();
 
     // Build invoice items list
-    final items = _buildInvoiceItems(
-      orders: orders,
-      timeCost: timeCost,
-      sessionDuration: _calculateDuration(session),
-    );
+    final items = _buildInvoiceItems(orders: orders, bill: bill);
 
     pdf.addPage(
       pw.Page(
@@ -54,17 +52,16 @@ class PdfInvoiceService {
 
   List<InvoiceItem> _buildInvoiceItems({
     required List<Order> orders,
-    required double timeCost,
-    required Duration sessionDuration,
+    required SessionBill bill,
   }) {
     final items = <InvoiceItem>[];
 
     // Add time duration as first item
-    if (timeCost > 0) {
+    if (bill.timeCost > 0) {
       items.add(
         InvoiceItem.timeDuration(
-          durationFormatted: _formatDuration(sessionDuration),
-          totalCost: timeCost,
+          durationFormatted: _formatDuration(bill.duration),
+          totalCost: bill.timeCost,
         ),
       );
     }
@@ -82,11 +79,6 @@ class PdfInvoiceService {
     }
 
     return items;
-  }
-
-  Duration _calculateDuration(Session session) {
-    final endTime = session.endTime ?? DateTime.now();
-    return endTime.difference(session.startTime);
   }
 
   String _formatDuration(Duration duration) {
