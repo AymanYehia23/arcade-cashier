@@ -25,6 +25,11 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
       status:
           $enumDecodeNullable(_$SessionStatusEnumMap, json['status']) ??
           SessionStatus.active,
+      pausedAt: json['paused_at'] == null
+          ? null
+          : DateTime.parse(json['paused_at'] as String),
+      totalPausedDurationSeconds:
+          (json['total_paused_duration_seconds'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
@@ -39,6 +44,8 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
       'planned_duration_minutes': instance.plannedDurationMinutes,
       'source': instance.source,
       'status': _$SessionStatusEnumMap[instance.status]!,
+      'paused_at': instance.pausedAt?.toIso8601String(),
+      'total_paused_duration_seconds': instance.totalPausedDurationSeconds,
     };
 
 const _$SessionTypeEnumMap = {
@@ -48,5 +55,6 @@ const _$SessionTypeEnumMap = {
 
 const _$SessionStatusEnumMap = {
   SessionStatus.active: 'active',
+  SessionStatus.paused: 'paused',
   SessionStatus.completed: 'completed',
 };

@@ -1,16 +1,18 @@
 import 'dart:async';
 
-import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
-import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_action_buttons.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_order_list.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_timer_widget.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,37 +30,7 @@ class ActiveSessionDialog extends ConsumerStatefulWidget {
 }
 
 class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    _startTimer();
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (mounted) {
-        setState(() {
-          // Trigger rebuild to update time
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$hours:$minutes:$seconds";
-  }
+  // Timer logic moved to SessionTimerWidget
 
   Future<void> _showExtendDialog(BuildContext context, int sessionId) async {
     final loc = AppLocalizations.of(context)!;
@@ -195,9 +167,6 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               return Center(child: Text(loc.noActiveSessionFound));
             }
 
-            final now = DateTime.now();
-            final startTimeLocal = session.startTime.toLocal();
-
             // Orders
             final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
             final ordersList = ordersAsync.valueOrNull ?? [];
@@ -208,39 +177,6 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               session,
               ordersList,
             );
-
-            // Re-evaluating time text logic relative to usage.
-            // The previous code had complex logic for display text (Open vs Fixed remaining vs Overtime).
-            // BillingService gives us COST duration. Display might need running time.
-            // Let's keep the display logic for timeText separated if it's purely visual (like "remaining time"),
-            // but use bill properties for costs.
-
-            String displayTimeText;
-            Color? displayTimeColor;
-
-            if (session.isQuickOrder) {
-              displayTimeText = 'Walk-in';
-              displayTimeColor = Colors.blue;
-            } else if (session.sessionType == SessionType.open) {
-              final elapsed = now.difference(startTimeLocal);
-              displayTimeText = _formatDuration(elapsed);
-              displayTimeColor = Colors.green;
-            } else {
-              final planned = Duration(
-                minutes: session.plannedDurationMinutes ?? 0,
-              );
-              final endTime = startTimeLocal.add(planned);
-              final remaining = endTime.difference(now);
-
-              if (remaining.isNegative) {
-                displayTimeText =
-                    "${loc.timeUp} -${_formatDuration(remaining.abs())}";
-                displayTimeColor = Theme.of(context).colorScheme.error;
-              } else {
-                displayTimeText = "${_formatDuration(remaining)} remaining";
-                displayTimeColor = Colors.orange;
-              }
-            }
 
             return Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -273,11 +209,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   child: Column(
                     children: [
                       if (!session.isQuickOrder) ...[
-                        _SessionInfoSection(
-                          timeText: displayTimeText,
-                          timeColor: displayTimeColor,
+                        SessionTimerWidget(
                           session: session,
-                          loc: loc,
                           onExtend: () =>
                               _showExtendDialog(context, session.id),
                         ),
@@ -292,7 +225,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                             Expanded(
-                              child: _OrdersList(ordersAsync: ordersAsync),
+                              child: SessionOrderList(ordersAsync: ordersAsync),
                             ),
                           ],
                         ),
@@ -315,147 +248,45 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
         ),
       ),
       actions: [
-        if (!completionState.isLoading) ...[
-          TextButton(
+        sessionAsync.maybeWhen(
+          data: (session) {
+            if (session == null) return const SizedBox.shrink();
+
+            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+            final orders = ordersAsync.valueOrNull ?? [];
+            final billingService = ref.watch(billingServiceProvider);
+            final bill = billingService.calculateSessionBill(session, orders);
+
+            return SessionActionButtons(
+              onCancel: () => Navigator.of(context).pop(),
+              onCheckout: () => _showCompleteSessionDialog(
+                context: context,
+                session: session,
+                orders: orders,
+                bill: bill,
+              ),
+              isCheckoutLoading: completionState.isLoading,
+              isQuickOrder: session.isQuickOrder,
+              isPaused: session.status == SessionStatus.paused,
+              onTogglePause: () {
+                if (session.status == SessionStatus.paused) {
+                  ref
+                      .read(sessionsControllerProvider.notifier)
+                      .resumeSession(session.id, session.roomId);
+                } else {
+                  ref
+                      .read(sessionsControllerProvider.notifier)
+                      .pauseSession(session.id, session.roomId);
+                }
+              },
+            );
+          },
+          orElse: () => TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(loc.cancel),
           ),
-          sessionAsync.maybeWhen(
-            data: (session) {
-              if (session == null) return const SizedBox.shrink();
-
-              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-              final orders = ordersAsync.valueOrNull ?? [];
-
-              // Calculate costs (duplicated logic, should be extracted but keeping inline for now)
-              // Calculate costs using BillingService
-              final billingService = ref.watch(billingServiceProvider);
-              final bill = billingService.calculateSessionBill(session, orders);
-
-              return FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                onPressed: () => _showCompleteSessionDialog(
-                  context: context,
-                  session: session,
-                  orders: orders,
-                  bill: bill,
-                ),
-                child: Text(
-                  session.isQuickOrder ? 'Checkout & Print' : loc.stopSession,
-                ),
-              );
-            },
-            orElse: () => const SizedBox.shrink(),
-          ),
-        ] else
-          const CircularProgressIndicator(),
-      ],
-    );
-  }
-}
-
-class _SessionInfoSection extends StatelessWidget {
-  final String timeText;
-  final Color? timeColor;
-  final Session session;
-  final AppLocalizations loc;
-  final VoidCallback onExtend;
-
-  const _SessionInfoSection({
-    required this.timeText,
-    required this.timeColor,
-    required this.session,
-    required this.loc,
-    required this.onExtend,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(loc.timeElapsed, style: Theme.of(context).textTheme.bodyLarge),
-        Text(
-          timeText,
-          style: Theme.of(context).textTheme.displaySmall?.copyWith(
-            color: timeColor,
-            fontWeight: FontWeight.bold,
-            fontFeatures: [const FontFeature.tabularFigures()],
-            fontSize: 24, // Reduced font size for better fit
-          ),
-        ),
-        if (session.sessionType == SessionType.fixed)
-          TextButton(onPressed: onExtend, child: Text(loc.extendTime)),
-        Text('Rate: ${session.appliedHourlyRate} EGP/hr'),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (session.isMultiMatch)
-              Chip(label: Text(loc.multiMatch))
-            else
-              Chip(label: Text(loc.singleMatch)),
-            const SizedBox(width: 8),
-            Chip(
-              label: Text(
-                session.sessionType == SessionType.open
-                    ? loc.openTime
-                    : loc.fixedTime,
-              ),
-            ),
-          ],
         ),
       ],
-    );
-  }
-}
-
-class _OrdersList extends ConsumerWidget {
-  final AsyncValue<List<Order>> ordersAsync;
-
-  const _OrdersList({required this.ordersAsync});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ordersAsync.when(
-      data: (orders) {
-        if (orders.isEmpty) return const Center(child: Text('No orders yet'));
-        return ListView.separated(
-          itemCount: orders.length,
-          separatorBuilder: (context, index) => const Divider(height: 1),
-          itemBuilder: (context, index) {
-            final order = orders[index];
-            final productName =
-                order.product?.name ?? 'Unknown #${order.productId}';
-            return ListTile(
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                productName,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Text('${order.quantity} x ${order.unitPrice}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('${order.totalPrice} EGP'),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      ref
-                          .read(sessionOrdersControllerProvider.notifier)
-                          .deleteOrder(order.id, order.sessionId);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => Center(child: Text('Error loading orders')),
     );
   }
 }

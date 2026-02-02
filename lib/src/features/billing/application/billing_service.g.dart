@@ -6,7 +6,7 @@ part of 'billing_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$billingServiceHash() => r'49d6522a2b57fea9548e0db5ff694977a74adcd4';
+String _$billingServiceHash() => r'82e1c8fa28b81cf412c570197200c1dc4e684c69';
 
 /// See also [billingService].
 @ProviderFor(billingService)

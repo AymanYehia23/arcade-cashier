@@ -661,6 +661,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time ({duration})'**
   String timeDuration(String duration);
+
+  /// No description provided for @addItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Items'**
+  String get addItems;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @resume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get resume;
+
+  /// No description provided for @paused.
+  ///
+  /// In en, this message translates to:
+  /// **'PAUSED'**
+  String get paused;
 }
 
 class _AppLocalizationsDelegate

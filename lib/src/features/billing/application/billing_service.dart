@@ -28,7 +28,15 @@ class BillingService {
     Duration duration;
 
     if (session.sessionType == SessionType.open) {
-      duration = now.difference(startTimeLocal);
+      final totalPaused = Duration(seconds: session.totalPausedDurationSeconds);
+
+      // If currently paused, duration stops accumulating at pausedAt
+      final endPoint = session.pausedAt ?? now;
+      duration = endPoint.difference(startTimeLocal) - totalPaused;
+
+      if (duration.isNegative) {
+        duration = Duration.zero;
+      }
     } else {
       // Fixed session type
       // For billing purposes in "Active Session", we might want to show the currently elapsed time

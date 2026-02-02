@@ -18,6 +18,8 @@ abstract class SessionsRepository {
     int? plannedDurationMinutes,
   });
   Future<void> stopSession({required int sessionId, int? roomId});
+  Future<void> pauseSession(int sessionId);
+  Future<void> resumeSession(int sessionId);
   Future<void> extendSession({
     required int sessionId,
     required int additionalMinutes,
@@ -92,6 +94,50 @@ class SupabaseSessionsRepository implements SessionsRepository {
         .from('sessions')
         .update({
           'planned_duration_minutes': currentDuration + additionalMinutes,
+        })
+        .match({'id': sessionId});
+  }
+
+  @override
+  Future<void> pauseSession(int sessionId) async {
+    await _supabase
+        .from('sessions')
+        .update({
+          'status': domain.SessionStatus.paused.name,
+          'paused_at': DateTime.now().toUtc().toIso8601String(),
+        })
+        .match({'id': sessionId});
+  }
+
+  @override
+  Future<void> resumeSession(int sessionId) async {
+    // 1. Fetch current session to get paused_at and total_paused_duration_seconds
+    final sessionData = await _supabase
+        .from('sessions')
+        .select('paused_at, total_paused_duration_seconds')
+        .eq('id', sessionId)
+        .single();
+
+    final pausedAtIso = sessionData['paused_at'] as String?;
+    final currentTotalPaused =
+        sessionData['total_paused_duration_seconds'] as int? ?? 0;
+
+    int additionalPausedSeconds = 0;
+    if (pausedAtIso != null) {
+      final pausedAt = DateTime.parse(pausedAtIso);
+      additionalPausedSeconds = DateTime.now()
+          .toUtc()
+          .difference(pausedAt)
+          .inSeconds;
+    }
+
+    await _supabase
+        .from('sessions')
+        .update({
+          'status': domain.SessionStatus.active.name,
+          'paused_at': null,
+          'total_paused_duration_seconds':
+              currentTotalPaused + additionalPausedSeconds,
         })
         .match({'id': sessionId});
   }

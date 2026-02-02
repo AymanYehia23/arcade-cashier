@@ -38,6 +38,10 @@ mixin _$Session {
   int? get plannedDurationMinutes => throw _privateConstructorUsedError;
   String get source => throw _privateConstructorUsedError;
   SessionStatus get status => throw _privateConstructorUsedError;
+  @JsonKey(name: 'paused_at')
+  DateTime? get pausedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_paused_duration_seconds')
+  int get totalPausedDurationSeconds => throw _privateConstructorUsedError;
 
   /// Serializes this Session to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -64,6 +68,9 @@ abstract class $SessionCopyWith<$Res> {
     @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
     SessionStatus status,
+    @JsonKey(name: 'paused_at') DateTime? pausedAt,
+    @JsonKey(name: 'total_paused_duration_seconds')
+    int totalPausedDurationSeconds,
   });
 }
 
@@ -92,6 +99,8 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
     Object? plannedDurationMinutes = freezed,
     Object? source = null,
     Object? status = null,
+    Object? pausedAt = freezed,
+    Object? totalPausedDurationSeconds = null,
   }) {
     return _then(
       _value.copyWith(
@@ -135,6 +144,14 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as SessionStatus,
+            pausedAt: freezed == pausedAt
+                ? _value.pausedAt
+                : pausedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            totalPausedDurationSeconds: null == totalPausedDurationSeconds
+                ? _value.totalPausedDurationSeconds
+                : totalPausedDurationSeconds // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -160,6 +177,9 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
     @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
     SessionStatus status,
+    @JsonKey(name: 'paused_at') DateTime? pausedAt,
+    @JsonKey(name: 'total_paused_duration_seconds')
+    int totalPausedDurationSeconds,
   });
 }
 
@@ -187,6 +207,8 @@ class __$$SessionImplCopyWithImpl<$Res>
     Object? plannedDurationMinutes = freezed,
     Object? source = null,
     Object? status = null,
+    Object? pausedAt = freezed,
+    Object? totalPausedDurationSeconds = null,
   }) {
     return _then(
       _$SessionImpl(
@@ -230,6 +252,14 @@ class __$$SessionImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as SessionStatus,
+        pausedAt: freezed == pausedAt
+            ? _value.pausedAt
+            : pausedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        totalPausedDurationSeconds: null == totalPausedDurationSeconds
+            ? _value.totalPausedDurationSeconds
+            : totalPausedDurationSeconds // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -249,6 +279,9 @@ class _$SessionImpl extends _Session {
     @JsonKey(name: 'planned_duration_minutes') this.plannedDurationMinutes,
     this.source = 'walk_in',
     this.status = SessionStatus.active,
+    @JsonKey(name: 'paused_at') this.pausedAt,
+    @JsonKey(name: 'total_paused_duration_seconds')
+    this.totalPausedDurationSeconds = 0,
   }) : super._();
 
   factory _$SessionImpl.fromJson(Map<String, dynamic> json) =>
@@ -283,10 +316,16 @@ class _$SessionImpl extends _Session {
   @override
   @JsonKey()
   final SessionStatus status;
+  @override
+  @JsonKey(name: 'paused_at')
+  final DateTime? pausedAt;
+  @override
+  @JsonKey(name: 'total_paused_duration_seconds')
+  final int totalPausedDurationSeconds;
 
   @override
   String toString() {
-    return 'Session(id: $id, roomId: $roomId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status)';
+    return 'Session(id: $id, roomId: $roomId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
   }
 
   @override
@@ -308,7 +347,15 @@ class _$SessionImpl extends _Session {
             (identical(other.plannedDurationMinutes, plannedDurationMinutes) ||
                 other.plannedDurationMinutes == plannedDurationMinutes) &&
             (identical(other.source, source) || other.source == source) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.pausedAt, pausedAt) ||
+                other.pausedAt == pausedAt) &&
+            (identical(
+                  other.totalPausedDurationSeconds,
+                  totalPausedDurationSeconds,
+                ) ||
+                other.totalPausedDurationSeconds ==
+                    totalPausedDurationSeconds));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -325,6 +372,8 @@ class _$SessionImpl extends _Session {
     plannedDurationMinutes,
     source,
     status,
+    pausedAt,
+    totalPausedDurationSeconds,
   );
 
   /// Create a copy of Session
@@ -355,6 +404,9 @@ abstract class _Session extends Session {
     final int? plannedDurationMinutes,
     final String source,
     final SessionStatus status,
+    @JsonKey(name: 'paused_at') final DateTime? pausedAt,
+    @JsonKey(name: 'total_paused_duration_seconds')
+    final int totalPausedDurationSeconds,
   }) = _$SessionImpl;
   const _Session._() : super._();
 
@@ -387,6 +439,12 @@ abstract class _Session extends Session {
   String get source;
   @override
   SessionStatus get status;
+  @override
+  @JsonKey(name: 'paused_at')
+  DateTime? get pausedAt;
+  @override
+  @JsonKey(name: 'total_paused_duration_seconds')
+  int get totalPausedDurationSeconds;
 
   /// Create a copy of Session
   /// with the given fields replaced by the non-null parameter values.

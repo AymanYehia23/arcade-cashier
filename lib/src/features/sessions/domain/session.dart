@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'session.freezed.dart';
 part 'session.g.dart';
 
-enum SessionStatus { active, completed }
+enum SessionStatus { active, paused, completed }
 
 @freezed
 class Session with _$Session {
@@ -24,6 +24,10 @@ class Session with _$Session {
     @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     @Default('walk_in') String source,
     @Default(SessionStatus.active) SessionStatus status,
+    @JsonKey(name: 'paused_at') DateTime? pausedAt,
+    @JsonKey(name: 'total_paused_duration_seconds')
+    @Default(0)
+    int totalPausedDurationSeconds,
   }) = _Session;
 
   bool get isQuickOrder => roomId == null;

@@ -267,7 +267,7 @@ class _SessionByIdProviderElement
 }
 
 String _$sessionsControllerHash() =>
-    r'5f95236505a7780c1e3951c5f82985eda6b6de4d';
+    r'6b0d7410fbbcee63c5bb3502de88e9fb0397c218';
 
 /// See also [SessionsController].
 @ProviderFor(SessionsController)

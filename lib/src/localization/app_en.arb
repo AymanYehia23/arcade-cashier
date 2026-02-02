@@ -132,5 +132,9 @@
         "type": "String"
       }
     }
-  }
+  },
+  "addItems": "Add Items",
+  "pause": "Pause",
+  "resume": "Resume",
+  "paused": "PAUSED"
 }

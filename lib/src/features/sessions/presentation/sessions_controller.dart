@@ -67,6 +67,28 @@ class SessionsController extends _$SessionsController {
       ref.invalidate(roomsValuesProvider);
     });
   }
+
+  Future<void> pauseSession(int sessionId, int? roomId) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(sessionsRepositoryProvider).pauseSession(sessionId);
+      ref.invalidate(sessionByIdProvider(sessionId));
+      if (roomId != null) {
+        ref.invalidate(activeSessionProvider(roomId));
+      }
+    });
+  }
+
+  Future<void> resumeSession(int sessionId, int? roomId) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(sessionsRepositoryProvider).resumeSession(sessionId);
+      ref.invalidate(sessionByIdProvider(sessionId));
+      if (roomId != null) {
+        ref.invalidate(activeSessionProvider(roomId));
+      }
+    });
+  }
 }
 
 @riverpod

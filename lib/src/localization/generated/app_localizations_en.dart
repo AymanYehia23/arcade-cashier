@@ -312,4 +312,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String timeDuration(String duration) {
     return 'Time ($duration)';
   }
+
+  @override
+  String get addItems => 'Add Items';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get resume => 'Resume';
+
+  @override
+  String get paused => 'PAUSED';
 }
