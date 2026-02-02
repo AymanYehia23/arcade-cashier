@@ -685,6 +685,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'PAUSED'**
   String get paused;
+
+  /// No description provided for @analytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analytics;
 }
 
 class _AppLocalizationsDelegate

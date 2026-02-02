@@ -324,4 +324,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get paused => 'PAUSED';
+
+  @override
+  String get analytics => 'Analytics';
 }

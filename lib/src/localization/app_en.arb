@@ -136,5 +136,6 @@
   "addItems": "Add Items",
   "pause": "Pause",
   "resume": "Resume",
-  "paused": "PAUSED"
+  "paused": "PAUSED",
+  "analytics": "Analytics"
 }
