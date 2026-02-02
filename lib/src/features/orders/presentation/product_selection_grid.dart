@@ -88,24 +88,32 @@ class ProductSelectionGrid extends ConsumerWidget {
     WidgetRef ref,
     Product product,
   ) {
+    final isOutOfStock = product.stockQuantity <= 0;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: const BorderSide(color: Colors.white12),
       ),
-      color: const Color(0xFF2A2A35),
+      // Use red color for out of stock, otherwise keeping the original
+      color: isOutOfStock
+          ? const Color(0xFFB00020).withOpacity(0.5)
+          : const Color(0xFF2A2A35),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {
-          ref
-              .read(sessionOrdersControllerProvider.notifier)
-              .addOrder(
-                sessionId: sessionId,
-                productId: product.id,
-                price: product.sellingPrice,
-              );
-        },
+        // Disable onTap if out of stock
+        onTap: isOutOfStock
+            ? null
+            : () {
+                ref
+                    .read(sessionOrdersControllerProvider.notifier)
+                    .addOrder(
+                      sessionId: sessionId,
+                      productId: product.id,
+                      price: product.sellingPrice,
+                    );
+              },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -127,18 +135,33 @@ class ProductSelectionGrid extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 4),
-              Text(
-                '${product.sellingPrice.toStringAsFixed(0)} EGP',
-                style: const TextStyle(
-                  color: Color(0xFF4CAF50), // Green for price
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                'Stock: ${product.stockQuantity}',
-                style: const TextStyle(color: Colors.white54, fontSize: 10),
-              ),
+              isOutOfStock
+                  ? const Text(
+                      'Out of Stock',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Text(
+                          '${product.sellingPrice.toStringAsFixed(0)} EGP',
+                          style: const TextStyle(
+                            color: Color(0xFF4CAF50), // Green for price
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          'Stock: ${product.stockQuantity}',
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
             ],
           ),
         ),
