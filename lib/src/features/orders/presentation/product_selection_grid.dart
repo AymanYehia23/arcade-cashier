@@ -6,8 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductSelectionGrid extends ConsumerWidget {
   final int sessionId;
+  final FocusNode? focusNode;
 
-  const ProductSelectionGrid({super.key, required this.sessionId});
+  const ProductSelectionGrid({
+    super.key,
+    required this.sessionId,
+    this.focusNode,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,47 +40,51 @@ class ProductSelectionGrid extends ConsumerWidget {
           });
 
         // 2. Build List of Categories
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: sortedKeys.length,
-          itemBuilder: (context, index) {
-            final category = sortedKeys[index];
-            final items = grouped[category]!;
+        return Focus(
+          focusNode: focusNode,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: sortedKeys.length,
+            itemBuilder: (context, index) {
+              final category = sortedKeys[index];
+              final items = grouped[category]!;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Category Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    category,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category Header
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      category,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                // Products Grid for this Category
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Adjust for screen size if needed
-                    childAspectRatio: 1.5,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
+                  // Products Grid for this Category
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, // Adjust for screen size if needed
+                          childAspectRatio: 1.5,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                    itemCount: items.length,
+                    itemBuilder: (context, i) {
+                      final product = items[i];
+                      return _buildProductCard(context, ref, product);
+                    },
                   ),
-                  itemCount: items.length,
-                  itemBuilder: (context, i) {
-                    final product = items[i];
-                    return _buildProductCard(context, ref, product);
-                  },
-                ),
-                const SizedBox(height: 16), // Spacing between categories
-              ],
-            );
-          },
+                  const SizedBox(height: 16), // Spacing between categories
+                ],
+              );
+            },
+          ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),

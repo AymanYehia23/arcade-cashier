@@ -33,20 +33,28 @@ class SessionActionButtons extends StatelessWidget {
             label: Text(isPaused ? loc.resume : loc.pause),
           ),
         const SizedBox(width: 8),
-        TextButton(
-          onPressed: isCheckoutLoading ? null : onCancel,
-          child: Text(loc.cancel),
+        Tooltip(
+          message: '${loc.cancel} (Esc)',
+          child: TextButton(
+            onPressed: isCheckoutLoading ? null : onCancel,
+            child: Text(loc.cancel),
+          ),
         ),
         const SizedBox(width: 8),
         if (isCheckoutLoading)
           const CircularProgressIndicator()
         else
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
+          Tooltip(
+            message: isQuickOrder
+                ? 'Checkout (Ctrl+S)'
+                : '${loc.stopSession} (Ctrl+S)',
+            child: FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+              ),
+              onPressed: onCheckout,
+              child: Text(isQuickOrder ? 'Checkout & Print' : loc.stopSession),
             ),
-            onPressed: onCheckout,
-            child: Text(isQuickOrder ? 'Checkout & Print' : loc.stopSession),
           ),
       ],
     );

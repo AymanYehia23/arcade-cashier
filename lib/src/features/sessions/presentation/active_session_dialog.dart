@@ -15,6 +15,7 @@ import 'package:arcade_cashier/src/features/sessions/presentation/widgets/sessio
 import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_timer_widget.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ActiveSessionDialog extends ConsumerStatefulWidget {
@@ -31,6 +32,13 @@ class ActiveSessionDialog extends ConsumerStatefulWidget {
 
 class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
   // Timer logic moved to SessionTimerWidget
+  final FocusNode _productGridFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _productGridFocusNode.dispose();
+    super.dispose();
+  }
 
   Future<void> _showExtendDialog(BuildContext context, int sessionId) async {
     final loc = AppLocalizations.of(context)!;
@@ -153,140 +161,172 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
     final completionState = ref.watch(sessionCompletionControllerProvider);
 
-    return AlertDialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      title: Text(
-        '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? 'Quick Order' : widget.room?.name ?? 'Unknown'}',
-      ),
-      content: SizedBox(
-        width: 1000,
-        height: 600,
-        child: sessionAsync.when(
-          data: (session) {
-            if (session == null) {
-              return Center(child: Text(loc.noActiveSessionFound));
-            }
-
-            // Orders
-            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-            final ordersList = ordersAsync.valueOrNull ?? [];
-
-            // Calculate Bill
-            final billingService = ref.watch(billingServiceProvider);
-            final bill = billingService.calculateSessionBill(
-              session,
-              ordersList,
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          Navigator.of(context).pop();
+        },
+        const SingleActivator(LogicalKeyboardKey.enter): () {
+          _productGridFocusNode.requestFocus();
+        },
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () {
+          if (completionState.isLoading) return;
+          sessionAsync.whenData((session) {
+            if (session == null) return;
+            final ordersAsync = ref.read(sessionOrdersProvider(session.id));
+            final orders = ordersAsync.valueOrNull ?? [];
+            final billingService = ref.read(billingServiceProvider);
+            final bill = billingService.calculateSessionBill(session, orders);
+            _showCompleteSessionDialog(
+              context: context,
+              session: session,
+              orders: orders,
+              bill: bill,
             );
+          });
+        },
+      },
+      child: AlertDialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        title: Text(
+          '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? 'Quick Order' : widget.room?.name ?? 'Unknown'}',
+        ),
+        content: SizedBox(
+          width: 1000,
+          height: 600,
+          child: sessionAsync.when(
+            data: (session) {
+              if (session == null) {
+                return Center(child: Text(loc.noActiveSessionFound));
+              }
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // PRODUCT SELECTION (Left)
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        loc.products,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Expanded(
-                        child: Card(
-                          child: ProductSelectionGrid(sessionId: session.id),
+              // Orders
+              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+              final ordersList = ordersAsync.valueOrNull ?? [];
+
+              // Calculate Bill
+              final billingService = ref.watch(billingServiceProvider);
+              final bill = billingService.calculateSessionBill(
+                session,
+                ordersList,
+              );
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // PRODUCT SELECTION (Left)
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          loc.products,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: Card(
+                            child: ProductSelectionGrid(
+                              sessionId: session.id,
+                              focusNode: _productGridFocusNode,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 16),
-                const VerticalDivider(width: 1),
-                const SizedBox(width: 16),
-                // SESSION INFO & ORDERS (Right)
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      if (!session.isQuickOrder) ...[
-                        SessionTimerWidget(
-                          session: session,
-                          onExtend: () =>
-                              _showExtendDialog(context, session.id),
+                  const SizedBox(width: 16),
+                  const VerticalDivider(width: 1),
+                  const SizedBox(width: 16),
+                  // SESSION INFO & ORDERS (Right)
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        if (!session.isQuickOrder) ...[
+                          SessionTimerWidget(
+                            session: session,
+                            onExtend: () =>
+                                _showExtendDialog(context, session.id),
+                          ),
+                          const Divider(),
+                        ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Text(
+                                loc.orders,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
+                              Expanded(
+                                child: SessionOrderList(
+                                  ordersAsync: ordersAsync,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         const Divider(),
-                      ],
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              loc.orders,
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                            Expanded(
-                              child: SessionOrderList(ordersAsync: ordersAsync),
-                            ),
-                          ],
+                        _BillSection(
+                          timeCost: bill.timeCost,
+                          ordersTotal: bill.ordersTotal,
+                          grandTotal: bill.totalAmount,
+                          loc: loc,
                         ),
-                      ),
-                      const Divider(),
-                      _BillSection(
-                        timeCost: bill.timeCost,
-                        ordersTotal: bill.ordersTotal,
-                        grandTotal: bill.totalAmount,
-                        loc: loc,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
-          error: (e, st) => Center(child: Text(loc.errorMessage(e.toString()))),
-          loading: () => const Center(child: CircularProgressIndicator()),
-        ),
-      ),
-      actions: [
-        sessionAsync.maybeWhen(
-          data: (session) {
-            if (session == null) return const SizedBox.shrink();
-
-            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-            final orders = ordersAsync.valueOrNull ?? [];
-            final billingService = ref.watch(billingServiceProvider);
-            final bill = billingService.calculateSessionBill(session, orders);
-
-            return SessionActionButtons(
-              onCancel: () => Navigator.of(context).pop(),
-              onCheckout: () => _showCompleteSessionDialog(
-                context: context,
-                session: session,
-                orders: orders,
-                bill: bill,
-              ),
-              isCheckoutLoading: completionState.isLoading,
-              isQuickOrder: session.isQuickOrder,
-              isPaused: session.status == SessionStatus.paused,
-              onTogglePause: () {
-                if (session.status == SessionStatus.paused) {
-                  ref
-                      .read(sessionsControllerProvider.notifier)
-                      .resumeSession(session.id, session.roomId);
-                } else {
-                  ref
-                      .read(sessionsControllerProvider.notifier)
-                      .pauseSession(session.id, session.roomId);
-                }
-              },
-            );
-          },
-          orElse: () => TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(loc.cancel),
+                ],
+              );
+            },
+            error: (e, st) =>
+                Center(child: Text(loc.errorMessage(e.toString()))),
+            loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ),
-      ],
+        actions: [
+          sessionAsync.maybeWhen(
+            data: (session) {
+              if (session == null) return const SizedBox.shrink();
+
+              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+              final orders = ordersAsync.valueOrNull ?? [];
+              final billingService = ref.watch(billingServiceProvider);
+              final bill = billingService.calculateSessionBill(session, orders);
+
+              return SessionActionButtons(
+                onCancel: () => Navigator.of(context).pop(),
+                onCheckout: () => _showCompleteSessionDialog(
+                  context: context,
+                  session: session,
+                  orders: orders,
+                  bill: bill,
+                ),
+                isCheckoutLoading: completionState.isLoading,
+                isQuickOrder: session.isQuickOrder,
+                isPaused: session.status == SessionStatus.paused,
+                onTogglePause: () {
+                  if (session.status == SessionStatus.paused) {
+                    ref
+                        .read(sessionsControllerProvider.notifier)
+                        .resumeSession(session.id, session.roomId);
+                  } else {
+                    ref
+                        .read(sessionsControllerProvider.notifier)
+                        .pauseSession(session.id, session.roomId);
+                  }
+                },
+              );
+            },
+            orElse: () => TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(loc.cancel),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
