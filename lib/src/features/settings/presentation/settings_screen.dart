@@ -45,9 +45,7 @@ class SettingsScreen extends ConsumerWidget {
               leading: const Icon(Icons.inventory),
               title: Text(loc.manageInventory),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                // Placeholder
-              },
+              onTap: () => context.push(AppRoutes.manageProducts),
             ),
             const Divider(),
             _SectionHeader(title: loc.account),

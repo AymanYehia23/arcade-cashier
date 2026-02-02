@@ -1,3 +1,4 @@
+// ignore_for_file: invalid_annotation_target
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

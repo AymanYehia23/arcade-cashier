@@ -23,7 +23,7 @@ final roomsRepositoryProvider = Provider<RoomsRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RoomsRepositoryRef = ProviderRef<RoomsRepository>;
-String _$roomsValuesHash() => r'aa747efeb61b32cdf8a687177a0a830f7bbb396a';
+String _$roomsValuesHash() => r'c0bbb8868b281d703be792a9405be149ccbee278';
 
 /// See also [roomsValues].
 @ProviderFor(roomsValues)

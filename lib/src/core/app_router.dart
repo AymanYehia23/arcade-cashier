@@ -7,6 +7,7 @@ import 'package:arcade_cashier/src/features/authentication/data/auth_repository.
 import 'package:arcade_cashier/src/features/authentication/presentation/splash_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/dashboard_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/manage_rooms_screen.dart';
+import 'package:arcade_cashier/src/features/products/presentation/manage_products_screen.dart';
 import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
 
 import 'package:arcade_cashier/src/utils/go_router_refresh_stream.dart';
@@ -70,6 +71,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'rooms',
                     builder: (context, state) => const ManageRoomsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'products',
+                    builder: (context, state) => const ManageProductsScreen(),
                   ),
                 ],
               ),

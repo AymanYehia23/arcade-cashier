@@ -71,5 +71,12 @@ RoomsRepository roomsRepository(Ref ref) {
 @riverpod
 Stream<List<Room>> roomsValues(Ref ref) {
   final repository = ref.watch(roomsRepositoryProvider);
-  return repository.watchRooms();
+  return repository.watchRooms().handleError((error, stackTrace) {
+    if (error.toString().contains('RealtimeSubscribeException')) {
+      // Ignore transient connection errors during startup
+      // The stream will stay in loading state or previous state until valid data arrives
+      return;
+    }
+    throw error;
+  });
 }

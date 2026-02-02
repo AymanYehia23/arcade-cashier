@@ -66,5 +66,43 @@
     }
   },
   "sessionStopped": "Session stopped",
-  "noActiveSessionFound": "No active session found."
+  "noActiveSessionFound": "No active session found.",
+  "manageInventory": "Manage Inventory",
+  "productName": "Product Name",
+  "category": "Category",
+  "sellingPrice": "Selling Price",
+  "stockQuantity": "Stock Quantity",
+  "drinks": "Drinks",
+  "snacks": "Snacks",
+  "food": "Food",
+  "other": "Other",
+  "lowStock": "Low Stock",
+  "addProduct": "Add Product",
+  "editProduct": "Edit Product",
+  "deleteProduct": "Delete Product",
+  "confirmDeleteProduct": "Are you sure you want to delete this product?",
+  "noProductsFound": "No products found",
+  "fieldRequired": "Required",
+  "invalidNumber": "Invalid number",
+  "productPriceStock": "Price: {price} | Stock: {stock, plural, =0{Out of Stock} other{{stock}}}",
+  "@productPriceStock": {
+    "placeholders": {
+      "price": {
+        "type": "double",
+        "format": "currency",
+        "optionalParameters": {
+          "symbol": "EGP ",
+          "decimalDigits": 2
+        }
+      },
+      "stock": {
+        "type": "int"
+      }
+    }
+  },
+  "products": "Products",
+  "orders": "Orders",
+  "total": "Total",
+  "bill": "Bill",
+  "timeCost": "Time Cost"
 }

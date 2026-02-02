@@ -445,6 +445,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No active session found.'**
   String get noActiveSessionFound;
+
+  /// No description provided for @productName.
+  ///
+  /// In en, this message translates to:
+  /// **'Product Name'**
+  String get productName;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @sellingPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling Price'**
+  String get sellingPrice;
+
+  /// No description provided for @stockQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock Quantity'**
+  String get stockQuantity;
+
+  /// No description provided for @drinks.
+  ///
+  /// In en, this message translates to:
+  /// **'Drinks'**
+  String get drinks;
+
+  /// No description provided for @snacks.
+  ///
+  /// In en, this message translates to:
+  /// **'Snacks'**
+  String get snacks;
+
+  /// No description provided for @food.
+  ///
+  /// In en, this message translates to:
+  /// **'Food'**
+  String get food;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @lowStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Low Stock'**
+  String get lowStock;
+
+  /// No description provided for @addProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Product'**
+  String get addProduct;
+
+  /// No description provided for @editProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Product'**
+  String get editProduct;
+
+  /// No description provided for @deleteProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product'**
+  String get deleteProduct;
+
+  /// No description provided for @confirmDeleteProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this product?'**
+  String get confirmDeleteProduct;
+
+  /// No description provided for @noProductsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found'**
+  String get noProductsFound;
+
+  /// No description provided for @fieldRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get fieldRequired;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid number'**
+  String get invalidNumber;
+
+  /// No description provided for @productPriceStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: {price} | Stock: {stock, plural, =0{Out of Stock} other{{stock}}}'**
+  String productPriceStock(double price, int stock);
+
+  /// No description provided for @products.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get products;
+
+  /// No description provided for @orders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get orders;
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @bill.
+  ///
+  /// In en, this message translates to:
+  /// **'Bill'**
+  String get bill;
+
+  /// No description provided for @timeCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Cost'**
+  String get timeCost;
 }
 
 class _AppLocalizationsDelegate

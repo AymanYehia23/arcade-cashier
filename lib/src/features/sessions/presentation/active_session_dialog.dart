@@ -1,6 +1,10 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
+import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -29,9 +33,11 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      setState(() {
-        // We will update this properly once we have the session start time
-      });
+      if (mounted) {
+        setState(() {
+          // Trigger rebuild to update time
+        });
+      }
     });
   }
 
@@ -111,98 +117,139 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       );
     });
 
+    ref.listen<AsyncValue>(sessionOrdersControllerProvider, (_, state) {
+      if (state.hasError && !state.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.errorMessage(state.error.toString()))),
+        );
+      }
+    });
+
     final sessionAsync = ref.watch(activeSessionProvider(widget.room.id));
     final controllerState = ref.watch(sessionsControllerProvider);
-
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       title: Text('${loc.activeSession} - ${widget.room.name}'),
-      content: sessionAsync.when(
-        data: (session) {
-          if (session == null) {
-            return Text(loc.noActiveSessionFound);
-          }
-
-          final now = DateTime.now();
-          // Logic for display
-          String timeText = '';
-          Color? timeColor;
-
-          final startTimeLocal = session.startTime.toLocal();
-
-          if (session.sessionType == SessionType.open) {
-            _elapsed = now.difference(startTimeLocal);
-            timeText = _formatDuration(_elapsed);
-            timeColor = Colors.green;
-          } else {
-            // Fixed time logic
-            final planned = Duration(
-              minutes: session.plannedDurationMinutes ?? 0,
-            );
-            final endTime = startTimeLocal.add(planned);
-            final remaining = endTime.difference(now);
-
-            if (remaining.isNegative) {
-              timeText = "${loc.timeUp} -${_formatDuration(remaining.abs())}";
-              timeColor = Theme.of(context).colorScheme.error;
-            } else {
-              timeText = "${_formatDuration(remaining)} remaining";
-              timeColor = Colors.orange;
+      content: SizedBox(
+        width: 1000,
+        height: 600,
+        child: sessionAsync.when(
+          data: (session) {
+            if (session == null) {
+              return Center(child: Text(loc.noActiveSessionFound));
             }
-          }
 
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                loc.timeElapsed,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                timeText,
-                style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: timeColor,
-                  fontFeatures: [const FontFeature.tabularFigures()],
-                ),
-              ),
-              const SizedBox(height: 8),
-              if (session.sessionType == SessionType.fixed)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: FilterChip(
-                    label: Text(loc.extendTime),
-                    onSelected: (_) => _showExtendDialog(context, session.id),
+            final now = DateTime.now();
+            final startTimeLocal = session.startTime.toLocal();
+            String timeText = '';
+            Color? timeColor;
+            double timeCost = 0.0;
+
+            if (session.sessionType == SessionType.open) {
+              _elapsed = now.difference(startTimeLocal);
+              timeText = _formatDuration(_elapsed);
+              timeColor = Colors.green;
+
+              final hours = _elapsed.inMinutes / 60.0;
+              timeCost = hours * session.appliedHourlyRate;
+            } else {
+              final planned = Duration(
+                minutes: session.plannedDurationMinutes ?? 0,
+              );
+              final endTime = startTimeLocal.add(planned);
+              final remaining = endTime.difference(now);
+
+              if (remaining.isNegative) {
+                timeText = "${loc.timeUp} -${_formatDuration(remaining.abs())}";
+                timeColor = Theme.of(context).colorScheme.error;
+              } else {
+                timeText = "${_formatDuration(remaining)} remaining";
+                timeColor = Colors.orange;
+              }
+
+              final plannedHours = (session.plannedDurationMinutes ?? 0) / 60.0;
+              timeCost = plannedHours * session.appliedHourlyRate;
+            }
+
+            // Orders
+            final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+            double ordersTotal = 0;
+            if (ordersAsync.hasValue) {
+              ordersTotal = ordersAsync.value!.fold(
+                0,
+                (sum, x) => sum + x.totalPrice,
+              );
+            }
+
+            final grandTotal = timeCost + ordersTotal;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // PRODUCT SELECTION (Left)
+                Expanded(
+                  flex: 4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        loc.products,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: Card(
+                          child: ProductSelectionGrid(sessionId: session.id),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              Text(
-                'Rate: ${session.appliedHourlyRate} EGP/hr',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (session.isMultiMatch)
-                    Chip(label: Text(loc.multiMatch))
-                  else
-                    Chip(label: Text(loc.singleMatch)),
-                  const SizedBox(width: 8),
-                  Chip(
-                    label: Text(
-                      session.sessionType == SessionType.open
-                          ? loc.openTime
-                          : loc.fixedTime,
-                    ),
+                const SizedBox(width: 16),
+                const VerticalDivider(width: 1),
+                const SizedBox(width: 16),
+                // SESSION INFO & ORDERS (Right)
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      _SessionInfoSection(
+                        timeText: timeText,
+                        timeColor: timeColor,
+                        session: session,
+                        loc: loc,
+                        onExtend: () => _showExtendDialog(context, session.id),
+                      ),
+                      const Divider(),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              loc.orders,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Expanded(
+                              child: _OrdersList(ordersAsync: ordersAsync),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      _BillSection(
+                        timeCost: timeCost,
+                        ordersTotal: ordersTotal,
+                        grandTotal: grandTotal,
+                        loc: loc,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
-          );
-        },
-        error: (e, st) => Text(loc.errorMessage(e.toString())),
-        loading: () => const SizedBox(
-          height: 100,
-          child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
+            );
+          },
+          error: (e, st) => Center(child: Text(loc.errorMessage(e.toString()))),
+          loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),
       actions: [
@@ -233,6 +280,162 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
         ] else
           const CircularProgressIndicator(),
       ],
+    );
+  }
+}
+
+class _SessionInfoSection extends StatelessWidget {
+  final String timeText;
+  final Color? timeColor;
+  final Session session;
+  final AppLocalizations loc;
+  final VoidCallback onExtend;
+
+  const _SessionInfoSection({
+    required this.timeText,
+    required this.timeColor,
+    required this.session,
+    required this.loc,
+    required this.onExtend,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(loc.timeElapsed, style: Theme.of(context).textTheme.bodyLarge),
+        Text(
+          timeText,
+          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+            color: timeColor,
+            fontWeight: FontWeight.bold,
+            fontFeatures: [const FontFeature.tabularFigures()],
+            fontSize: 24, // Reduced font size for better fit
+          ),
+        ),
+        if (session.sessionType == SessionType.fixed)
+          TextButton(onPressed: onExtend, child: Text(loc.extendTime)),
+        Text('Rate: ${session.appliedHourlyRate} EGP/hr'),
+        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (session.isMultiMatch)
+              Chip(label: Text(loc.multiMatch))
+            else
+              Chip(label: Text(loc.singleMatch)),
+            const SizedBox(width: 8),
+            Chip(
+              label: Text(
+                session.sessionType == SessionType.open
+                    ? loc.openTime
+                    : loc.fixedTime,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _OrdersList extends ConsumerWidget {
+  final AsyncValue<List<Order>> ordersAsync;
+
+  const _OrdersList({required this.ordersAsync});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ordersAsync.when(
+      data: (orders) {
+        if (orders.isEmpty) return const Center(child: Text('No orders yet'));
+        return ListView.separated(
+          itemCount: orders.length,
+          separatorBuilder: (_, _) => const Divider(height: 1),
+          itemBuilder: (context, index) {
+            final order = orders[index];
+            final productName =
+                order.product?.name ?? 'Unknown #${order.productId}';
+            return ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              title: Text(
+                productName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              subtitle: Text('${order.quantity} x ${order.unitPrice}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('${order.totalPrice} EGP'),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      ref
+                          .read(sessionOrdersControllerProvider.notifier)
+                          .deleteOrder(order.id, order.sessionId);
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, s) => Center(child: Text('Error loading orders')),
+    );
+  }
+}
+
+class _BillSection extends StatelessWidget {
+  final double timeCost;
+  final double ordersTotal;
+  final double grandTotal;
+  final AppLocalizations loc;
+
+  const _BillSection({
+    required this.timeCost,
+    required this.ordersTotal,
+    required this.grandTotal,
+    required this.loc,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(loc.timeCost),
+              Text('${timeCost.toStringAsFixed(2)} EGP'),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(loc.orders),
+              Text('${ordersTotal.toStringAsFixed(2)} EGP'),
+            ],
+          ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(loc.total, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                '${grandTotal.toStringAsFixed(2)} EGP',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

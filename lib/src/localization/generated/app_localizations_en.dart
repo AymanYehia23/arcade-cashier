@@ -184,4 +184,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noActiveSessionFound => 'No active session found.';
+
+  @override
+  String get productName => 'Product Name';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get sellingPrice => 'Selling Price';
+
+  @override
+  String get stockQuantity => 'Stock Quantity';
+
+  @override
+  String get drinks => 'Drinks';
+
+  @override
+  String get snacks => 'Snacks';
+
+  @override
+  String get food => 'Food';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get lowStock => 'Low Stock';
+
+  @override
+  String get addProduct => 'Add Product';
+
+  @override
+  String get editProduct => 'Edit Product';
+
+  @override
+  String get deleteProduct => 'Delete Product';
+
+  @override
+  String get confirmDeleteProduct =>
+      'Are you sure you want to delete this product?';
+
+  @override
+  String get noProductsFound => 'No products found';
+
+  @override
+  String get fieldRequired => 'Required';
+
+  @override
+  String get invalidNumber => 'Invalid number';
+
+  @override
+  String productPriceStock(double price, int stock) {
+    final intl.NumberFormat priceNumberFormat = intl.NumberFormat.currency(
+      locale: localeName,
+      symbol: 'EGP ',
+      decimalDigits: 2,
+    );
+    final String priceString = priceNumberFormat.format(price);
+
+    String _temp0 = intl.Intl.pluralLogic(
+      stock,
+      locale: localeName,
+      other: '$stock',
+      zero: 'Out of Stock',
+    );
+    return 'Price: $priceString | Stock: $_temp0';
+  }
+
+  @override
+  String get products => 'Products';
+
+  @override
+  String get orders => 'Orders';
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get bill => 'Bill';
+
+  @override
+  String get timeCost => 'Time Cost';
 }
