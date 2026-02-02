@@ -104,5 +104,7 @@
   "orders": "Orders",
   "total": "Total",
   "bill": "Bill",
-  "timeCost": "Time Cost"
+  "timeCost": "Time Cost",
+  "search": "Search",
+  "inventory": "Inventory"
 }

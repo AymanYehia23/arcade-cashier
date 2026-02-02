@@ -33,6 +33,10 @@ class ScaffoldWithNavigation extends StatelessWidget {
               label: loc.dashboardTitle,
             ),
             NavigationDestination(
+              icon: const Icon(Icons.inventory_2),
+              label: loc.inventory,
+            ),
+            NavigationDestination(
               icon: const Icon(Icons.settings),
               label: loc.settingsTitle,
             ),
@@ -56,6 +60,10 @@ class ScaffoldWithNavigation extends StatelessWidget {
                 NavigationRailDestination(
                   icon: const Icon(Icons.dashboard),
                   label: Text(loc.dashboardTitle),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.inventory_2),
+                  label: Text(loc.inventory),
                 ),
                 NavigationRailDestination(
                   icon: const Icon(Icons.settings),

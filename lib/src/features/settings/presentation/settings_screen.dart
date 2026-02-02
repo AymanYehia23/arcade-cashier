@@ -41,12 +41,6 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(AppRoutes.manageRooms),
             ),
-            ListTile(
-              leading: const Icon(Icons.inventory),
-              title: Text(loc.manageInventory),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(AppRoutes.manageProducts),
-            ),
             const Divider(),
             _SectionHeader(title: loc.account),
             ListTile(

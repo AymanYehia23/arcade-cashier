@@ -577,6 +577,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Time Cost'**
   String get timeCost;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @inventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory'**
+  String get inventory;
 }
 
 class _AppLocalizationsDelegate

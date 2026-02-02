@@ -266,4 +266,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get timeCost => 'Time Cost';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get inventory => 'Inventory';
 }
