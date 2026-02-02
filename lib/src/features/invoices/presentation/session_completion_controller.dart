@@ -30,7 +30,7 @@ class SessionCompletionController extends _$SessionCompletionController {
   /// Completes a session, creates an invoice, and generates the PDF.
   Future<SessionCompletionResult?> completeSession({
     required Session session,
-    required int roomId,
+    int? roomId,
     required List<Order> orders,
     required double timeCost,
     required double totalAmount,
@@ -44,8 +44,10 @@ class SessionCompletionController extends _$SessionCompletionController {
           .read(sessionsRepositoryProvider)
           .stopSession(sessionId: session.id, roomId: roomId);
 
-      // Invalidate rooms to refresh UI
-      ref.invalidate(roomsValuesProvider);
+      // Invalidate rooms to refresh UI (only if room was involved)
+      if (roomId != null) {
+        ref.invalidate(roomsValuesProvider);
+      }
 
       // 2. Generate invoice number
       final invoiceNumber = await ref

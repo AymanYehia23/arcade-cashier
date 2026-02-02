@@ -147,13 +147,132 @@ class _ActiveSessionProviderElement
   int get roomId => (origin as ActiveSessionProvider).roomId;
 }
 
+String _$sessionByIdHash() => r'b76e1ae4c3a5a17172bf5a57f9d7706eed3006b9';
+
+/// See also [sessionById].
+@ProviderFor(sessionById)
+const sessionByIdProvider = SessionByIdFamily();
+
+/// See also [sessionById].
+class SessionByIdFamily extends Family<AsyncValue<Session?>> {
+  /// See also [sessionById].
+  const SessionByIdFamily();
+
+  /// See also [sessionById].
+  SessionByIdProvider call(int sessionId) {
+    return SessionByIdProvider(sessionId);
+  }
+
+  @override
+  SessionByIdProvider getProviderOverride(
+    covariant SessionByIdProvider provider,
+  ) {
+    return call(provider.sessionId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'sessionByIdProvider';
+}
+
+/// See also [sessionById].
+class SessionByIdProvider extends AutoDisposeFutureProvider<Session?> {
+  /// See also [sessionById].
+  SessionByIdProvider(int sessionId)
+    : this._internal(
+        (ref) => sessionById(ref as SessionByIdRef, sessionId),
+        from: sessionByIdProvider,
+        name: r'sessionByIdProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$sessionByIdHash,
+        dependencies: SessionByIdFamily._dependencies,
+        allTransitiveDependencies: SessionByIdFamily._allTransitiveDependencies,
+        sessionId: sessionId,
+      );
+
+  SessionByIdProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.sessionId,
+  }) : super.internal();
+
+  final int sessionId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Session?> Function(SessionByIdRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: SessionByIdProvider._internal(
+        (ref) => create(ref as SessionByIdRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        sessionId: sessionId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Session?> createElement() {
+    return _SessionByIdProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SessionByIdProvider && other.sessionId == sessionId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, sessionId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin SessionByIdRef on AutoDisposeFutureProviderRef<Session?> {
+  /// The parameter `sessionId` of this provider.
+  int get sessionId;
+}
+
+class _SessionByIdProviderElement
+    extends AutoDisposeFutureProviderElement<Session?>
+    with SessionByIdRef {
+  _SessionByIdProviderElement(super.provider);
+
+  @override
+  int get sessionId => (origin as SessionByIdProvider).sessionId;
+}
+
 String _$sessionsControllerHash() =>
-    r'b3d1bd8791bd1d1e85d3f08ebaace62913b156a7';
+    r'5f95236505a7780c1e3951c5f82985eda6b6de4d';
 
 /// See also [SessionsController].
 @ProviderFor(SessionsController)
 final sessionsControllerProvider =
-    AutoDisposeAsyncNotifierProvider<SessionsController, void>.internal(
+    AsyncNotifierProvider<SessionsController, void>.internal(
       SessionsController.new,
       name: r'sessionsControllerProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -163,6 +282,6 @@ final sessionsControllerProvider =
       allTransitiveDependencies: null,
     );
 
-typedef _$SessionsController = AutoDisposeAsyncNotifier<void>;
+typedef _$SessionsController = AsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

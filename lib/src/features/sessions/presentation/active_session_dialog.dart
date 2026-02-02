@@ -14,9 +14,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ActiveSessionDialog extends ConsumerStatefulWidget {
-  const ActiveSessionDialog({super.key, required this.room});
+  const ActiveSessionDialog({super.key, this.room, this.session})
+    : assert(room != null || session != null);
 
-  final Room room;
+  final Room? room;
+  final Session? session;
 
   @override
   ConsumerState<ActiveSessionDialog> createState() =>
@@ -132,7 +134,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
           .read(sessionCompletionControllerProvider.notifier)
           .completeSession(
             session: session,
-            roomId: widget.room.id,
+            roomId: widget.room?.id,
             orders: orders,
             timeCost: timeCost,
             totalAmount: grandTotal,
@@ -171,12 +173,17 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       }
     });
 
-    final sessionAsync = ref.watch(activeSessionProvider(widget.room.id));
+    final sessionAsync = widget.room != null
+        ? ref.watch(activeSessionProvider(widget.room!.id))
+        : ref.watch(sessionByIdProvider(widget.session!.id));
+
     final completionState = ref.watch(sessionCompletionControllerProvider);
 
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      title: Text('${loc.activeSession} - ${widget.room.name}'),
+      title: Text(
+        '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? 'Quick Order' : widget.room?.name ?? 'Unknown'}',
+      ),
       content: SizedBox(
         width: 1000,
         height: 600,
@@ -192,7 +199,12 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             Color? timeColor;
             double timeCost = 0.0;
 
-            if (session.sessionType == SessionType.open) {
+            if (session.isQuickOrder) {
+              // Quick Order: Time is free/irrelevant
+              timeText = 'Walk-in';
+              timeColor = Colors.blue;
+              timeCost = 0.0;
+            } else if (session.sessionType == SessionType.open) {
               final elapsed = now.difference(startTimeLocal);
               timeText = _formatDuration(elapsed);
               timeColor = Colors.green;
@@ -259,14 +271,17 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   flex: 3,
                   child: Column(
                     children: [
-                      _SessionInfoSection(
-                        timeText: timeText,
-                        timeColor: timeColor,
-                        session: session,
-                        loc: loc,
-                        onExtend: () => _showExtendDialog(context, session.id),
-                      ),
-                      const Divider(),
+                      if (!session.isQuickOrder) ...[
+                        _SessionInfoSection(
+                          timeText: timeText,
+                          timeColor: timeColor,
+                          session: session,
+                          loc: loc,
+                          onExtend: () =>
+                              _showExtendDialog(context, session.id),
+                        ),
+                        const Divider(),
+                      ],
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -311,9 +326,11 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
               final orders = ordersAsync.valueOrNull ?? [];
 
-              // Calculate costs
+              // Calculate costs (duplicated logic, should be extracted but keeping inline for now)
               double timeCost = 0.0;
-              if (session.sessionType == SessionType.open) {
+              if (session.isQuickOrder) {
+                timeCost = 0.0;
+              } else if (session.sessionType == SessionType.open) {
                 final elapsed = DateTime.now().difference(
                   session.startTime.toLocal(),
                 );
@@ -342,7 +359,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   timeCost: timeCost,
                   grandTotal: grandTotal,
                 ),
-                child: Text(loc.stopSession),
+                child: Text(
+                  session.isQuickOrder ? 'Checkout & Print' : loc.stopSession,
+                ),
               );
             },
             orElse: () => const SizedBox.shrink(),

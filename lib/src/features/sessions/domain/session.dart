@@ -9,9 +9,11 @@ enum SessionStatus { active, completed }
 
 @freezed
 class Session with _$Session {
+  const Session._();
+
   const factory Session({
     required int id,
-    @JsonKey(name: 'room_id') required int roomId,
+    @JsonKey(name: 'room_id') int? roomId,
     @JsonKey(name: 'start_time') required DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') required double appliedHourlyRate,
@@ -23,6 +25,8 @@ class Session with _$Session {
     @Default('walk_in') String source,
     @Default(SessionStatus.active) SessionStatus status,
   }) = _Session;
+
+  bool get isQuickOrder => roomId == null;
 
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);

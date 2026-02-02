@@ -7,23 +7,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sessions_controller.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SessionsController extends _$SessionsController {
   @override
   FutureOr<void> build() {
     // initial state
   }
 
-  Future<void> startSession({
-    required int roomId,
+  Future<Session?> startSession({
+    int? roomId,
     required double rate,
     required bool isMultiMatch,
     required SessionType sessionType,
     int? plannedDurationMinutes,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      await ref
+    try {
+      final session = await ref
           .read(sessionsRepositoryProvider)
           .startSession(
             roomId: roomId,
@@ -34,7 +34,12 @@ class SessionsController extends _$SessionsController {
           );
       // Invalidate rooms to refresh UI
       ref.invalidate(roomsValuesProvider);
-    });
+      state = const AsyncData(null);
+      return session;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
+    }
   }
 
   Future<void> extendSession({
@@ -49,22 +54,10 @@ class SessionsController extends _$SessionsController {
             sessionId: sessionId,
             additionalMinutes: additionalMinutes,
           );
-      // Invalidate active session to refresh UI (if we had a provider for it specifically by ID)
-      // Since specific active session provider depends on room, we might need to invalidate that specific provider family member?
-      // Actually, activeSession provider is autoDispose? No, keepAlive.
-      // We should invalidate relevant providers.
-      // ref.invalidate(activeSessionProvider); // This invalidates all families? No, we need to target specific.
-      // For now, let's rely on UI pulling updates or manual invalidation if we passed roomId.
-      // Let's pass roomId to this method too just for invalidation convenience?
-      // The user didn't ask for it, but good practice.
-      // For now, UI will probably rebuild if we don't invalidate? No, AsyncValue needs refresh.
     });
   }
 
-  Future<void> stopSession({
-    required int sessionId,
-    required int roomId,
-  }) async {
+  Future<void> stopSession({required int sessionId, int? roomId}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref
@@ -79,4 +72,9 @@ class SessionsController extends _$SessionsController {
 @riverpod
 Future<Session?> activeSession(Ref ref, int roomId) {
   return ref.read(sessionsRepositoryProvider).getActiveSession(roomId);
+}
+
+@riverpod
+Future<Session?> sessionById(Ref ref, int sessionId) {
+  return ref.read(sessionsRepositoryProvider).getSessionById(sessionId);
 }

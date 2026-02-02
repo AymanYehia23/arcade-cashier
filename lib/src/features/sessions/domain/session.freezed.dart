@@ -23,7 +23,7 @@ Session _$SessionFromJson(Map<String, dynamic> json) {
 mixin _$Session {
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'room_id')
-  int get roomId => throw _privateConstructorUsedError;
+  int? get roomId => throw _privateConstructorUsedError;
   @JsonKey(name: 'start_time')
   DateTime get startTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'end_time')
@@ -55,7 +55,7 @@ abstract class $SessionCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    @JsonKey(name: 'room_id') int roomId,
+    @JsonKey(name: 'room_id') int? roomId,
     @JsonKey(name: 'start_time') DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
@@ -83,7 +83,7 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
   @override
   $Res call({
     Object? id = null,
-    Object? roomId = null,
+    Object? roomId = freezed,
     Object? startTime = null,
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
@@ -99,10 +99,10 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as int,
-            roomId: null == roomId
+            roomId: freezed == roomId
                 ? _value.roomId
                 : roomId // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             startTime: null == startTime
                 ? _value.startTime
                 : startTime // ignore: cast_nullable_to_non_nullable
@@ -151,7 +151,7 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
   @useResult
   $Res call({
     int id,
-    @JsonKey(name: 'room_id') int roomId,
+    @JsonKey(name: 'room_id') int? roomId,
     @JsonKey(name: 'start_time') DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
@@ -178,7 +178,7 @@ class __$$SessionImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? roomId = null,
+    Object? roomId = freezed,
     Object? startTime = null,
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
@@ -194,10 +194,10 @@ class __$$SessionImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as int,
-        roomId: null == roomId
+        roomId: freezed == roomId
             ? _value.roomId
             : roomId // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         startTime: null == startTime
             ? _value.startTime
             : startTime // ignore: cast_nullable_to_non_nullable
@@ -237,10 +237,10 @@ class __$$SessionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SessionImpl implements _Session {
+class _$SessionImpl extends _Session {
   const _$SessionImpl({
     required this.id,
-    @JsonKey(name: 'room_id') required this.roomId,
+    @JsonKey(name: 'room_id') this.roomId,
     @JsonKey(name: 'start_time') required this.startTime,
     @JsonKey(name: 'end_time') this.endTime,
     @JsonKey(name: 'applied_hourly_rate') required this.appliedHourlyRate,
@@ -249,7 +249,7 @@ class _$SessionImpl implements _Session {
     @JsonKey(name: 'planned_duration_minutes') this.plannedDurationMinutes,
     this.source = 'walk_in',
     this.status = SessionStatus.active,
-  });
+  }) : super._();
 
   factory _$SessionImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionImplFromJson(json);
@@ -258,7 +258,7 @@ class _$SessionImpl implements _Session {
   final int id;
   @override
   @JsonKey(name: 'room_id')
-  final int roomId;
+  final int? roomId;
   @override
   @JsonKey(name: 'start_time')
   final DateTime startTime;
@@ -341,10 +341,10 @@ class _$SessionImpl implements _Session {
   }
 }
 
-abstract class _Session implements Session {
+abstract class _Session extends Session {
   const factory _Session({
     required final int id,
-    @JsonKey(name: 'room_id') required final int roomId,
+    @JsonKey(name: 'room_id') final int? roomId,
     @JsonKey(name: 'start_time') required final DateTime startTime,
     @JsonKey(name: 'end_time') final DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate')
@@ -356,6 +356,7 @@ abstract class _Session implements Session {
     final String source,
     final SessionStatus status,
   }) = _$SessionImpl;
+  const _Session._() : super._();
 
   factory _Session.fromJson(Map<String, dynamic> json) = _$SessionImpl.fromJson;
 
@@ -363,7 +364,7 @@ abstract class _Session implements Session {
   int get id;
   @override
   @JsonKey(name: 'room_id')
-  int get roomId;
+  int? get roomId;
   @override
   @JsonKey(name: 'start_time')
   DateTime get startTime;

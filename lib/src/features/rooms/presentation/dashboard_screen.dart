@@ -3,8 +3,10 @@ import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_card.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/rooms_controller.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/active_session_dialog.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/start_session_dialog.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,10 @@ class DashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue>(
       roomsControllerProvider,
+      (_, state) => state.showAlertDialogOnError(context),
+    );
+    ref.listen<AsyncValue>(
+      sessionsControllerProvider,
       (_, state) => state.showAlertDialogOnError(context),
     );
 
@@ -104,6 +110,28 @@ class DashboardScreen extends ConsumerWidget {
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final session = await ref
+              .read(sessionsControllerProvider.notifier)
+              .startSession(
+                roomId: null,
+                rate:
+                    0.0, // Free for walk-ins? Or standard rate? User said "time is free/irrelevant".
+                isMultiMatch: false,
+                sessionType: SessionType.open,
+              );
+
+          if (context.mounted && session != null) {
+            showDialog(
+              context: context,
+              builder: (context) => ActiveSessionDialog(session: session),
+            );
+          }
+        },
+        label: const Text('Quick Order'),
+        icon: const Icon(Icons.flash_on),
       ),
     );
   }

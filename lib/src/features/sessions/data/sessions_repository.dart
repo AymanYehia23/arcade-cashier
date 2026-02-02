@@ -11,18 +11,19 @@ part 'sessions_repository.g.dart';
 
 abstract class SessionsRepository {
   Future<domain.Session> startSession({
-    required int roomId,
+    int? roomId,
     required double rate,
     required bool isMultiMatch,
     required SessionType sessionType,
     int? plannedDurationMinutes,
   });
-  Future<void> stopSession({required int sessionId, required int roomId});
+  Future<void> stopSession({required int sessionId, int? roomId});
   Future<void> extendSession({
     required int sessionId,
     required int additionalMinutes,
   });
   Future<domain.Session?> getActiveSession(int roomId);
+  Stream<List<domain.Session>> watchActiveSessions();
   Future<domain.Session?> getSessionById(int sessionId);
 }
 
@@ -33,7 +34,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
 
   @override
   Future<domain.Session> startSession({
-    required int roomId,
+    int? roomId,
     required double rate,
     required bool isMultiMatch,
     required SessionType sessionType,
@@ -47,18 +48,23 @@ class SupabaseSessionsRepository implements SessionsRepository {
           'start_time': DateTime.now().toUtc().toIso8601String(),
           'applied_hourly_rate': rate,
           'is_multi_match': isMultiMatch,
-          'session_type': sessionType.name,
+          // Force 'open' if room_id is null (Quick Order), otherwise use provided type
+          'session_type': roomId == null
+              ? SessionType.open.name
+              : sessionType.name,
           'planned_duration_minutes': plannedDurationMinutes,
           'status': domain.SessionStatus.active.name,
         })
         .select()
         .single();
 
-    // 2. Update room status
-    await _supabase
-        .from('rooms')
-        .update({'current_status': RoomStatus.occupied.name})
-        .match({'id': roomId});
+    // 2. Update room status (ONLY if room assigned)
+    if (roomId != null) {
+      await _supabase
+          .from('rooms')
+          .update({'current_status': RoomStatus.occupied.name})
+          .match({'id': roomId});
+    }
 
     return domain.Session.fromJson(sessionData);
   }
@@ -91,10 +97,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   }
 
   @override
-  Future<void> stopSession({
-    required int sessionId,
-    required int roomId,
-  }) async {
+  Future<void> stopSession({required int sessionId, int? roomId}) async {
     // 1. Update session
     await _supabase
         .from('sessions')
@@ -104,11 +107,13 @@ class SupabaseSessionsRepository implements SessionsRepository {
         })
         .match({'id': sessionId});
 
-    // 2. Update room status
-    await _supabase
-        .from('rooms')
-        .update({'current_status': RoomStatus.available.name})
-        .match({'id': roomId});
+    // 2. Update room status (ONLY if room assigned)
+    if (roomId != null) {
+      await _supabase
+          .from('rooms')
+          .update({'current_status': RoomStatus.available.name})
+          .match({'id': roomId});
+    }
   }
 
   @override
@@ -145,6 +150,20 @@ class SupabaseSessionsRepository implements SessionsRepository {
     } catch (e) {
       return null;
     }
+  }
+
+  @override
+  Stream<List<domain.Session>> watchActiveSessions() {
+    return _supabase
+        .from('sessions')
+        .stream(primaryKey: ['id'])
+        .order('start_time')
+        .map(
+          (data) => data
+              .where((element) => element['end_time'] == null)
+              .map((e) => domain.Session.fromJson(e))
+              .toList(),
+        );
   }
 }
 
