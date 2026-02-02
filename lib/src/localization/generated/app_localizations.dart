@@ -589,6 +589,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Inventory'**
   String get inventory;
+
+  /// No description provided for @invoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get invoices;
+
+  /// No description provided for @invoiceHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice History'**
+  String get invoiceHistory;
+
+  /// No description provided for @completeSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete Session?'**
+  String get completeSession;
+
+  /// No description provided for @totalBillAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Bill: {amount} EGP'**
+  String totalBillAmount(String amount);
+
+  /// No description provided for @finishAndPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish & Print'**
+  String get finishAndPrint;
+
+  /// No description provided for @thankYouMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you! Visit again'**
+  String get thankYouMessage;
+
+  /// No description provided for @invoiceNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice #'**
+  String get invoiceNumber;
+
+  /// No description provided for @noInvoicesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices found'**
+  String get noInvoicesFound;
+
+  /// No description provided for @reprintInvoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Reprint Invoice'**
+  String get reprintInvoice;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethod;
+
+  /// No description provided for @cash.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash'**
+  String get cash;
+
+  /// No description provided for @timeDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Time ({duration})'**
+  String timeDuration(String duration);
 }
 
 class _AppLocalizationsDelegate

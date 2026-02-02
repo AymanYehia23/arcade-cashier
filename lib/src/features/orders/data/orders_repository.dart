@@ -16,6 +16,8 @@ abstract interface class OrdersRepository {
 
   Stream<List<Order>> watchSessionOrders(int sessionId);
 
+  Future<List<Order>> getOrdersForSession(int sessionId);
+
   Future<void> deleteOrder(int orderId);
 }
 

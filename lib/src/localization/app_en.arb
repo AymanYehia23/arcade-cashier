@@ -106,5 +106,31 @@
   "bill": "Bill",
   "timeCost": "Time Cost",
   "search": "Search",
-  "inventory": "Inventory"
+  "inventory": "Inventory",
+  "invoices": "Invoices",
+  "invoiceHistory": "Invoice History",
+  "completeSession": "Complete Session?",
+  "totalBillAmount": "Total Bill: {amount} EGP",
+  "@totalBillAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "finishAndPrint": "Finish & Print",
+  "thankYouMessage": "Thank you! Visit again",
+  "invoiceNumber": "Invoice #",
+  "noInvoicesFound": "No invoices found",
+  "reprintInvoice": "Reprint Invoice",
+  "paymentMethod": "Payment Method",
+  "cash": "Cash",
+  "timeDuration": "Time ({duration})",
+  "@timeDuration": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  }
 }

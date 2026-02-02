@@ -8,6 +8,7 @@ import 'package:arcade_cashier/src/features/authentication/presentation/splash_s
 import 'package:arcade_cashier/src/features/rooms/presentation/dashboard_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/manage_rooms_screen.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_dashboard_screen.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoices_history_screen.dart';
 import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
 
 import 'package:arcade_cashier/src/utils/go_router_refresh_stream.dart';
@@ -67,6 +68,14 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: AppRoutes.products,
                 builder: (context, state) => const ProductsDashboardScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.invoices,
+                builder: (context, state) => const InvoicesHistoryScreen(),
               ),
             ],
           ),

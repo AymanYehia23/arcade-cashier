@@ -272,4 +272,44 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get inventory => 'Inventory';
+
+  @override
+  String get invoices => 'Invoices';
+
+  @override
+  String get invoiceHistory => 'Invoice History';
+
+  @override
+  String get completeSession => 'Complete Session?';
+
+  @override
+  String totalBillAmount(String amount) {
+    return 'Total Bill: $amount EGP';
+  }
+
+  @override
+  String get finishAndPrint => 'Finish & Print';
+
+  @override
+  String get thankYouMessage => 'Thank you! Visit again';
+
+  @override
+  String get invoiceNumber => 'Invoice #';
+
+  @override
+  String get noInvoicesFound => 'No invoices found';
+
+  @override
+  String get reprintInvoice => 'Reprint Invoice';
+
+  @override
+  String get paymentMethod => 'Payment Method';
+
+  @override
+  String get cash => 'Cash';
+
+  @override
+  String timeDuration(String duration) {
+    return 'Time ($duration)';
+  }
 }

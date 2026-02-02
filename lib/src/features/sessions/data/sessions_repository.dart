@@ -23,6 +23,7 @@ abstract class SessionsRepository {
     required int additionalMinutes,
   });
   Future<domain.Session?> getActiveSession(int roomId);
+  Future<domain.Session?> getSessionById(int sessionId);
 }
 
 class SupabaseSessionsRepository implements SessionsRepository {
@@ -126,6 +127,22 @@ class SupabaseSessionsRepository implements SessionsRepository {
       return domain.Session.fromJson(sessionData);
     } catch (e) {
       // Log the error for debugging but return null as defensive programming
+      return null;
+    }
+  }
+
+  @override
+  Future<domain.Session?> getSessionById(int sessionId) async {
+    try {
+      final sessionData = await _supabase
+          .from('sessions')
+          .select()
+          .eq('id', sessionId)
+          .maybeSingle();
+
+      if (sessionData == null) return null;
+      return domain.Session.fromJson(sessionData);
+    } catch (e) {
       return null;
     }
   }

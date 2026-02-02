@@ -42,6 +42,16 @@ class SupabaseOrdersRepository implements OrdersRepository {
   }
 
   @override
+  Future<List<Order>> getOrdersForSession(int sessionId) async {
+    final data = await _supabase
+        .from('session_orders')
+        .select('*, products(*)')
+        .eq('session_id', sessionId)
+        .order('created_at', ascending: true);
+    return (data as List).map((json) => Order.fromJson(json)).toList();
+  }
+
+  @override
   Future<void> deleteOrder(int orderId) async {
     final response = await _supabase
         .from('session_orders')

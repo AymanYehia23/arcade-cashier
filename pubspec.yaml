@@ -47,6 +47,9 @@ dependencies:
   http: ^1.6.0
   shared_preferences: ^2.5.4
   window_manager: ^0.5.1
+  pdf: ^3.11.1
+  printing: ^5.13.3
+  collection: ^1.19.1
 
 dev_dependencies:
   flutter_test:

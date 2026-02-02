@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
@@ -23,7 +25,6 @@ class ActiveSessionDialog extends ConsumerStatefulWidget {
 
 class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
   Timer? _timer;
-  Duration _elapsed = Duration.zero;
 
   @override
   void initState() {
@@ -97,24 +98,69 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     );
   }
 
+  Future<void> _showCompleteSessionDialog({
+    required BuildContext context,
+    required Session session,
+    required List<Order> orders,
+    required double timeCost,
+    required double grandTotal,
+  }) async {
+    final loc = AppLocalizations.of(context)!;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(loc.completeSession),
+          content: Text(loc.totalBillAmount(grandTotal.toStringAsFixed(2))),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(loc.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(loc.finishAndPrint),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed == true && context.mounted) {
+      final result = await ref
+          .read(sessionCompletionControllerProvider.notifier)
+          .completeSession(
+            session: session,
+            roomId: widget.room.id,
+            orders: orders,
+            timeCost: timeCost,
+            totalAmount: grandTotal,
+          );
+
+      if (result != null && context.mounted) {
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          builder: (_) => InvoicePreviewDialog(
+            pdfBytes: result.pdfBytes,
+            invoiceNumber: result.invoice.invoiceNumber,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
 
-    ref.listen<AsyncValue>(sessionsControllerProvider, (_, state) {
-      state.whenOrNull(
-        data: (_) {
-          Navigator.of(context).pop();
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(loc.sessionStopped)));
-        },
-        error: (err, stack) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(loc.errorMessage(err.toString()))),
-          );
-        },
-      );
+    ref.listen<AsyncValue>(sessionCompletionControllerProvider, (_, state) {
+      if (state.hasError && !state.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(loc.errorMessage(state.error.toString()))),
+        );
+      }
     });
 
     ref.listen<AsyncValue>(sessionOrdersControllerProvider, (_, state) {
@@ -126,7 +172,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     });
 
     final sessionAsync = ref.watch(activeSessionProvider(widget.room.id));
-    final controllerState = ref.watch(sessionsControllerProvider);
+    final completionState = ref.watch(sessionCompletionControllerProvider);
+
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       title: Text('${loc.activeSession} - ${widget.room.name}'),
@@ -146,11 +193,11 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             double timeCost = 0.0;
 
             if (session.sessionType == SessionType.open) {
-              _elapsed = now.difference(startTimeLocal);
-              timeText = _formatDuration(_elapsed);
+              final elapsed = now.difference(startTimeLocal);
+              timeText = _formatDuration(elapsed);
               timeColor = Colors.green;
 
-              final hours = _elapsed.inMinutes / 60.0;
+              final hours = elapsed.inMinutes / 60.0;
               timeCost = hours * session.appliedHourlyRate;
             } else {
               final planned = Duration(
@@ -174,11 +221,10 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             // Orders
             final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
             double ordersTotal = 0;
+            List<Order> ordersList = [];
             if (ordersAsync.hasValue) {
-              ordersTotal = ordersAsync.value!.fold(
-                0,
-                (sum, x) => sum + x.totalPrice,
-              );
+              ordersList = ordersAsync.value!;
+              ordersTotal = ordersList.fold(0, (sum, x) => sum + x.totalPrice);
             }
 
             final grandTotal = timeCost + ordersTotal;
@@ -253,28 +299,52 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
         ),
       ),
       actions: [
-        if (!controllerState.isLoading) ...[
+        if (!completionState.isLoading) ...[
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(loc.cancel),
           ),
           sessionAsync.maybeWhen(
-            data: (session) => session != null
-                ? FilledButton(
-                    style: FilledButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.error,
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(sessionsControllerProvider.notifier)
-                          .stopSession(
-                            sessionId: session.id,
-                            roomId: widget.room.id,
-                          );
-                    },
-                    child: Text(loc.stopSession),
-                  )
-                : const SizedBox.shrink(),
+            data: (session) {
+              if (session == null) return const SizedBox.shrink();
+
+              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+              final orders = ordersAsync.valueOrNull ?? [];
+
+              // Calculate costs
+              double timeCost = 0.0;
+              if (session.sessionType == SessionType.open) {
+                final elapsed = DateTime.now().difference(
+                  session.startTime.toLocal(),
+                );
+                final hours = elapsed.inMinutes / 60.0;
+                timeCost = hours * session.appliedHourlyRate;
+              } else {
+                final plannedHours =
+                    (session.plannedDurationMinutes ?? 0) / 60.0;
+                timeCost = plannedHours * session.appliedHourlyRate;
+              }
+
+              final ordersTotal = orders.fold(
+                0.0,
+                (sum, x) => sum + x.totalPrice,
+              );
+              final grandTotal = timeCost + ordersTotal;
+
+              return FilledButton(
+                style: FilledButton.styleFrom(
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                ),
+                onPressed: () => _showCompleteSessionDialog(
+                  context: context,
+                  session: session,
+                  orders: orders,
+                  timeCost: timeCost,
+                  grandTotal: grandTotal,
+                ),
+                child: Text(loc.stopSession),
+              );
+            },
             orElse: () => const SizedBox.shrink(),
           ),
         ] else
@@ -351,7 +421,7 @@ class _OrdersList extends ConsumerWidget {
         if (orders.isEmpty) return const Center(child: Text('No orders yet'));
         return ListView.separated(
           itemCount: orders.length,
-          separatorBuilder: (_, _) => const Divider(height: 1),
+          separatorBuilder: (context, index) => const Divider(height: 1),
           itemBuilder: (context, index) {
             final order = orders[index];
             final productName =

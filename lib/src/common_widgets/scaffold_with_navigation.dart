@@ -37,6 +37,10 @@ class ScaffoldWithNavigation extends StatelessWidget {
               label: loc.inventory,
             ),
             NavigationDestination(
+              icon: const Icon(Icons.receipt_long),
+              label: loc.invoices,
+            ),
+            NavigationDestination(
               icon: const Icon(Icons.settings),
               label: loc.settingsTitle,
             ),
@@ -64,6 +68,10 @@ class ScaffoldWithNavigation extends StatelessWidget {
                 NavigationRailDestination(
                   icon: const Icon(Icons.inventory_2),
                   label: Text(loc.inventory),
+                ),
+                NavigationRailDestination(
+                  icon: const Icon(Icons.receipt_long),
+                  label: Text(loc.invoices),
                 ),
                 NavigationRailDestination(
                   icon: const Icon(Icons.settings),

@@ -12,10 +12,19 @@ class RoomsRepository {
 
   RoomsRepository(this._supabase);
 
+  Future<List<Room>> fetchRooms() async {
+    final data = await _supabase
+        .from('rooms')
+        .select()
+        .order('name', ascending: true);
+    return data.map((json) => Room.fromJson(json)).toList();
+  }
+
   Stream<List<Room>> watchRooms() {
     return _supabase
         .from('rooms')
         .stream(primaryKey: ['id'])
+        .order('name', ascending: true)
         .map((data) => data.map((json) => Room.fromJson(json)).toList());
   }
 
@@ -71,12 +80,5 @@ RoomsRepository roomsRepository(Ref ref) {
 @riverpod
 Stream<List<Room>> roomsValues(Ref ref) {
   final repository = ref.watch(roomsRepositoryProvider);
-  return repository.watchRooms().handleError((error, stackTrace) {
-    if (error.toString().contains('RealtimeSubscribeException')) {
-      // Ignore transient connection errors during startup
-      // The stream will stay in loading state or previous state until valid data arrives
-      return;
-    }
-    throw error;
-  });
+  return Stream.fromFuture(repository.fetchRooms());
 }

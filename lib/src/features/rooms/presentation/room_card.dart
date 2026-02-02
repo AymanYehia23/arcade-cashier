@@ -82,7 +82,6 @@ class _RoomCardState extends ConsumerState<RoomCard>
     final activeSessionAsync = widget.room.currentStatus == RoomStatus.occupied
         ? ref.watch(activeSessionProvider(widget.room.id))
         : null;
-
     return activeSessionAsync?.when(
           data: (session) {
             bool isExpired = false;
@@ -170,7 +169,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
                           const SizedBox(height: 24),
                           Center(
                             child: Text(
-                              widget.room.name,
+                              'Room ${widget.room.name}',
                               style: Theme.of(context).textTheme.headlineMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.bold,
