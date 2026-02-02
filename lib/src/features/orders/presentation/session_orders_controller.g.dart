@@ -148,7 +148,7 @@ class _SessionOrdersProviderElement
 }
 
 String _$sessionOrdersControllerHash() =>
-    r'a314fb259a0d398f4b44700b4478e21c5082b474';
+    r'483fec3b6b3ba5fe89f5ecadc3fccd9b47f1c95c';
 
 /// See also [SessionOrdersController].
 @ProviderFor(SessionOrdersController)

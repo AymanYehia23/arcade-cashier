@@ -14,12 +14,15 @@ class SupabaseOrdersRepository implements OrdersRepository {
     required int quantity,
     required double unitPrice,
   }) async {
-    await _supabase.from('session_orders').insert({
-      'session_id': sessionId,
-      'product_id': productId,
-      'quantity': quantity,
-      'unit_price': unitPrice,
-    });
+    await _supabase.rpc(
+      'add_order_item',
+      params: {
+        'p_session_id': sessionId,
+        'p_product_id': productId,
+        'p_price': unitPrice,
+        'p_quantity': quantity,
+      },
+    );
   }
 
   @override
@@ -40,6 +43,21 @@ class SupabaseOrdersRepository implements OrdersRepository {
 
   @override
   Future<void> deleteOrder(int orderId) async {
-    await _supabase.from('session_orders').delete().eq('id', orderId);
+    final response = await _supabase
+        .from('session_orders')
+        .select('quantity')
+        .eq('id', orderId)
+        .single();
+
+    final int quantity = response['quantity'] as int;
+
+    if (quantity > 1) {
+      await _supabase
+          .from('session_orders')
+          .update({'quantity': quantity - 1})
+          .eq('id', orderId);
+    } else {
+      await _supabase.from('session_orders').delete().eq('id', orderId);
+    }
   }
 }

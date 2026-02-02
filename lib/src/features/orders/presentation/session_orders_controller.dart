@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/features/orders/data/orders_repository.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -37,6 +38,7 @@ class SessionOrdersController extends _$SessionOrdersController {
 
     if (!state.hasError) {
       ref.invalidate(sessionOrdersProvider(sessionId));
+      ref.invalidate(productsProvider);
     }
   }
 
@@ -64,6 +66,7 @@ class SessionOrdersController extends _$SessionOrdersController {
 
     if (!state.hasError) {
       ref.invalidate(sessionOrdersProvider(sessionId));
+      ref.invalidate(productsProvider);
     }
   }
 }
