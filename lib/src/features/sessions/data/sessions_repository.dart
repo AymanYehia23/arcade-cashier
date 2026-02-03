@@ -28,6 +28,16 @@ abstract class SessionsRepository {
   Future<domain.Session?> getActiveSession(int roomId);
   Stream<List<domain.Session>> watchActiveSessions();
   Future<domain.Session?> getSessionById(int sessionId);
+  Future<int> checkoutSession({
+    required int sessionId,
+    required double totalAmount,
+    required double discountAmount,
+    required double discountPercentage,
+    required String paymentMethod,
+    int? customerId,
+    String? customerName,
+    String shopName = 'Arcade',
+  });
 }
 
 class SupabaseSessionsRepository implements SessionsRepository {
@@ -211,6 +221,33 @@ class SupabaseSessionsRepository implements SessionsRepository {
               .map((e) => domain.Session.fromJson(e))
               .toList(),
         );
+  }
+
+  @override
+  Future<int> checkoutSession({
+    required int sessionId,
+    required double totalAmount,
+    required double discountAmount,
+    required double discountPercentage,
+    required String paymentMethod,
+    int? customerId,
+    String? customerName,
+    String shopName = 'Arcade Station',
+  }) async {
+    final response = await _supabase.rpc<int>(
+      'checkout_session',
+      params: {
+        'p_session_id': sessionId,
+        'p_customer_id': customerId,
+        'p_customer_name': customerName,
+        'p_discount_percentage': discountPercentage,
+        'p_discount_amount': discountAmount,
+        'p_total_amount': totalAmount,
+        'p_payment_method': paymentMethod,
+        'p_shop_name': shopName,
+      },
+    );
+    return response;
   }
 }
 
