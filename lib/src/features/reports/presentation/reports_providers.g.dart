@@ -62,6 +62,25 @@ final roomUsageProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RoomUsageRef = AutoDisposeFutureProviderRef<List<RoomUsageReport>>;
+String _$roomFinancialsHash() => r'36a68a5c0ebf479e268ffb9172b619be6abce4ee';
+
+/// See also [roomFinancials].
+@ProviderFor(roomFinancials)
+final roomFinancialsProvider =
+    AutoDisposeFutureProvider<List<RoomFinancialReport>>.internal(
+      roomFinancials,
+      name: r'roomFinancialsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$roomFinancialsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoomFinancialsRef =
+    AutoDisposeFutureProviderRef<List<RoomFinancialReport>>;
 String _$reportsDateRangeHash() => r'e9bddcb3a9732de06e945b39eec892c854237bbd';
 
 /// See also [ReportsDateRange].

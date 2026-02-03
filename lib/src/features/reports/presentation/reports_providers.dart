@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../data/reports_repository.dart';
 import '../domain/daily_revenue_report.dart';
 import '../domain/product_performance_report.dart';
 import '../domain/room_usage_report.dart';
+import '../domain/room_financial_report.dart';
 
 part 'reports_providers.g.dart';
 
@@ -36,8 +38,15 @@ Future<List<ProductPerformanceReport>> topProducts(TopProductsRef ref) async {
 }
 
 @riverpod
-Future<List<RoomUsageReport>> roomUsage(RoomUsageRef ref) async {
+Future<List<RoomUsageReport>> roomUsage(Ref ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
   final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchRoomUsage(start: range.start, end: range.end);
+}
+
+@riverpod
+Future<List<RoomFinancialReport>> roomFinancials(Ref ref) async {
+  final repository = ref.watch(reportsRepositoryProvider);
+  final range = ref.watch(reportsDateRangeProvider);
+  return repository.fetchRoomFinancials(start: range.start, end: range.end);
 }

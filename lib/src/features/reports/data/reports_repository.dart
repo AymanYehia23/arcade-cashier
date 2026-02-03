@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../domain/daily_revenue_report.dart';
 import '../domain/product_performance_report.dart';
 import '../domain/room_usage_report.dart';
+import '../domain/room_financial_report.dart';
 
 part 'reports_repository.g.dart';
 
@@ -63,5 +64,21 @@ class ReportsRepository {
     final response = await _supabase.rpc('get_room_usage', params: params);
 
     return (response as List).map((e) => RoomUsageReport.fromJson(e)).toList();
+  }
+
+  Future<List<RoomFinancialReport>> fetchRoomFinancials({
+    DateTime? start,
+    DateTime? end,
+  }) async {
+    final params = {
+      if (start != null) 'start_date': start.toIso8601String(),
+      if (end != null) 'end_date': end.toIso8601String(),
+    };
+
+    final response = await _supabase.rpc('get_room_financials', params: params);
+
+    return (response as List)
+        .map((e) => RoomFinancialReport.fromJson(e))
+        .toList();
   }
 }

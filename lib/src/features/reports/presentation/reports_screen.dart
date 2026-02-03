@@ -4,6 +4,7 @@ import 'reports_providers.dart';
 import 'tabs/revenue_tab.dart';
 import 'tabs/products_tab.dart';
 import 'tabs/rooms_tab.dart';
+import 'tabs/financial_breakdown_tab.dart';
 
 class ReportsScreen extends ConsumerWidget {
   const ReportsScreen({super.key});
@@ -13,7 +14,7 @@ class ReportsScreen extends ConsumerWidget {
     final dateRange = ref.watch(reportsDateRangeProvider);
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(title: const Text('Reports & Analytics')),
         body: Column(
@@ -52,13 +53,19 @@ class ReportsScreen extends ConsumerWidget {
             const TabBar(
               tabs: [
                 Tab(text: 'Revenue', icon: Icon(Icons.bar_chart)),
+                Tab(text: 'Financials', icon: Icon(Icons.attach_money)),
                 Tab(text: 'Products', icon: Icon(Icons.shopping_cart)),
                 Tab(text: 'Room Usage', icon: Icon(Icons.pie_chart)),
               ],
             ),
             const Expanded(
               child: TabBarView(
-                children: [RevenueTab(), ProductsTab(), RoomsTab()],
+                children: [
+                  RevenueTab(),
+                  FinancialBreakdownTab(),
+                  ProductsTab(),
+                  RoomsTab(),
+                ],
               ),
             ),
           ],
