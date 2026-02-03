@@ -41,21 +41,27 @@ class SessionActionButtons extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        if (isCheckoutLoading)
-          const CircularProgressIndicator()
-        else
-          Tooltip(
-            message: isQuickOrder
-                ? 'Checkout (Ctrl+S)'
-                : '${loc.stopSession} (Ctrl+S)',
-            child: FilledButton(
-              style: FilledButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-              ),
-              onPressed: onCheckout,
-              child: Text(isQuickOrder ? 'Checkout & Print' : loc.stopSession),
+        Tooltip(
+          message: isQuickOrder
+              ? 'Checkout (Ctrl+S)'
+              : '${loc.stopSession} (Ctrl+S)',
+          child: FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
+            onPressed: isCheckoutLoading ? null : onCheckout,
+            child: isCheckoutLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Text(isQuickOrder ? 'Checkout & Print' : loc.stopSession),
           ),
+        ),
       ],
     );
   }

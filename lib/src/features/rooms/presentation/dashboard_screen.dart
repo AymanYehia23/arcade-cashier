@@ -74,6 +74,7 @@ class DashboardScreen extends ConsumerWidget {
                       } else if (room.currentStatus == RoomStatus.occupied) {
                         showDialog(
                           context: context,
+                          barrierDismissible: false,
                           builder: (context) => ActiveSessionDialog(room: room),
                         );
                       }
@@ -130,6 +131,7 @@ class DashboardScreen extends ConsumerWidget {
           if (context.mounted && session != null) {
             showDialog(
               context: context,
+              barrierDismissible: false,
               builder: (context) => ActiveSessionDialog(session: session),
             );
           }
