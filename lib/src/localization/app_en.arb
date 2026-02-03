@@ -283,5 +283,21 @@
       }
     }
   },
-  "percentSymbol": "%"
+  "percentSymbol": "%",
+  "errorConnection": "Unable to connect to server. Please check your internet connection.",
+  "errorRequestTimedOut": "Request timed out. Please try again.",
+  "errorServer": "Server error. Please try again later.",
+  "errorInvalidData": "Invalid data received. Please try again.",
+  "errorGeneric": "An unexpected error occurred. Please try again.",
+  "voidInvoiceTitle": "Void Invoice",
+  "voidInvoiceConfirm": "Are you sure you want to void this invoice? This will remove it from daily revenue.",
+  "voidAction": "Void",
+  "printFailed": "Print failed: {error}",
+  "@printFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

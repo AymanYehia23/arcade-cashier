@@ -16,6 +16,7 @@ import 'package:arcade_cashier/src/features/sessions/presentation/widgets/sessio
 import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_order_list.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_timer_widget.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -271,7 +272,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     ref.listen<AsyncValue>(sessionCompletionControllerProvider, (_, state) {
       if (state.hasError && !state.isLoading) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.errorMessage(state.error.toString()))),
+          SnackBar(
+            content: Text(getUserFriendlyErrorMessage(state.error!, context)),
+          ),
         );
       }
     });
@@ -279,7 +282,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     ref.listen<AsyncValue>(sessionOrdersControllerProvider, (_, state) {
       if (state.hasError && !state.isLoading) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(loc.errorMessage(state.error.toString()))),
+          SnackBar(
+            content: Text(getUserFriendlyErrorMessage(state.error!, context)),
+          ),
         );
       }
     });
@@ -411,7 +416,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               );
             },
             error: (e, st) =>
-                Center(child: Text(loc.errorMessage(e.toString()))),
+                Center(child: Text(getUserFriendlyErrorMessage(e, context))),
             loading: () => const Center(child: CircularProgressIndicator()),
           ),
         ),

@@ -91,7 +91,7 @@ class ProductSelectionGrid extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, st) => ErrorStateWidget(
-        message: getUserFriendlyErrorMessage(err),
+        message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(productsProvider),
       ),
     );

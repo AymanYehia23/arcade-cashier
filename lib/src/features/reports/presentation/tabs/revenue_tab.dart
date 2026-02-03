@@ -76,6 +76,7 @@ class RevenueTab extends ConsumerWidget {
                       title: loc.grossSales,
                       value: totalWeekGrossRevenue,
                       valueColor: Colors.grey.shade700,
+                      currencySymbol: loc.egp,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -84,6 +85,7 @@ class RevenueTab extends ConsumerWidget {
                       title: loc.discountsLabel,
                       value: -totalWeekDiscount,
                       valueColor: Colors.red,
+                      currencySymbol: loc.egp,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -93,6 +95,7 @@ class RevenueTab extends ConsumerWidget {
                       value: totalWeekNetRevenue,
                       valueColor: Colors.green.shade700,
                       isBold: true,
+                      currencySymbol: loc.egp,
                     ),
                   ),
                 ],
@@ -109,8 +112,11 @@ class RevenueTab extends ConsumerWidget {
                         getTooltipColor: (group) => Colors.blueGrey,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
                           final item = sortedData[group.x.toInt()];
+                          final locale = Localizations.localeOf(
+                            context,
+                          ).toString();
                           return BarTooltipItem(
-                            '${DateFormat('MM/dd').format(item.date)}\n',
+                            '${DateFormat('MM/dd', locale).format(item.date)}\n',
                             const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -118,7 +124,7 @@ class RevenueTab extends ConsumerWidget {
                             children: [
                               TextSpan(
                                 text: NumberFormat.currency(
-                                  symbol: 'EGP',
+                                  symbol: loc.egp,
                                 ).format(rod.toY),
                                 style: const TextStyle(
                                   color: Colors.yellow,
@@ -138,11 +144,15 @@ class RevenueTab extends ConsumerWidget {
                           getTitlesWidget: (value, meta) {
                             final index = value.toInt();
                             if (index >= 0 && index < sortedData.length) {
+                              final locale = Localizations.localeOf(
+                                context,
+                              ).toString();
                               return Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
                                   DateFormat(
                                     'E',
+                                    locale,
                                   ).format(sortedData[index].date),
                                   style: const TextStyle(fontSize: 12),
                                 ),
@@ -182,7 +192,7 @@ class RevenueTab extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => ErrorStateWidget(
-        message: getUserFriendlyErrorMessage(err),
+        message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(dailyRevenueProvider),
       ),
     );
@@ -193,12 +203,14 @@ class _SummaryCard extends StatelessWidget {
   final String title;
   final double value;
   final Color valueColor;
+  final String currencySymbol;
   final bool isBold;
 
   const _SummaryCard({
     required this.title,
     required this.value,
     required this.valueColor,
+    required this.currencySymbol,
     this.isBold = false,
   });
 
@@ -223,7 +235,7 @@ class _SummaryCard extends StatelessWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                NumberFormat.currency(symbol: 'EGP ').format(value),
+                NumberFormat.currency(symbol: '$currencySymbol ').format(value),
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   color: valueColor,

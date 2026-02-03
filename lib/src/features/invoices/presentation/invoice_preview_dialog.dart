@@ -33,10 +33,8 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Void Invoice'),
-        content: const Text(
-          'Are you sure you want to void this invoice? This will remove it from daily revenue.',
-        ),
+        title: Text(loc.voidInvoiceTitle),
+        content: Text(loc.voidInvoiceConfirm),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -47,7 +45,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
             style: TextButton.styleFrom(
               foregroundColor: Theme.of(context).colorScheme.error,
             ),
-            child: const Text('Void'),
+            child: Text(loc.voidAction),
           ),
         ],
       ),
@@ -65,6 +63,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
 
   Future<void> _handlePrint() async {
     if (_isPrinting) return;
+    final loc = AppLocalizations.of(context)!;
 
     setState(() {
       _isPrinting = true;
@@ -105,7 +104,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text('Print failed: $e')));
+        ).showSnackBar(SnackBar(content: Text(loc.printFailed(e.toString()))));
       }
     } finally {
       if (mounted) {
@@ -185,7 +184,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
                   child: TextButton.icon(
                     onPressed: () => _voidInvoice(context),
                     icon: const Icon(Icons.block),
-                    label: const Text('Void Invoice'),
+                    label: Text(loc.voidInvoiceTitle),
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.error,
                     ),

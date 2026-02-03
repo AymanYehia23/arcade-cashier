@@ -127,7 +127,7 @@ class ProductsDashboardScreen extends ConsumerWidget {
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, st) => ErrorStateWidget(
-                  message: getUserFriendlyErrorMessage(e),
+                  message: getUserFriendlyErrorMessage(e, context),
                   onRetry: () {
                     ref.invalidate(productSearchQueryProvider);
                     ref.invalidate(productsProvider);

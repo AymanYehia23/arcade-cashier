@@ -7,7 +7,7 @@ extension AsyncValueUI on AsyncValue {
   /// Shows a snackbar with error message when AsyncValue has an error
   void showAlertDialogOnError(BuildContext context) {
     if (!isLoading && hasError) {
-      final message = getUserFriendlyErrorMessage(error!);
+      final message = getUserFriendlyErrorMessage(error!, context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(message), backgroundColor: Colors.red),
@@ -19,13 +19,14 @@ extension AsyncValueUI on AsyncValue {
   ///
   /// Returns an ErrorStateWidget with user-friendly message and retry callback.
   /// Use this in AsyncValue.when() error handlers.
-  Widget buildErrorWidget({
+  Widget buildErrorWidget(
+    BuildContext context, {
     required VoidCallback onRetry,
     String? customMessage,
     IconData? icon,
   }) {
     return ErrorStateWidget(
-      message: customMessage ?? getUserFriendlyErrorMessage(error!),
+      message: customMessage ?? getUserFriendlyErrorMessage(error!, context),
       onRetry: onRetry,
       icon: icon,
     );

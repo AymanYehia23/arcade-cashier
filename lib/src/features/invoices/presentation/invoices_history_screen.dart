@@ -2,6 +2,7 @@ import 'package:arcade_cashier/src/features/invoices/presentation/invoices_searc
 import 'package:arcade_cashier/src/features/invoices/presentation/widgets/date_filter_chips.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/widgets/invoice_history_card.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -94,10 +95,13 @@ class _InvoicesHistoryScreenState extends ConsumerState<InvoicesHistoryScreen> {
             if (invoicesState.hasError && !invoicesState.isLoading)
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Text(
-                      loc.errorMessage(invoicesState.error.toString()),
+                      getUserFriendlyErrorMessage(
+                        invoicesState.error!,
+                        context,
+                      ),
                     ),
                   ),
                 ),

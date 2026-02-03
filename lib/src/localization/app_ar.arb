@@ -171,5 +171,14 @@
   "phone": "رقم الهاتف",
   "newCustomer": "عميل جديد",
   "searchCustomer": "بحث عن عميل (الاسم أو الهاتف)",
-  "percentSymbol": "%"
+  "percentSymbol": "%",
+  "errorConnection": "فشل الاتصال بالخادم. يرجى التحقق من الاتصال بالإنترنت.",
+  "errorRequestTimedOut": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
+  "errorServer": "خطأ في الخادم. يرجى المحاولة لاحقاً.",
+  "errorInvalidData": "بيانات غير صالحة. يرجى المحاولة مرة أخرى.",
+  "errorGeneric": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "voidInvoiceTitle": "إلغاء الفاتورة",
+  "voidInvoiceConfirm": "هل أنت متأكد أنك تريد إلغاء هذه الفاتورة؟ سيتم حذفها من الإيراد اليومي.",
+  "voidAction": "إلغاء الآن",
+  "printFailed": "فشل الطباعة: {error}"
 }

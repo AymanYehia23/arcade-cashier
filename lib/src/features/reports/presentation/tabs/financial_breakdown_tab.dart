@@ -131,7 +131,7 @@ class FinancialBreakdownTab extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => ErrorStateWidget(
-        message: getUserFriendlyErrorMessage(err),
+        message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(roomFinancialsProvider),
       ),
     );

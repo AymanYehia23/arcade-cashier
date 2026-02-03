@@ -94,7 +94,7 @@ class DashboardScreen extends ConsumerWidget {
           );
         },
         error: (e, st) => ErrorStateWidget(
-          message: getUserFriendlyErrorMessage(e),
+          message: getUserFriendlyErrorMessage(e, context),
           onRetry: () => ref.refresh(roomsValuesProvider),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),

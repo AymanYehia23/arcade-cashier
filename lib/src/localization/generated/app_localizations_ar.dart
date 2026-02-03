@@ -566,4 +566,36 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get percentSymbol => '%';
+
+  @override
+  String get errorConnection =>
+      'فشل الاتصال بالخادم. يرجى التحقق من الاتصال بالإنترنت.';
+
+  @override
+  String get errorRequestTimedOut =>
+      'انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get errorServer => 'خطأ في الخادم. يرجى المحاولة لاحقاً.';
+
+  @override
+  String get errorInvalidData => 'بيانات غير صالحة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get errorGeneric => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get voidInvoiceTitle => 'إلغاء الفاتورة';
+
+  @override
+  String get voidInvoiceConfirm =>
+      'هل أنت متأكد أنك تريد إلغاء هذه الفاتورة؟ سيتم حذفها من الإيراد اليومي.';
+
+  @override
+  String get voidAction => 'إلغاء الآن';
+
+  @override
+  String printFailed(String error) {
+    return 'فشل الطباعة: $error';
+  }
 }

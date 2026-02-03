@@ -567,4 +567,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get percentSymbol => '%';
+
+  @override
+  String get errorConnection =>
+      'Unable to connect to server. Please check your internet connection.';
+
+  @override
+  String get errorRequestTimedOut => 'Request timed out. Please try again.';
+
+  @override
+  String get errorServer => 'Server error. Please try again later.';
+
+  @override
+  String get errorInvalidData => 'Invalid data received. Please try again.';
+
+  @override
+  String get errorGeneric => 'An unexpected error occurred. Please try again.';
+
+  @override
+  String get voidInvoiceTitle => 'Void Invoice';
+
+  @override
+  String get voidInvoiceConfirm =>
+      'Are you sure you want to void this invoice? This will remove it from daily revenue.';
+
+  @override
+  String get voidAction => 'Void';
+
+  @override
+  String printFailed(String error) {
+    return 'Print failed: $error';
+  }
 }

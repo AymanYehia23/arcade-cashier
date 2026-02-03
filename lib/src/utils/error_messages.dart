@@ -1,28 +1,31 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:flutter/widgets.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 
 /// Converts technical error objects to user-friendly error messages.
 ///
 /// This function maps common network and system exceptions to clear,
 /// actionable messages that end users can understand.
-String getUserFriendlyErrorMessage(Object error) {
+String getUserFriendlyErrorMessage(Object error, BuildContext context) {
+  final loc = AppLocalizations.of(context)!;
   if (error is SocketException) {
-    return 'Unable to connect to server. Please check your internet connection.';
+    return loc.errorConnection;
   } else if (error is http.ClientException) {
-    return 'Connection error. Please try again.';
+    return loc.errorConnection;
   } else if (error is TimeoutException) {
-    return 'Request timed out. Please try again.';
+    return loc.errorRequestTimedOut;
   } else if (error is HttpException) {
-    return 'Server error. Please try again later.';
+    return loc.errorServer;
   } else if (error is FormatException) {
-    return 'Invalid data received. Please try again.';
+    return loc.errorInvalidData;
   } else if (error.toString().contains('WebSocketChannelException')) {
-    return 'Connection lost. Please check your internet connection.';
+    return loc.errorConnection;
   } else if (error.toString().contains('Failed host lookup')) {
-    return 'Cannot reach server. Please check your internet connection.';
+    return loc.errorConnection;
   } else {
     // Generic fallback for unknown errors
-    return 'An unexpected error occurred. Please try again.';
+    return loc.errorGeneric;
   }
 }

@@ -1135,6 +1135,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'%'**
   String get percentSymbol;
+
+  /// No description provided for @errorConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to connect to server. Please check your internet connection.'**
+  String get errorConnection;
+
+  /// No description provided for @errorRequestTimedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out. Please try again.'**
+  String get errorRequestTimedOut;
+
+  /// No description provided for @errorServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error. Please try again later.'**
+  String get errorServer;
+
+  /// No description provided for @errorInvalidData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid data received. Please try again.'**
+  String get errorInvalidData;
+
+  /// No description provided for @errorGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get errorGeneric;
+
+  /// No description provided for @voidInvoiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Void Invoice'**
+  String get voidInvoiceTitle;
+
+  /// No description provided for @voidInvoiceConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to void this invoice? This will remove it from daily revenue.'**
+  String get voidInvoiceConfirm;
+
+  /// No description provided for @voidAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Void'**
+  String get voidAction;
+
+  /// No description provided for @printFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Print failed: {error}'**
+  String printFailed(String error);
 }
 
 class _AppLocalizationsDelegate
