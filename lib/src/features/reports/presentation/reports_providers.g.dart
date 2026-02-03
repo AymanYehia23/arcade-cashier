@@ -25,7 +25,7 @@ final dailyRevenueProvider =
 // ignore: unused_element
 typedef DailyRevenueRef =
     AutoDisposeFutureProviderRef<List<DailyRevenueReport>>;
-String _$topProductsHash() => r'22104f20e92470dc256fa82db9795ce2381a14f7';
+String _$topProductsHash() => r'd0cff8953c332cf6edab873ea958f228a20b0cd5';
 
 /// See also [topProducts].
 @ProviderFor(topProducts)
@@ -44,7 +44,7 @@ final topProductsProvider =
 // ignore: unused_element
 typedef TopProductsRef =
     AutoDisposeFutureProviderRef<List<ProductPerformanceReport>>;
-String _$roomUsageHash() => r'15ec2dae0b64e8645a43dd49097cd63e380a06cc';
+String _$roomUsageHash() => r'77b75222feddb7641840d7e4fd45772be42fefb8';
 
 /// See also [roomUsage].
 @ProviderFor(roomUsage)

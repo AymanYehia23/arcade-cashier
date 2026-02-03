@@ -41,13 +41,14 @@ class RoomsRepository {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    RoomStatus status = RoomStatus.available,
   }) async {
     await _supabase.from(DbTables.rooms).insert({
       'name': name,
       'device_type': deviceType.jsonValue,
       'hourly_rate': singleMatchHourlyRate,
       'multi_player_hourly_rate': multiMatchHourlyRate,
-      'current_status': RoomConstants.available,
+      'current_status': status.name,
     });
   }
 
@@ -57,6 +58,7 @@ class RoomsRepository {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    required RoomStatus status,
   }) async {
     await _supabase
         .from(DbTables.rooms)
@@ -65,6 +67,7 @@ class RoomsRepository {
           'device_type': deviceType.jsonValue,
           'hourly_rate': singleMatchHourlyRate,
           'multi_player_hourly_rate': multiMatchHourlyRate,
+          'current_status': status.name,
         })
         .match({'id': roomId});
   }

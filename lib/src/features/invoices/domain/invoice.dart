@@ -15,7 +15,13 @@ class Invoice with _$Invoice {
     @JsonKey(name: 'total_amount') required double totalAmount,
     @JsonKey(name: 'payment_method') @Default('cash') String paymentMethod,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
+    @Default('paid') String status,
+    @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
   }) = _Invoice;
+
+  const Invoice._();
+
+  bool get isCancelled => status == 'cancelled';
 
   factory Invoice.fromJson(Map<String, dynamic> json) =>
       _$InvoiceFromJson(json);

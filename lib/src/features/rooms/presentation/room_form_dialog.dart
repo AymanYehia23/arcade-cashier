@@ -21,6 +21,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
   final _singleRateController = TextEditingController();
   final _multiRateController = TextEditingController();
   DeviceType? _selectedDeviceType;
+  RoomStatus _selectedStatus = RoomStatus.available;
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
     if (widget.room != null) {
       _nameController.text = widget.room!.name;
       _selectedDeviceType = widget.room!.deviceType;
+      _selectedStatus = widget.room!.currentStatus;
       _singleRateController.text = widget.room!.singleMatchHourlyRate
           .toString();
       _multiRateController.text = widget.room!.multiMatchHourlyRate.toString();
@@ -56,6 +58,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
               deviceType: deviceType,
               singleMatchHourlyRate: singleRate,
               multiMatchHourlyRate: multiRate,
+              status: _selectedStatus,
             )
           : await controller.updateRoom(
               roomId: widget.room!.id,
@@ -63,6 +66,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
               deviceType: deviceType,
               singleMatchHourlyRate: singleRate,
               multiMatchHourlyRate: multiRate,
+              status: _selectedStatus,
             );
 
       if (success && mounted) {
@@ -99,6 +103,26 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
                   decoration: InputDecoration(labelText: loc.roomName),
                   validator: (value) =>
                       value == null || value.isEmpty ? loc.roomName : null,
+                ),
+                const SizedBox(height: 16),
+                DropdownButtonFormField<RoomStatus>(
+                  initialValue: _selectedStatus,
+                  decoration: InputDecoration(labelText: 'Status'),
+                  items: RoomStatus.values
+                      .map(
+                        (status) => DropdownMenuItem(
+                          value: status,
+                          child: Text(status.name.toUpperCase()),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    }
+                  },
                 ),
                 const SizedBox(height: 16),
                 DropdownButtonFormField<DeviceType>(

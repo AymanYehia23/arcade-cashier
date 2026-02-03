@@ -128,7 +128,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
           context: context,
           builder: (_) => InvoicePreviewDialog(
             pdfBytes: result.pdfBytes,
-            invoiceNumber: result.invoice.invoiceNumber,
+            invoice: result.invoice,
           ),
         );
       }

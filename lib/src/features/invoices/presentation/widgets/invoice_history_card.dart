@@ -66,6 +66,25 @@ class InvoiceHistoryCard extends ConsumerWidget {
                 ],
               ),
               const SizedBox(height: 8),
+              if (invoice.isCancelled)
+                Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.errorContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'CANCELLED',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onErrorContainer,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -79,7 +98,12 @@ class InvoiceHistoryCard extends ConsumerWidget {
                     '${invoice.totalAmount.toStringAsFixed(2)} EGP',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
+                      color: invoice.isCancelled
+                          ? theme.colorScheme.outline
+                          : theme.colorScheme.primary,
+                      decoration: invoice.isCancelled
+                          ? TextDecoration.lineThrough
+                          : null,
                     ),
                   ),
                 ],

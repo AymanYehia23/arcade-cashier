@@ -18,6 +18,7 @@ abstract class InvoicesRepository {
   });
   Future<Invoice?> getInvoiceById(int id);
   Future<String> generateInvoiceNumber();
+  Future<void> cancelInvoice(int invoiceId);
 }
 
 class SupabaseInvoicesRepository implements InvoicesRepository {
@@ -98,6 +99,17 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
 
     final count = (response as List).length + 1;
     return 'INV-$datePrefix-${count.toString().padLeft(3, '0')}';
+  }
+
+  @override
+  Future<void> cancelInvoice(int invoiceId) async {
+    await _supabase
+        .from(DbTables.invoices)
+        .update({
+          'status': 'cancelled',
+          'cancelled_at': DateTime.now().toIso8601String(),
+        })
+        .eq('id', invoiceId);
   }
 }
 

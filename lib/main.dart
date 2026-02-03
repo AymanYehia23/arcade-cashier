@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:arcade_cashier/src/features/settings/data/locale_repository.dart';
 import 'package:arcade_cashier/src/core/logging_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// ignore: depend_on_referenced_packages
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

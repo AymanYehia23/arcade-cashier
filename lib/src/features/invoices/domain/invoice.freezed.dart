@@ -35,6 +35,9 @@ mixin _$Invoice {
   String get paymentMethod => throw _privateConstructorUsedError;
   @JsonKey(name: 'issued_at')
   DateTime? get issuedAt => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  @JsonKey(name: 'cancelled_at')
+  DateTime? get cancelledAt => throw _privateConstructorUsedError;
 
   /// Serializes this Invoice to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -58,6 +61,8 @@ abstract class $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'payment_method') String paymentMethod,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
+    String status,
+    @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
   });
 }
 
@@ -83,6 +88,8 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
     Object? totalAmount = null,
     Object? paymentMethod = null,
     Object? issuedAt = freezed,
+    Object? status = null,
+    Object? cancelledAt = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -114,6 +121,14 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
                 ? _value.issuedAt
                 : issuedAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as String,
+            cancelledAt: freezed == cancelledAt
+                ? _value.cancelledAt
+                : cancelledAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
           )
           as $Val,
     );
@@ -136,6 +151,8 @@ abstract class _$$InvoiceImplCopyWith<$Res> implements $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'payment_method') String paymentMethod,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
+    String status,
+    @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
   });
 }
 
@@ -160,6 +177,8 @@ class __$$InvoiceImplCopyWithImpl<$Res>
     Object? totalAmount = null,
     Object? paymentMethod = null,
     Object? issuedAt = freezed,
+    Object? status = null,
+    Object? cancelledAt = freezed,
   }) {
     return _then(
       _$InvoiceImpl(
@@ -191,6 +210,14 @@ class __$$InvoiceImplCopyWithImpl<$Res>
             ? _value.issuedAt
             : issuedAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as String,
+        cancelledAt: freezed == cancelledAt
+            ? _value.cancelledAt
+            : cancelledAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
       ),
     );
   }
@@ -198,7 +225,7 @@ class __$$InvoiceImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$InvoiceImpl implements _Invoice {
+class _$InvoiceImpl extends _Invoice {
   const _$InvoiceImpl({
     @JsonKey(includeToJson: false) this.id,
     @JsonKey(name: 'session_id') required this.sessionId,
@@ -207,7 +234,9 @@ class _$InvoiceImpl implements _Invoice {
     @JsonKey(name: 'total_amount') required this.totalAmount,
     @JsonKey(name: 'payment_method') this.paymentMethod = 'cash',
     @JsonKey(name: 'issued_at') this.issuedAt,
-  });
+    this.status = 'paid',
+    @JsonKey(name: 'cancelled_at') this.cancelledAt,
+  }) : super._();
 
   factory _$InvoiceImpl.fromJson(Map<String, dynamic> json) =>
       _$$InvoiceImplFromJson(json);
@@ -233,10 +262,16 @@ class _$InvoiceImpl implements _Invoice {
   @override
   @JsonKey(name: 'issued_at')
   final DateTime? issuedAt;
+  @override
+  @JsonKey()
+  final String status;
+  @override
+  @JsonKey(name: 'cancelled_at')
+  final DateTime? cancelledAt;
 
   @override
   String toString() {
-    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, issuedAt: $issuedAt)';
+    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, issuedAt: $issuedAt, status: $status, cancelledAt: $cancelledAt)';
   }
 
   @override
@@ -256,7 +291,10 @@ class _$InvoiceImpl implements _Invoice {
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
             (identical(other.issuedAt, issuedAt) ||
-                other.issuedAt == issuedAt));
+                other.issuedAt == issuedAt) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.cancelledAt, cancelledAt) ||
+                other.cancelledAt == cancelledAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -270,6 +308,8 @@ class _$InvoiceImpl implements _Invoice {
     totalAmount,
     paymentMethod,
     issuedAt,
+    status,
+    cancelledAt,
   );
 
   /// Create a copy of Invoice
@@ -286,7 +326,7 @@ class _$InvoiceImpl implements _Invoice {
   }
 }
 
-abstract class _Invoice implements Invoice {
+abstract class _Invoice extends Invoice {
   const factory _Invoice({
     @JsonKey(includeToJson: false) final int? id,
     @JsonKey(name: 'session_id') required final int sessionId,
@@ -295,7 +335,10 @@ abstract class _Invoice implements Invoice {
     @JsonKey(name: 'total_amount') required final double totalAmount,
     @JsonKey(name: 'payment_method') final String paymentMethod,
     @JsonKey(name: 'issued_at') final DateTime? issuedAt,
+    final String status,
+    @JsonKey(name: 'cancelled_at') final DateTime? cancelledAt,
   }) = _$InvoiceImpl;
+  const _Invoice._() : super._();
 
   factory _Invoice.fromJson(Map<String, dynamic> json) = _$InvoiceImpl.fromJson;
 
@@ -320,6 +363,11 @@ abstract class _Invoice implements Invoice {
   @override
   @JsonKey(name: 'issued_at')
   DateTime? get issuedAt;
+  @override
+  String get status;
+  @override
+  @JsonKey(name: 'cancelled_at')
+  DateTime? get cancelledAt;
 
   /// Create a copy of Invoice
   /// with the given fields replaced by the non-null parameter values.

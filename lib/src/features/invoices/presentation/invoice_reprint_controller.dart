@@ -79,10 +79,8 @@ class InvoiceReprintController extends _$InvoiceReprintController {
       if (context.mounted) {
         showDialog(
           context: context,
-          builder: (_) => InvoicePreviewDialog(
-            pdfBytes: pdfBytes,
-            invoiceNumber: invoice.invoiceNumber,
-          ),
+          builder: (_) =>
+              InvoicePreviewDialog(pdfBytes: pdfBytes, invoice: invoice),
         );
       }
     } catch (e, st) {

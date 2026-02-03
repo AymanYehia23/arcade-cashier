@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/device_type.dart';
+import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'room_form_controller.g.dart';
@@ -16,6 +17,7 @@ class RoomFormController extends _$RoomFormController {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    required RoomStatus status,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
@@ -26,6 +28,7 @@ class RoomFormController extends _$RoomFormController {
             deviceType: deviceType,
             singleMatchHourlyRate: singleMatchHourlyRate,
             multiMatchHourlyRate: multiMatchHourlyRate,
+            status: status,
           ),
     );
     if (!state.hasError) {
@@ -40,6 +43,7 @@ class RoomFormController extends _$RoomFormController {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    required RoomStatus status,
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(
@@ -51,6 +55,7 @@ class RoomFormController extends _$RoomFormController {
             deviceType: deviceType,
             singleMatchHourlyRate: singleMatchHourlyRate,
             multiMatchHourlyRate: multiMatchHourlyRate,
+            status: status,
           ),
     );
     if (!state.hasError) {

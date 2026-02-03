@@ -26,7 +26,7 @@ class SessionActionButtons extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const SizedBox(width: 8),
-        if (onTogglePause != null)
+        if (onTogglePause != null && !isQuickOrder)
           TextButton.icon(
             onPressed: onTogglePause,
             icon: Icon(isPaused ? Icons.play_arrow : Icons.pause),

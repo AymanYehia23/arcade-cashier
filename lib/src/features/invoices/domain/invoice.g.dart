@@ -17,6 +17,10 @@ _$InvoiceImpl _$$InvoiceImplFromJson(Map<String, dynamic> json) =>
       issuedAt: json['issued_at'] == null
           ? null
           : DateTime.parse(json['issued_at'] as String),
+      status: json['status'] as String? ?? 'paid',
+      cancelledAt: json['cancelled_at'] == null
+          ? null
+          : DateTime.parse(json['cancelled_at'] as String),
     );
 
 Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
@@ -27,4 +31,6 @@ Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
       'total_amount': instance.totalAmount,
       'payment_method': instance.paymentMethod,
       'issued_at': instance.issuedAt?.toIso8601String(),
+      'status': instance.status,
+      'cancelled_at': instance.cancelledAt?.toIso8601String(),
     };
