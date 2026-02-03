@@ -6,6 +6,7 @@ import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_ser
 import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
@@ -36,6 +37,7 @@ class SessionCompletionController extends _$SessionCompletionController {
     required List<Order> orders,
     required SessionBill bill,
     Customer? customer,
+    required AppLocalizations loc,
     String shopName = 'Arcade',
   }) async {
     state = const AsyncLoading();
@@ -88,6 +90,7 @@ class SessionCompletionController extends _$SessionCompletionController {
         session: sessionWithEndTime,
         orders: orders,
         bill: bill,
+        loc: loc,
       );
 
       final result = SessionCompletionResult(

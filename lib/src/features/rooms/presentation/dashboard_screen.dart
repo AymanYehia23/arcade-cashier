@@ -40,7 +40,7 @@ class DashboardScreen extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.assessment),
             onPressed: () => ShiftReportDialog.show(context),
-            tooltip: 'End Shift',
+            tooltip: loc.endShift,
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -119,7 +119,7 @@ class DashboardScreen extends ConsumerWidget {
             );
           }
         },
-        label: const Text('Quick Order'),
+        label: Text(loc.quickOrder),
         icon: const Icon(Icons.flash_on),
       ),
     );

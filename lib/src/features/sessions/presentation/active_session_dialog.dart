@@ -131,7 +131,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                     children: [
                       // Section 1: Customer Selection
                       Text(
-                        'Customer', // Localize if possible, or use "Customer"
+                        loc.customer,
                         style: Theme.of(sbContext).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 8),
@@ -148,7 +148,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
                       // Section 2: Financials
                       Text(
-                        'Payment Details', // Localize
+                        loc.paymentDetails,
                         style: Theme.of(sbContext).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 12),
@@ -156,9 +156,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text('Subtotal:'),
+                          Text('${loc.subtotal}:'),
                           Text(
-                            '${currentBill.subtotal.toStringAsFixed(2)} EGP',
+                            '${currentBill.subtotal.toStringAsFixed(2)} ${loc.egp}',
                           ),
                         ],
                       ),
@@ -167,9 +167,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       // Discount Input
                       TextField(
                         controller: discountController,
-                        decoration: const InputDecoration(
-                          labelText: 'Discount (%)',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: loc.discountLabel,
+                          border: const OutlineInputBorder(),
                           prefixText: '% ',
                           suffixText: '',
                           isDense: true,
@@ -188,7 +188,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            'Discount: - ${currentBill.discountAmount.toStringAsFixed(2)} EGP',
+                            loc.discountValue(
+                              currentBill.discountAmount.toStringAsFixed(2),
+                            ),
                             style: const TextStyle(
                               color: Colors.red,
                               fontWeight: FontWeight.bold,
@@ -210,7 +212,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                             style: Theme.of(sbContext).textTheme.titleLarge,
                           ),
                           Text(
-                            '${currentBill.totalAmount.toStringAsFixed(2)} EGP',
+                            '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
                             style: Theme.of(sbContext).textTheme.titleLarge
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
@@ -241,14 +243,14 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                           orders: orders,
                           bill: currentBill,
                           customer: selectedCustomer,
+                          loc: loc,
+                          shopName: loc.brandName,
                         );
 
                     if (result != null && context.mounted) {
                       Navigator.of(context).pop(); // Close ActiveSessionDialog
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Session completed - Invoice created'),
-                        ),
+                        SnackBar(content: Text(loc.sessionCompleted)),
                       );
                     }
                   },
@@ -316,7 +318,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       child: AlertDialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         title: Text(
-          '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? 'Quick Order' : widget.room?.name ?? 'Unknown'}',
+          '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? loc.quickOrder : widget.room?.name ?? loc.unknown}',
         ),
         content: SizedBox(
           width: 1000,

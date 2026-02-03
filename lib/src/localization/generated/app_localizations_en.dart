@@ -12,6 +12,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Arcade Shop ERP';
 
   @override
+  String get brandName => 'Arcade';
+
+  @override
   String get loginTitle => 'Login to Arcade Shop';
 
   @override
@@ -339,4 +342,167 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchCustomer => 'Search Customer (Name or Phone)';
+
+  @override
+  String get endShift => 'End Shift';
+
+  @override
+  String get quickOrder => 'Quick Order';
+
+  @override
+  String get somethingWentWrong => 'Something Went Wrong';
+
+  @override
+  String get customer => 'Customer';
+
+  @override
+  String get paymentDetails => 'Payment Details';
+
+  @override
+  String get subtotal => 'Subtotal';
+
+  @override
+  String get discountLabel => 'Discount (%)';
+
+  @override
+  String discountValue(String amount) {
+    return 'Discount: - $amount EGP';
+  }
+
+  @override
+  String get sessionCompleted => 'Session completed - Invoice created';
+
+  @override
+  String get unknown => 'Unknown';
+
+  @override
+  String get egp => 'EGP';
+
+  @override
+  String get egpPerHour => 'EGP/hr';
+
+  @override
+  String get reportsTitle => 'Reports & Analytics';
+
+  @override
+  String get period => 'Period';
+
+  @override
+  String get tabRevenue => 'Revenue';
+
+  @override
+  String get tabFinancials => 'Financials';
+
+  @override
+  String get tabProducts => 'Products';
+
+  @override
+  String get tabRoomUsage => 'Room Usage';
+
+  @override
+  String get endOfShiftReport => 'End of Shift Report';
+
+  @override
+  String get cashSales => 'Cash Sales';
+
+  @override
+  String get cardSales => 'Card Sales';
+
+  @override
+  String get totalTransactions => 'Total Transactions';
+
+  @override
+  String get netRevenue => 'Net Revenue';
+
+  @override
+  String get discountsGiven => 'Discounts Given';
+
+  @override
+  String get printZReport => 'Print Z-Report';
+
+  @override
+  String get failedToLoadReport => 'Failed to load shift report';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String failedToPrintReport(String error) {
+    return 'Failed to print report: $error';
+  }
+
+  @override
+  String get cancelled => 'CANCELLED';
+
+  @override
+  String get invoiceNum => 'Invoice #';
+
+  @override
+  String get tableItem => 'Item';
+
+  @override
+  String get tableQty => 'Qty';
+
+  @override
+  String get tableAmount => 'Amount';
+
+  @override
+  String get subtotalLabel => 'Subtotal';
+
+  @override
+  String get discountLabelPdf => 'Discount';
+
+  @override
+  String get totalLabel => 'TOTAL';
+
+  @override
+  String get thankYou => 'Thank you!';
+
+  @override
+  String get visitAgain => 'Visit again';
+
+  @override
+  String get cashierSignature => 'Cashier Signature';
+
+  @override
+  String get zReportTitle => 'Z-REPORT';
+
+  @override
+  String get paymentCash => 'CASH';
+
+  @override
+  String get paymentCard => 'CARD';
+
+  @override
+  String get noRevenueData => 'No revenue data available.';
+
+  @override
+  String get grossSales => 'Gross Sales';
+
+  @override
+  String get profitabilityBySource => 'Profitability by Source';
+
+  @override
+  String get tableSource => 'Source';
+
+  @override
+  String get tableSessions => 'Sessions';
+
+  @override
+  String get tableHours => 'Hours';
+
+  @override
+  String get tableRevenue => 'Revenue';
+
+  @override
+  String get avgTicket => 'Avg. Ticket';
+
+  @override
+  String get grandTotalRevenue => 'Grand Total Revenue: ';
+
+  @override
+  String get noDataPeriod => 'No data available for this period.';
+
+  @override
+  String get discountsLabel => 'Discounts';
 }

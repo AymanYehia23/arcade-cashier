@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/reports/data/reports_repository.dart';
 import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
@@ -51,6 +52,7 @@ class ShiftReportDialog extends ConsumerWidget {
     WidgetRef ref,
     ShiftReport report,
   ) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +62,7 @@ class ShiftReportDialog extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'End of Shift Report',
+              loc.endOfShiftReport,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -75,25 +77,28 @@ class ShiftReportDialog extends ConsumerWidget {
 
         // Summary Cards
         _SummaryCard(
-          title: 'Cash Sales',
+          title: loc.cashSales,
           value: report.totalCash,
           icon: Icons.payments,
           color: Colors.green,
+          loc: loc,
         ),
         const SizedBox(height: 12),
         _SummaryCard(
-          title: 'Card Sales',
+          title: loc.cardSales,
           value: report.totalCard,
           icon: Icons.credit_card,
           color: Colors.blue,
+          loc: loc,
         ),
         const SizedBox(height: 12),
         _SummaryCard(
-          title: 'Total Transactions',
+          title: loc.totalTransactions,
           value: report.transactionsCount.toDouble(),
           icon: Icons.receipt_long,
           color: Colors.orange,
           isCount: true,
+          loc: loc,
         ),
         const SizedBox(height: 16),
 
@@ -111,13 +116,13 @@ class ShiftReportDialog extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Net Revenue',
+                loc.netRevenue,
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               Text(
-                '${report.totalRevenue.toStringAsFixed(2)} EGP',
+                '${report.totalRevenue.toStringAsFixed(2)} ${loc.egp}',
                 style: Theme.of(
                   context,
                 ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -132,7 +137,7 @@ class ShiftReportDialog extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Discounts Given: ${report.totalDiscount.toStringAsFixed(2)} EGP',
+            '${loc.discountsGiven}: ${report.totalDiscount.toStringAsFixed(2)} ${loc.egp}',
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
@@ -146,7 +151,7 @@ class ShiftReportDialog extends ConsumerWidget {
         FilledButton.icon(
           onPressed: () => _printReport(context, ref, report),
           icon: const Icon(Icons.print),
-          label: const Text('Print Z-Report'),
+          label: Text(loc.printZReport),
           style: FilledButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
           ),
@@ -156,13 +161,14 @@ class ShiftReportDialog extends ConsumerWidget {
   }
 
   Widget _buildError(BuildContext context, Object error) {
+    final loc = AppLocalizations.of(context)!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Icon(Icons.error_outline, size: 48, color: Colors.red),
         const SizedBox(height: 16),
         Text(
-          'Failed to load shift report',
+          loc.failedToLoadReport,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
@@ -174,7 +180,7 @@ class ShiftReportDialog extends ConsumerWidget {
         const SizedBox(height: 16),
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
+          child: Text(loc.close),
         ),
       ],
     );
@@ -187,9 +193,10 @@ class ShiftReportDialog extends ConsumerWidget {
   ) async {
     final pdfService = ref.read(pdfInvoiceServiceProvider);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final loc = AppLocalizations.of(context)!;
 
     try {
-      final pdfBytes = await pdfService.generateShiftReportPdf(report);
+      final pdfBytes = await pdfService.generateShiftReportPdf(report, loc);
 
       // Close the dialog BEFORE opening the print dialog.
       if (context.mounted) {
@@ -203,7 +210,7 @@ class ShiftReportDialog extends ConsumerWidget {
     } catch (e) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          content: Text('Failed to print report: $e'),
+          content: Text(loc.failedToPrintReport(e.toString())),
           backgroundColor: Colors.red,
         ),
       );
@@ -217,12 +224,14 @@ class _SummaryCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final bool isCount;
+  final AppLocalizations loc;
 
   const _SummaryCard({
     required this.title,
     required this.value,
     required this.icon,
     required this.color,
+    required this.loc,
     this.isCount = false,
   });
 
@@ -259,7 +268,7 @@ class _SummaryCard extends StatelessWidget {
                 Text(
                   isCount
                       ? value.toInt().toString()
-                      : '${value.toStringAsFixed(2)} EGP',
+                      : '${value.toStringAsFixed(2)} ${loc.egp}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,18 +11,17 @@ class FinancialBreakdownTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     final financialsAsync = ref.watch(roomFinancialsProvider);
     final currencyFormat = NumberFormat.currency(
-      symbol: 'EGP ',
+      symbol: '${loc.egp} ',
       decimalDigits: 0,
     );
 
     return financialsAsync.when(
       data: (report) {
         if (report.isEmpty) {
-          return const Center(
-            child: Text("No data available for this period."),
-          );
+          return Center(child: Text(loc.noDataPeriod));
         }
 
         final double grandTotalRevenue = report.fold(
@@ -35,7 +35,7 @@ class FinancialBreakdownTab extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "Profitability by Source",
+                loc.profitabilityBySource,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 16),
@@ -47,13 +47,22 @@ class FinancialBreakdownTab extends ConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Source')),
-                            DataColumn(label: Text('Sessions'), numeric: true),
-                            DataColumn(label: Text('Hours'), numeric: true),
-                            DataColumn(label: Text('Revenue'), numeric: true),
+                          columns: [
+                            DataColumn(label: Text(loc.tableSource)),
                             DataColumn(
-                              label: Text('Avg. Ticket'),
+                              label: Text(loc.tableSessions),
+                              numeric: true,
+                            ),
+                            DataColumn(
+                              label: Text(loc.tableHours),
+                              numeric: true,
+                            ),
+                            DataColumn(
+                              label: Text(loc.tableRevenue),
+                              numeric: true,
+                            ),
+                            DataColumn(
+                              label: Text(loc.avgTicket),
                               numeric: true,
                             ),
                           ],
@@ -98,7 +107,7 @@ class FinancialBreakdownTab extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "Grand Total Revenue: ",
+                              loc.grandTotalRevenue,
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             Text(

@@ -15,7 +15,7 @@ class SplashScreen extends StatelessWidget {
           children: [
             const CircularProgressIndicator(),
             const SizedBox(height: 16),
-            Text(AppLocalizations.of(context)?.loading ?? 'Loading...'),
+            Text(AppLocalizations.of(context)!.loading),
           ],
         ),
       ),

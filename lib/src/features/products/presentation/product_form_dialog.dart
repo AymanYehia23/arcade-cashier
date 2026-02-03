@@ -128,9 +128,16 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
                     labelText: loc.category,
                     border: const OutlineInputBorder(),
                   ),
-                  items: ['Drinks', 'Snacks', 'Food', 'Other']
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                      .toList(),
+                  items: ['Drinks', 'Snacks', 'Food', 'Other'].map((c) {
+                    final label = switch (c) {
+                      'Drinks' => loc.drinks,
+                      'Snacks' => loc.snacks,
+                      'Food' => loc.food,
+                      'Other' => loc.other,
+                      _ => c,
+                    };
+                    return DropdownMenuItem(value: c, child: Text(label));
+                  }).toList(),
                   onChanged: (value) {
                     if (value != null) {
                       _category = value;

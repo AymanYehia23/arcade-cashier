@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_reprint_controller.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,23 @@ class InvoiceHistoryCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     final issuedDate = invoice.issuedAt ?? DateTime.now();
     final controllerState = ref.watch(invoiceReprintControllerProvider);
     final theme = Theme.of(context);
-    // Assuming paymentMethod is a field or we default to 'Cash' if not present/mapped.
-    // Adjust logic if PaymentMethod is an enum or different structure.
-    final paymentMethod = invoice.paymentMethod.toString().split('.').last;
+
+    // Localize payment method
+    final paymentMethodRaw = invoice.paymentMethod
+        .toString()
+        .split('.')
+        .last
+        .toLowerCase();
+    final paymentMethodLabel = switch (paymentMethodRaw) {
+      'cash' => loc.paymentCash,
+      'card' => loc.paymentCard,
+      _ => paymentMethodRaw.toUpperCase(),
+    };
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -56,7 +67,7 @@ class InvoiceHistoryCard extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      paymentMethod.toUpperCase(),
+                      paymentMethodLabel,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: theme.colorScheme.onSecondaryContainer,
                         fontWeight: FontWeight.bold,
@@ -78,7 +89,7 @@ class InvoiceHistoryCard extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'CANCELLED',
+                    loc.cancelled,
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onErrorContainer,
                       fontWeight: FontWeight.bold,
@@ -95,7 +106,7 @@ class InvoiceHistoryCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    '${invoice.totalAmount.toStringAsFixed(2)} EGP',
+                    '${invoice.totalAmount.toStringAsFixed(2)} ${loc.egp}',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: invoice.isCancelled

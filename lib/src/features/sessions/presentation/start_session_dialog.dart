@@ -113,7 +113,7 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
                               );
                         },
                         child: Text(
-                          '${loc.singleMatch} (2P) - ${widget.room.singleMatchHourlyRate} EGP/hr',
+                          '${loc.singleMatch} (${loc.twoPlayers}) - ${widget.room.singleMatchHourlyRate} ${loc.egpPerHour}',
                         ),
                       ),
                     ),
@@ -136,7 +136,7 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
                               );
                         },
                         child: Text(
-                          '${loc.multiMatch} (4P) - ${widget.room.multiMatchHourlyRate} EGP/hr',
+                          '${loc.multiMatch} (${loc.fourPlayers}) - ${widget.room.multiMatchHourlyRate} ${loc.egpPerHour}',
                         ),
                       ),
                     ),

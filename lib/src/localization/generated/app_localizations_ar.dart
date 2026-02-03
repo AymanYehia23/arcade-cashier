@@ -12,6 +12,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'إدارة متجر الألعاب';
 
   @override
+  String get brandName => 'أركيد';
+
+  @override
   String get loginTitle => 'تسجيل الدخول';
 
   @override
@@ -339,4 +342,167 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchCustomer => 'Search Customer (Name or Phone)';
+
+  @override
+  String get endShift => 'إنهاء الوردية';
+
+  @override
+  String get quickOrder => 'طلب سريع';
+
+  @override
+  String get somethingWentWrong => 'حدث خطأ ما';
+
+  @override
+  String get customer => 'العميل';
+
+  @override
+  String get paymentDetails => 'تفاصيل الدفع';
+
+  @override
+  String get subtotal => 'المجموع الفرعي';
+
+  @override
+  String get discountLabel => 'خصم (%)';
+
+  @override
+  String discountValue(String amount) {
+    return 'خصم: - $amount ج.م';
+  }
+
+  @override
+  String get sessionCompleted => 'تم إنهاء الجلسة - تم إنشاء الفاتورة';
+
+  @override
+  String get unknown => 'غير معروف';
+
+  @override
+  String get egp => 'ج.م';
+
+  @override
+  String get egpPerHour => 'ج.م/ساعة';
+
+  @override
+  String get reportsTitle => 'التقارير والتحليلات';
+
+  @override
+  String get period => 'الفترة';
+
+  @override
+  String get tabRevenue => 'الإيرادات';
+
+  @override
+  String get tabFinancials => 'المالية';
+
+  @override
+  String get tabProducts => 'المنتجات';
+
+  @override
+  String get tabRoomUsage => 'استخدام الغرف';
+
+  @override
+  String get endOfShiftReport => 'تقرير نهاية الوردية';
+
+  @override
+  String get cashSales => 'مبيعات نقدية';
+
+  @override
+  String get cardSales => 'مبيعات بطاقة';
+
+  @override
+  String get totalTransactions => 'إجمالي المعاملات';
+
+  @override
+  String get netRevenue => 'صافي الإيرادات';
+
+  @override
+  String get discountsGiven => 'الخصومات المقدمة';
+
+  @override
+  String get printZReport => 'طباعة تقرير Z';
+
+  @override
+  String get failedToLoadReport => 'فشل تحميل التقرير';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String failedToPrintReport(String error) {
+    return 'فشل طباعة التقرير: $error';
+  }
+
+  @override
+  String get cancelled => 'ملغاة';
+
+  @override
+  String get invoiceNum => 'رقم الفاتورة';
+
+  @override
+  String get tableItem => 'الصنف';
+
+  @override
+  String get tableQty => 'الكمية';
+
+  @override
+  String get tableAmount => 'المبلغ';
+
+  @override
+  String get subtotalLabel => 'المجموع الفرعي';
+
+  @override
+  String get discountLabelPdf => 'الخصم';
+
+  @override
+  String get totalLabel => 'الإجمالي';
+
+  @override
+  String get thankYou => 'شكراً لك!';
+
+  @override
+  String get visitAgain => 'شرفتنا';
+
+  @override
+  String get cashierSignature => 'توقيع الكاشير';
+
+  @override
+  String get zReportTitle => 'تقرير وردية';
+
+  @override
+  String get paymentCash => 'نقدي';
+
+  @override
+  String get paymentCard => 'بطاقة';
+
+  @override
+  String get noRevenueData => 'لا توجد بيانات للإيرادات.';
+
+  @override
+  String get grossSales => 'إجمالي المبيعات';
+
+  @override
+  String get profitabilityBySource => 'الربحية حسب المصدر';
+
+  @override
+  String get tableSource => 'المصدر';
+
+  @override
+  String get tableSessions => 'الجلسات';
+
+  @override
+  String get tableHours => 'الساعات';
+
+  @override
+  String get tableRevenue => 'الإيرادات';
+
+  @override
+  String get avgTicket => 'متوسط التذكرة';
+
+  @override
+  String get grandTotalRevenue => 'إجمالي الإيرادات الكلي: ';
+
+  @override
+  String get noDataPeriod => 'لا توجد بيانات لهذه الفترة.';
+
+  @override
+  String get discountsLabel => 'الخصومات';
 }

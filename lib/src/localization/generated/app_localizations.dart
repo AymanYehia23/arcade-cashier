@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Arcade Shop ERP'**
   String get appTitle;
 
+  /// No description provided for @brandName.
+  ///
+  /// In en, this message translates to:
+  /// **'Arcade'**
+  String get brandName;
+
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:
@@ -715,6 +721,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search Customer (Name or Phone)'**
   String get searchCustomer;
+
+  /// No description provided for @endShift.
+  ///
+  /// In en, this message translates to:
+  /// **'End Shift'**
+  String get endShift;
+
+  /// No description provided for @quickOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Order'**
+  String get quickOrder;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something Went Wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @customer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get customer;
+
+  /// No description provided for @paymentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Details'**
+  String get paymentDetails;
+
+  /// No description provided for @subtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get subtotal;
+
+  /// No description provided for @discountLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount (%)'**
+  String get discountLabel;
+
+  /// No description provided for @discountValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount: - {amount} EGP'**
+  String discountValue(String amount);
+
+  /// No description provided for @sessionCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Session completed - Invoice created'**
+  String get sessionCompleted;
+
+  /// No description provided for @unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get unknown;
+
+  /// No description provided for @egp.
+  ///
+  /// In en, this message translates to:
+  /// **'EGP'**
+  String get egp;
+
+  /// No description provided for @egpPerHour.
+  ///
+  /// In en, this message translates to:
+  /// **'EGP/hr'**
+  String get egpPerHour;
+
+  /// No description provided for @reportsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reports & Analytics'**
+  String get reportsTitle;
+
+  /// No description provided for @period.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get period;
+
+  /// No description provided for @tabRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue'**
+  String get tabRevenue;
+
+  /// No description provided for @tabFinancials.
+  ///
+  /// In en, this message translates to:
+  /// **'Financials'**
+  String get tabFinancials;
+
+  /// No description provided for @tabProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get tabProducts;
+
+  /// No description provided for @tabRoomUsage.
+  ///
+  /// In en, this message translates to:
+  /// **'Room Usage'**
+  String get tabRoomUsage;
+
+  /// No description provided for @endOfShiftReport.
+  ///
+  /// In en, this message translates to:
+  /// **'End of Shift Report'**
+  String get endOfShiftReport;
+
+  /// No description provided for @cashSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Sales'**
+  String get cashSales;
+
+  /// No description provided for @cardSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Card Sales'**
+  String get cardSales;
+
+  /// No description provided for @totalTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Transactions'**
+  String get totalTransactions;
+
+  /// No description provided for @netRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Net Revenue'**
+  String get netRevenue;
+
+  /// No description provided for @discountsGiven.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts Given'**
+  String get discountsGiven;
+
+  /// No description provided for @printZReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Print Z-Report'**
+  String get printZReport;
+
+  /// No description provided for @failedToLoadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load shift report'**
+  String get failedToLoadReport;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @failedToPrintReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to print report: {error}'**
+  String failedToPrintReport(String error);
+
+  /// No description provided for @cancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'CANCELLED'**
+  String get cancelled;
+
+  /// No description provided for @invoiceNum.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice #'**
+  String get invoiceNum;
+
+  /// No description provided for @tableItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Item'**
+  String get tableItem;
+
+  /// No description provided for @tableQty.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty'**
+  String get tableQty;
+
+  /// No description provided for @tableAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get tableAmount;
+
+  /// No description provided for @subtotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get subtotalLabel;
+
+  /// No description provided for @discountLabelPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get discountLabelPdf;
+
+  /// No description provided for @totalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'TOTAL'**
+  String get totalLabel;
+
+  /// No description provided for @thankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you!'**
+  String get thankYou;
+
+  /// No description provided for @visitAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit again'**
+  String get visitAgain;
+
+  /// No description provided for @cashierSignature.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier Signature'**
+  String get cashierSignature;
+
+  /// No description provided for @zReportTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Z-REPORT'**
+  String get zReportTitle;
+
+  /// No description provided for @paymentCash.
+  ///
+  /// In en, this message translates to:
+  /// **'CASH'**
+  String get paymentCash;
+
+  /// No description provided for @paymentCard.
+  ///
+  /// In en, this message translates to:
+  /// **'CARD'**
+  String get paymentCard;
+
+  /// No description provided for @noRevenueData.
+  ///
+  /// In en, this message translates to:
+  /// **'No revenue data available.'**
+  String get noRevenueData;
+
+  /// No description provided for @grossSales.
+  ///
+  /// In en, this message translates to:
+  /// **'Gross Sales'**
+  String get grossSales;
+
+  /// No description provided for @profitabilityBySource.
+  ///
+  /// In en, this message translates to:
+  /// **'Profitability by Source'**
+  String get profitabilityBySource;
+
+  /// No description provided for @tableSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get tableSource;
+
+  /// No description provided for @tableSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get tableSessions;
+
+  /// No description provided for @tableHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get tableHours;
+
+  /// No description provided for @tableRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Revenue'**
+  String get tableRevenue;
+
+  /// No description provided for @avgTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Avg. Ticket'**
+  String get avgTicket;
+
+  /// No description provided for @grandTotalRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Grand Total Revenue: '**
+  String get grandTotalRevenue;
+
+  /// No description provided for @noDataPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'No data available for this period.'**
+  String get noDataPeriod;
+
+  /// No description provided for @discountsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts'**
+  String get discountsLabel;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.da
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
 import 'package:arcade_cashier/src/features/orders/data/orders_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -72,6 +73,7 @@ class InvoiceReprintController extends _$InvoiceReprintController {
         session: session,
         orders: orders,
         bill: bill,
+        loc: AppLocalizations.of(context)!,
       );
 
       state = const AsyncData(null);

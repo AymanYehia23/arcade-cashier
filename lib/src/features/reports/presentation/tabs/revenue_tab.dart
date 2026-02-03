@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,12 @@ class RevenueTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final revenueAsync = ref.watch(dailyRevenueProvider);
+    final loc = AppLocalizations.of(context)!;
 
     return revenueAsync.when(
       data: (data) {
         if (data.isEmpty) {
-          return const Center(child: Text('No revenue data available.'));
+          return Center(child: Text(loc.noRevenueData));
         }
 
         final double totalWeekNetRevenue = data.fold(
@@ -71,7 +73,7 @@ class RevenueTab extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: _SummaryCard(
-                      title: 'Gross Sales',
+                      title: loc.grossSales,
                       value: totalWeekGrossRevenue,
                       valueColor: Colors.grey.shade700,
                     ),
@@ -79,7 +81,7 @@ class RevenueTab extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _SummaryCard(
-                      title: 'Discounts',
+                      title: loc.discountsLabel,
                       value: -totalWeekDiscount,
                       valueColor: Colors.red,
                     ),
@@ -87,7 +89,7 @@ class RevenueTab extends ConsumerWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: _SummaryCard(
-                      title: 'Net Revenue',
+                      title: loc.netRevenue,
                       value: totalWeekNetRevenue,
                       valueColor: Colors.green.shade700,
                       isBold: true,

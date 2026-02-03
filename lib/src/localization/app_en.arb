@@ -1,5 +1,6 @@
 {
   "appTitle": "Arcade Shop ERP",
+  "brandName": "Arcade",
   "@appTitle": {
     "description": "The title of the application"
   },
@@ -141,5 +142,72 @@
   "name": "Name",
   "phone": "Phone",
   "newCustomer": "New Customer",
-  "searchCustomer": "Search Customer (Name or Phone)"
+  "searchCustomer": "Search Customer (Name or Phone)",
+  "endShift": "End Shift",
+  "quickOrder": "Quick Order",
+  "somethingWentWrong": "Something Went Wrong",
+  "customer": "Customer",
+  "paymentDetails": "Payment Details",
+  "subtotal": "Subtotal",
+  "discountLabel": "Discount (%)",
+  "discountValue": "Discount: - {amount} EGP",
+  "@discountValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "sessionCompleted": "Session completed - Invoice created",
+  "unknown": "Unknown",
+  "egp": "EGP",
+  "egpPerHour": "EGP/hr",
+  "reportsTitle": "Reports & Analytics",
+  "period": "Period",
+  "tabRevenue": "Revenue",
+  "tabFinancials": "Financials",
+  "tabProducts": "Products",
+  "tabRoomUsage": "Room Usage",
+  "endOfShiftReport": "End of Shift Report",
+  "cashSales": "Cash Sales",
+  "cardSales": "Card Sales",
+  "totalTransactions": "Total Transactions",
+  "netRevenue": "Net Revenue",
+  "discountsGiven": "Discounts Given",
+  "printZReport": "Print Z-Report",
+  "failedToLoadReport": "Failed to load shift report",
+  "close": "Close",
+  "failedToPrintReport": "Failed to print report: {error}",
+  "cancelled": "CANCELLED",
+  "invoiceNum": "Invoice #",
+  "tableItem": "Item",
+  "tableQty": "Qty",
+  "tableAmount": "Amount",
+  "subtotalLabel": "Subtotal",
+  "discountLabelPdf": "Discount",
+  "totalLabel": "TOTAL",
+  "thankYou": "Thank you!",
+  "visitAgain": "Visit again",
+  "cashierSignature": "Cashier Signature",
+  "zReportTitle": "Z-REPORT",
+  "paymentCash": "CASH",
+  "paymentCard": "CARD",
+  "@failedToPrintReport": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noRevenueData": "No revenue data available.",
+  "grossSales": "Gross Sales",
+  "profitabilityBySource": "Profitability by Source",
+  "tableSource": "Source",
+  "tableSessions": "Sessions",
+  "tableHours": "Hours",
+  "tableRevenue": "Revenue",
+  "avgTicket": "Avg. Ticket",
+  "grandTotalRevenue": "Grand Total Revenue: ",
+  "noDataPeriod": "No data available for this period.",
+  "discountsLabel": "Discounts"
 }

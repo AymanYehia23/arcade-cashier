@@ -1,4 +1,6 @@
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'reports_providers.dart';
 import 'tabs/revenue_tab.dart';
@@ -13,10 +15,12 @@ class ReportsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final dateRange = ref.watch(reportsDateRangeProvider);
 
+    final loc = AppLocalizations.of(context)!;
+
     return DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(title: const Text('Reports & Analytics')),
+        appBar: AppBar(title: Text(loc.reportsTitle)),
         body: Column(
           children: [
             // Filter Bar
@@ -26,7 +30,7 @@ class ReportsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Period: ${_formatDate(dateRange.start)} - ${_formatDate(dateRange.end)}',
+                    '${loc.period}: ${_formatDate(dateRange.start, context)} - ${_formatDate(dateRange.end, context)}',
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
@@ -59,12 +63,18 @@ class ReportsScreen extends ConsumerWidget {
             ),
             const Divider(height: 1),
             // Tabs
-            const TabBar(
+            TabBar(
               tabs: [
-                Tab(text: 'Revenue', icon: Icon(Icons.bar_chart)),
-                Tab(text: 'Financials', icon: Icon(Icons.attach_money)),
-                Tab(text: 'Products', icon: Icon(Icons.shopping_cart)),
-                Tab(text: 'Room Usage', icon: Icon(Icons.pie_chart)),
+                Tab(text: loc.tabRevenue, icon: const Icon(Icons.bar_chart)),
+                Tab(
+                  text: loc.tabFinancials,
+                  icon: const Icon(Icons.attach_money),
+                ),
+                Tab(
+                  text: loc.tabProducts,
+                  icon: const Icon(Icons.shopping_cart),
+                ),
+                Tab(text: loc.tabRoomUsage, icon: const Icon(Icons.pie_chart)),
               ],
             ),
             const Expanded(
@@ -83,7 +93,9 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  String _formatDate(DateTime date, BuildContext context) {
+    return DateFormat.yMd(
+      Localizations.localeOf(context).toString(),
+    ).format(date);
   }
 }

@@ -7,6 +7,7 @@ import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/settings/data/printer_repository.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -34,12 +35,14 @@ class PdfInvoiceService {
     required Session session,
     required List<Order> orders,
     required SessionBill bill,
+    required AppLocalizations loc,
   }) async {
     final pdfBytes = await generateInvoicePdf(
       invoice: invoice,
       session: session,
       orders: orders,
       bill: bill,
+      loc: loc,
     );
 
     await _printPdf(pdfBytes, invoice.invoiceNumber);
@@ -83,11 +86,12 @@ class PdfInvoiceService {
     session, // Still needed for specific session details if any, but duration comes from bill
     required List<Order> orders,
     required SessionBill bill,
+    required AppLocalizations loc,
   }) async {
     final pdf = pw.Document();
 
     // Build invoice items list
-    final items = _buildInvoiceItems(orders: orders, bill: bill);
+    final items = _buildInvoiceItems(orders: orders, bill: bill, loc: loc);
 
     // Load bundled Cairo font for Arabic + English support
     final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
@@ -95,19 +99,26 @@ class PdfInvoiceService {
     final font = pw.Font.ttf(fontData);
     final fontBold = pw.Font.ttf(fontBoldData);
 
+    // Ensure Arabic text direction is handled implicitly by the font/renderer or explicitly if needed.
+    // pdf package's textDirection depends on ThemeData.
+    final textDirection = loc.localeName == 'ar'
+        ? pw.TextDirection.rtl
+        : pw.TextDirection.ltr;
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.roll80,
         margin: const pw.EdgeInsets.all(8),
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+        textDirection: textDirection,
         build: (context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: [
-            _buildHeader(invoice),
+            _buildHeader(invoice, loc),
             pw.SizedBox(height: 8),
             pw.Divider(),
             pw.SizedBox(height: 8),
-            _buildItemsTable(items),
+            _buildItemsTable(items, loc),
             pw.SizedBox(height: 8),
             pw.Divider(thickness: 2),
             pw.SizedBox(height: 8),
@@ -115,9 +126,10 @@ class PdfInvoiceService {
               invoice.totalAmount,
               invoice.discountAmount,
               invoice.discountPercentage,
+              loc,
             ),
             pw.SizedBox(height: 16),
-            _buildFooter(),
+            _buildFooter(loc),
           ],
         ),
       ),
@@ -129,6 +141,7 @@ class PdfInvoiceService {
   List<InvoiceItem> _buildInvoiceItems({
     required List<Order> orders,
     required SessionBill bill,
+    required AppLocalizations loc,
   }) {
     final items = <InvoiceItem>[];
 
@@ -146,7 +159,7 @@ class PdfInvoiceService {
     for (final order in orders) {
       items.add(
         InvoiceItem(
-          name: order.product?.name ?? 'Product #${order.productId}',
+          name: order.product?.name ?? '${loc.tableItem} #${order.productId}',
           quantity: order.quantity,
           unitPrice: order.unitPrice,
           totalPrice: order.totalPrice,
@@ -165,7 +178,7 @@ class PdfInvoiceService {
     return '$hours:$minutes:$seconds';
   }
 
-  pw.Widget _buildHeader(Invoice invoice) {
+  pw.Widget _buildHeader(Invoice invoice, AppLocalizations loc) {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     final issuedDate = invoice.issuedAt ?? DateTime.now();
 
@@ -184,7 +197,7 @@ class PdfInvoiceService {
         ),
         pw.SizedBox(height: 2),
         pw.Text(
-          'Invoice #: ${invoice.invoiceNumber}',
+          '${loc.invoiceNum}: ${invoice.invoiceNumber}',
           style: const pw.TextStyle(fontSize: 10),
           textAlign: pw.TextAlign.center,
         ),
@@ -192,7 +205,7 @@ class PdfInvoiceService {
             invoice.customerName!.trim().isNotEmpty) ...[
           pw.SizedBox(height: 4),
           pw.Text(
-            'Customer: ${invoice.customerName}',
+            '${loc.customer}: ${invoice.customerName}',
             style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
             textAlign: pw.TextAlign.center,
           ),
@@ -201,7 +214,7 @@ class PdfInvoiceService {
     );
   }
 
-  pw.Widget _buildItemsTable(List<InvoiceItem> items) {
+  pw.Widget _buildItemsTable(List<InvoiceItem> items, AppLocalizations loc) {
     return pw.Table(
       columnWidths: {
         0: const pw.FlexColumnWidth(3),
@@ -213,16 +226,16 @@ class PdfInvoiceService {
         pw.TableRow(
           children: [
             pw.Text(
-              'Item',
+              loc.tableItem,
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
             ),
             pw.Text(
-              'Qty',
+              loc.tableQty,
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
               textAlign: pw.TextAlign.center,
             ),
             pw.Text(
-              'Amount',
+              loc.tableAmount,
               style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
               textAlign: pw.TextAlign.right,
             ),
@@ -266,6 +279,7 @@ class PdfInvoiceService {
     double totalAmount,
     double discountAmount,
     double discountPercentage,
+    AppLocalizations loc,
   ) {
     // If no discount, show just the total
     if (discountAmount <= 0) {
@@ -273,11 +287,11 @@ class PdfInvoiceService {
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
         children: [
           pw.Text(
-            'TOTAL:',
+            '${loc.totalLabel}:',
             style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
           ),
           pw.Text(
-            '${totalAmount.toStringAsFixed(2)} EGP',
+            '${totalAmount.toStringAsFixed(2)} ${loc.egp}',
             style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
           ),
         ],
@@ -292,9 +306,12 @@ class PdfInvoiceService {
         pw.Row(
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
-            pw.Text('Subtotal:', style: const pw.TextStyle(fontSize: 10)),
             pw.Text(
-              '${subtotal.toStringAsFixed(2)} EGP',
+              '${loc.subtotalLabel}:',
+              style: const pw.TextStyle(fontSize: 10),
+            ),
+            pw.Text(
+              '${subtotal.toStringAsFixed(2)} ${loc.egp}',
               style: const pw.TextStyle(fontSize: 10),
             ),
           ],
@@ -304,11 +321,11 @@ class PdfInvoiceService {
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
             pw.Text(
-              'Discount (${discountPercentage.toStringAsFixed(0)}%):',
+              '${loc.discountLabelPdf} (${discountPercentage.toStringAsFixed(0)}%):',
               style: const pw.TextStyle(fontSize: 10),
             ),
             pw.Text(
-              '-${discountAmount.toStringAsFixed(2)} EGP',
+              '-${discountAmount.toStringAsFixed(2)} ${loc.egp}',
               style: const pw.TextStyle(fontSize: 10),
             ),
           ],
@@ -320,11 +337,11 @@ class PdfInvoiceService {
           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
           children: [
             pw.Text(
-              'TOTAL:',
+              '${loc.totalLabel}:',
               style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
             ),
             pw.Text(
-              '${totalAmount.toStringAsFixed(2)} EGP',
+              '${totalAmount.toStringAsFixed(2)} ${loc.egp}',
               style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
             ),
           ],
@@ -334,7 +351,10 @@ class PdfInvoiceService {
   }
 
   /// Generates a Z-Report (Shift Report) PDF optimized for 80mm thermal printer roll.
-  Future<Uint8List> generateShiftReportPdf(ShiftReport report) async {
+  Future<Uint8List> generateShiftReportPdf(
+    ShiftReport report,
+    AppLocalizations loc,
+  ) async {
     final pdf = pw.Document();
 
     // Load bundled Cairo font for Arabic + English support
@@ -346,23 +366,28 @@ class PdfInvoiceService {
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     final generatedDate = report.generatedAt ?? DateTime.now();
 
+    final textDirection = loc.localeName == 'ar'
+        ? pw.TextDirection.rtl
+        : pw.TextDirection.ltr;
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.roll80,
         margin: const pw.EdgeInsets.all(8),
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+        textDirection: textDirection,
         build: (context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: [
             // Header
             pw.Text(
-              'Z-REPORT',
+              loc.zReportTitle,
               style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
               textAlign: pw.TextAlign.center,
             ),
             pw.SizedBox(height: 4),
             pw.Text(
-              'Arcade Cashier',
+              loc.brandName,
               style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
               textAlign: pw.TextAlign.center,
             ),
@@ -377,13 +402,14 @@ class PdfInvoiceService {
             pw.SizedBox(height: 8),
 
             // Body - Sales Breakdown
-            _buildReportRow('Cash Sales', report.totalCash),
+            _buildReportRow(loc.cashSales, report.totalCash, loc),
             pw.SizedBox(height: 4),
-            _buildReportRow('Card Sales', report.totalCard),
+            _buildReportRow(loc.cardSales, report.totalCard, loc),
             pw.SizedBox(height: 4),
             _buildReportRow(
-              'Total Transactions',
+              loc.totalTransactions,
               report.transactionsCount.toDouble(),
+              loc,
               isCount: true,
             ),
 
@@ -396,14 +422,14 @@ class PdfInvoiceService {
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
                 pw.Text(
-                  'NET REVENUE',
+                  loc.netRevenue.toUpperCase(),
                   style: pw.TextStyle(
                     fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
                 pw.Text(
-                  '${report.totalRevenue.toStringAsFixed(2)} EGP',
+                  '${report.totalRevenue.toStringAsFixed(2)} ${loc.egp}',
                   style: pw.TextStyle(
                     fontSize: 14,
                     fontWeight: pw.FontWeight.bold,
@@ -418,13 +444,13 @@ class PdfInvoiceService {
 
             // Footer
             pw.Text(
-              'Discounts Given: ${report.totalDiscount.toStringAsFixed(2)} EGP',
+              '${loc.discountsGiven}: ${report.totalDiscount.toStringAsFixed(2)} ${loc.egp}',
               style: const pw.TextStyle(fontSize: 9),
               textAlign: pw.TextAlign.center,
             ),
             pw.SizedBox(height: 16),
             pw.Text(
-              'Cashier Signature: ______________',
+              '${loc.cashierSignature}: ______________',
               style: const pw.TextStyle(fontSize: 10),
               textAlign: pw.TextAlign.center,
             ),
@@ -438,7 +464,8 @@ class PdfInvoiceService {
 
   pw.Widget _buildReportRow(
     String label,
-    double value, {
+    double value,
+    AppLocalizations loc, {
     bool isCount = false,
   }) {
     return pw.Row(
@@ -448,23 +475,23 @@ class PdfInvoiceService {
         pw.Text(
           isCount
               ? value.toInt().toString()
-              : '${value.toStringAsFixed(2)} EGP',
+              : '${value.toStringAsFixed(2)} ${loc.egp}',
           style: const pw.TextStyle(fontSize: 11),
         ),
       ],
     );
   }
 
-  pw.Widget _buildFooter() {
+  pw.Widget _buildFooter(AppLocalizations loc) {
     return pw.Column(
       children: [
         pw.Text(
-          'Thank you!',
+          loc.thankYou,
           style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
           textAlign: pw.TextAlign.center,
         ),
         pw.Text(
-          'Visit again',
+          loc.visitAgain,
           style: const pw.TextStyle(fontSize: 10),
           textAlign: pw.TextAlign.center,
         ),

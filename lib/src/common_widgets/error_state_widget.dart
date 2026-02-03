@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 /// A reusable error state widget that displays a user-friendly error message
@@ -39,7 +40,8 @@ class ErrorStateWidget extends StatelessWidget {
 
             // Heading
             Text(
-              'Something Went Wrong',
+              // 'Something Went Wrong',
+              AppLocalizations.of(context)!.somethingWentWrong,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -62,7 +64,7 @@ class ErrorStateWidget extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context)!.retry),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
