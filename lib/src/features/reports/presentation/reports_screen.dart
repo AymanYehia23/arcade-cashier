@@ -30,7 +30,10 @@ class ReportsScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${loc.period}: ${_formatDate(dateRange.start, context)} - ${_formatDate(dateRange.end, context)}',
+                    loc.periodHeader(
+                      _formatDate(dateRange.start, context),
+                      _formatDate(dateRange.end, context),
+                    ),
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(

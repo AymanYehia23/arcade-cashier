@@ -57,7 +57,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                 children: [15, 30, 60]
                     .map(
                       (mins) => ActionChip(
-                        label: Text('+$mins ${loc.minutes}'),
+                        label: Text(loc.addMinutes(mins, loc.minutes)),
                         onPressed: () {
                           Navigator.pop(dialogContext);
                           ref
@@ -156,7 +156,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('${loc.subtotal}:'),
+                          Text(loc.subtotalWithColon),
                           Text(
                             '${currentBill.subtotal.toStringAsFixed(2)} ${loc.egp}',
                           ),
@@ -170,7 +170,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                         decoration: InputDecoration(
                           labelText: loc.discountLabel,
                           border: const OutlineInputBorder(),
-                          prefixText: '% ',
+                          prefixText: loc.percentSymbol,
                           suffixText: '',
                           isDense: true,
                         ),
@@ -254,7 +254,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       );
                     }
                   },
-                  child: Text(loc.finishAndPrint),
+                  child: Text(loc.checkoutAndPrint),
                 ),
               ],
             );
@@ -483,14 +483,14 @@ class _BillSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(loc.timeCost),
-              Text('${timeCost.toStringAsFixed(2)} EGP'),
+              Text('${timeCost.toStringAsFixed(2)} ${loc.egp}'),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(loc.orders),
-              Text('${ordersTotal.toStringAsFixed(2)} EGP'),
+              Text('${ordersTotal.toStringAsFixed(2)} ${loc.egp}'),
             ],
           ),
           const Divider(),
@@ -499,7 +499,7 @@ class _BillSection extends StatelessWidget {
             children: [
               Text(loc.total, style: Theme.of(context).textTheme.titleLarge),
               Text(
-                '${grandTotal.toStringAsFixed(2)} EGP',
+                '${grandTotal.toStringAsFixed(2)} ${loc.egp}',
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

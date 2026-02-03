@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
 import 'package:arcade_cashier/src/features/products/presentation/product_form_dialog.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 
 class ProductDashboardCard extends ConsumerWidget {
   final Product product;
@@ -110,7 +111,7 @@ class ProductDashboardCard extends ConsumerWidget {
                           children: [
                             // Price
                             Text(
-                              '${product.sellingPrice.toStringAsFixed(0)} EGP',
+                              '${product.sellingPrice.toStringAsFixed(0)} ${AppLocalizations.of(context)!.egp}',
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w900,
@@ -121,8 +122,12 @@ class ProductDashboardCard extends ConsumerWidget {
                             // Stock Label
                             Text(
                               isOutOfStock
-                                  ? 'Out of Stock'
-                                  : '${product.stockQuantity} Left',
+                                  ? AppLocalizations.of(
+                                      context,
+                                    )!.outOfStockLabel
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.stockLeft(product.stockQuantity),
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -183,18 +188,18 @@ class ProductDashboardCard extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: const Color(0xFF2C2C3E),
-        title: const Text(
-          'Delete Product?',
+        title: Text(
+          AppLocalizations.of(context)!.deleteProductTitle,
           style: TextStyle(color: Colors.white),
         ),
         content: Text(
-          'Remove "${product.name}" from inventory?',
+          AppLocalizations.of(context)!.deleteProductMessage(product.name),
           style: const TextStyle(color: Colors.white70),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () {
@@ -203,8 +208,8 @@ class ProductDashboardCard extends ConsumerWidget {
                   .deleteProduct(product.id);
               Navigator.pop(ctx);
             },
-            child: const Text(
-              'Delete',
+            child: Text(
+              AppLocalizations.of(context)!.deleteButton,
               style: TextStyle(color: Colors.redAccent),
             ),
           ),

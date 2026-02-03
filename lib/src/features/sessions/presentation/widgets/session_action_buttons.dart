@@ -43,8 +43,8 @@ class SessionActionButtons extends StatelessWidget {
         const SizedBox(width: 8),
         Tooltip(
           message: isQuickOrder
-              ? 'Checkout (Ctrl+S)'
-              : '${loc.stopSession} (Ctrl+S)',
+              ? loc.checkoutShortcut
+              : loc.stopSessionShortcut(loc.stopSession),
           child: FilledButton(
             style: FilledButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary,
@@ -59,7 +59,7 @@ class SessionActionButtons extends StatelessWidget {
                       strokeWidth: 2,
                     ),
                   )
-                : Text(isQuickOrder ? 'Checkout & Print' : loc.stopSession),
+                : Text(isQuickOrder ? loc.checkoutAndPrint : loc.stopSession),
           ),
         ),
       ],

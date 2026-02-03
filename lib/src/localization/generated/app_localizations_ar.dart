@@ -189,53 +189,52 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noActiveSessionFound => 'لا توجد جلسة نشطة.';
 
   @override
-  String get productName => 'Product Name';
+  String get productName => 'اسم المنتج';
 
   @override
-  String get category => 'Category';
+  String get category => 'الفئة';
 
   @override
-  String get sellingPrice => 'Selling Price';
+  String get sellingPrice => 'سعر البيع';
 
   @override
-  String get stockQuantity => 'Stock Quantity';
+  String get stockQuantity => 'كمية المخزون';
 
   @override
-  String get drinks => 'Drinks';
+  String get drinks => 'مشروبات';
 
   @override
-  String get snacks => 'Snacks';
+  String get snacks => 'سناكس';
 
   @override
-  String get food => 'Food';
+  String get food => 'مأكولات';
 
   @override
-  String get other => 'Other';
+  String get other => 'أخرى';
 
   @override
-  String get lowStock => 'Low Stock';
+  String get lowStock => 'مخزون منخفض';
 
   @override
-  String get addProduct => 'Add Product';
+  String get addProduct => 'إضافة منتج';
 
   @override
-  String get editProduct => 'Edit Product';
+  String get editProduct => 'تعديل منتج';
 
   @override
-  String get deleteProduct => 'Delete Product';
+  String get deleteProduct => 'حذف المنتج';
 
   @override
-  String get confirmDeleteProduct =>
-      'Are you sure you want to delete this product?';
+  String get confirmDeleteProduct => 'هل أنت متأكد أنك تريد حذف هذا المنتج؟';
 
   @override
-  String get noProductsFound => 'No products found';
+  String get noProductsFound => 'لم يتم العثور على منتجات';
 
   @override
-  String get fieldRequired => 'Required';
+  String get fieldRequired => 'مطلوب';
 
   @override
-  String get invalidNumber => 'Invalid number';
+  String get invalidNumber => 'رقم غير صحيح';
 
   @override
   String productPriceStock(double price, int stock) {
@@ -250,98 +249,98 @@ class AppLocalizationsAr extends AppLocalizations {
       stock,
       locale: localeName,
       other: '$stock',
-      zero: 'Out of Stock',
+      zero: 'نفذت الكمية',
     );
-    return 'Price: $priceString | Stock: $_temp0';
+    return 'السعر: $priceString | المخزون: $_temp0';
   }
 
   @override
-  String get products => 'Products';
+  String get products => 'المنتجات';
 
   @override
-  String get orders => 'Orders';
+  String get orders => 'الطلبات';
 
   @override
-  String get total => 'Total';
+  String get total => 'الإجمالي';
 
   @override
-  String get bill => 'Bill';
+  String get bill => 'الحساب';
 
   @override
-  String get timeCost => 'Time Cost';
+  String get timeCost => 'تكلفة الوقت';
 
   @override
-  String get search => 'Search';
+  String get search => 'بحث';
 
   @override
-  String get inventory => 'Inventory';
+  String get inventory => 'المخزون';
 
   @override
-  String get invoices => 'Invoices';
+  String get invoices => 'الفواتير';
 
   @override
-  String get invoiceHistory => 'Invoice History';
+  String get invoiceHistory => 'سجل الفواتير';
 
   @override
-  String get completeSession => 'Complete Session?';
+  String get completeSession => 'إنهاء الجلسة؟';
 
   @override
   String totalBillAmount(String amount) {
-    return 'Total Bill: $amount EGP';
+    return 'إجمالي الحساب: $amount ج.م';
   }
 
   @override
-  String get finishAndPrint => 'Finish & Print';
+  String get finishAndPrint => 'إنهاء وطباعة';
 
   @override
-  String get thankYouMessage => 'Thank you! Visit again';
+  String get thankYouMessage => 'شكراً لك! ننتظر زيارتكم مرة أخرى';
 
   @override
-  String get invoiceNumber => 'Invoice #';
+  String get invoiceNumber => 'فاتورة #';
 
   @override
-  String get noInvoicesFound => 'No invoices found';
+  String get noInvoicesFound => 'لم يتم العثور على فواتير';
 
   @override
-  String get reprintInvoice => 'Reprint Invoice';
+  String get reprintInvoice => 'إعادة طباعة الفاتورة';
 
   @override
-  String get paymentMethod => 'Payment Method';
+  String get paymentMethod => 'طريقة الدفع';
 
   @override
-  String get cash => 'Cash';
+  String get cash => 'نقدي';
 
   @override
   String timeDuration(String duration) {
-    return 'Time ($duration)';
+    return 'الوقت ($duration)';
   }
 
   @override
-  String get addItems => 'Add Items';
+  String get addItems => 'إضافة أصناف';
 
   @override
-  String get pause => 'Pause';
+  String get pause => 'إيقاف مؤقت';
 
   @override
-  String get resume => 'Resume';
+  String get resume => 'استئناف';
 
   @override
-  String get paused => 'PAUSED';
+  String get paused => 'موقوفة';
 
   @override
-  String get analytics => 'Analytics';
+  String get analytics => 'التحليلات';
 
   @override
-  String get name => 'Name';
+  String get name => 'الاسم';
 
   @override
-  String get phone => 'Phone';
+  String get phone => 'رقم الهاتف';
 
   @override
-  String get newCustomer => 'New Customer';
+  String get newCustomer => 'عميل جديد';
 
   @override
-  String get searchCustomer => 'Search Customer (Name or Phone)';
+  String get searchCustomer => 'بحث عن عميل (الاسم أو الهاتف)';
 
   @override
   String get endShift => 'إنهاء الوردية';
@@ -505,4 +504,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get discountsLabel => 'الخصومات';
+
+  @override
+  String addMinutes(int minutes, String unit) {
+    return '+$minutes $unit';
+  }
+
+  @override
+  String get subtotalWithColon => 'المجموع الفرعي:';
+
+  @override
+  String remainingTime(String time) {
+    return 'المتبقي $time';
+  }
+
+  @override
+  String get checkoutAndPrint => 'إتمام وطباعة';
+
+  @override
+  String get checkoutShortcut => 'إتمام (Ctrl+S)';
+
+  @override
+  String stopSessionShortcut(String stopSession) {
+    return '$stopSession (Ctrl+S)';
+  }
+
+  @override
+  String get perHour => '/ساعة';
+
+  @override
+  String get rateLabel => 'المعدل';
+
+  @override
+  String get outOfStockLabel => 'نفذت الكمية';
+
+  @override
+  String stockLeft(int count) {
+    return 'متبقي $count';
+  }
+
+  @override
+  String get deleteProductTitle => 'حذف المنتج؟';
+
+  @override
+  String deleteProductMessage(String name) {
+    return 'هل تريد حذف \"$name\" من المخزون؟';
+  }
+
+  @override
+  String get deleteButton => 'حذف';
+
+  @override
+  String periodHeader(String start, String end) {
+    return 'الفترة: $start - $end';
+  }
+
+  @override
+  String discountsGivenValue(String amount, String currency) {
+    return 'الخصومات المقدمة: $amount $currency';
+  }
+
+  @override
+  String get percentSymbol => '%';
 }

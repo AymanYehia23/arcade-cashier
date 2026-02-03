@@ -65,7 +65,7 @@ class _SessionTimerWidgetState extends State<SessionTimerWidget> {
       displayTimeText = loc.paused; // 'PAUSED'
       displayTimeColor = Colors.grey;
     } else if (widget.session.isQuickOrder) {
-      displayTimeText = 'Walk-in';
+      displayTimeText = loc.quickOrder;
       displayTimeColor = Colors.blue;
     } else if (widget.session.sessionType == SessionType.open) {
       final totalPaused = Duration(
@@ -91,7 +91,7 @@ class _SessionTimerWidgetState extends State<SessionTimerWidget> {
         displayTimeText = "${loc.timeUp} -${_formatDuration(remaining.abs())}";
         displayTimeColor = Theme.of(context).colorScheme.error;
       } else {
-        displayTimeText = "${_formatDuration(remaining)} remaining";
+        displayTimeText = loc.remainingTime(_formatDuration(remaining));
         displayTimeColor = Colors.orange;
       }
     }
@@ -110,7 +110,9 @@ class _SessionTimerWidgetState extends State<SessionTimerWidget> {
         ),
         if (widget.session.sessionType == SessionType.fixed)
           TextButton(onPressed: widget.onExtend, child: Text(loc.extendTime)),
-        Text('Rate: ${widget.session.appliedHourlyRate} EGP/hr'),
+        Text(
+          '${loc.rateLabel}: ${widget.session.appliedHourlyRate} ${loc.egp}${loc.perHour}',
+        ),
         const SizedBox(height: 4),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,

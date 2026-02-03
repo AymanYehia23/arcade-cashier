@@ -209,5 +209,79 @@
   "avgTicket": "Avg. Ticket",
   "grandTotalRevenue": "Grand Total Revenue: ",
   "noDataPeriod": "No data available for this period.",
-  "discountsLabel": "Discounts"
+  "discountsLabel": "Discounts",
+  "addMinutes": "+{minutes} {unit}",
+  "@addMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "subtotalWithColon": "Subtotal:",
+  "remainingTime": "{time} remaining",
+  "@remainingTime": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutAndPrint": "Checkout & Print",
+  "checkoutShortcut": "Checkout (Ctrl+S)",
+  "stopSessionShortcut": "{stopSession} (Ctrl+S)",
+  "@stopSessionShortcut": {
+    "placeholders": {
+      "stopSession": {
+        "type": "String"
+      }
+    }
+  },
+  "perHour": "/hr",
+  "rateLabel": "Rate",
+  "outOfStockLabel": "Out of Stock",
+  "stockLeft": "{count} Left",
+  "@stockLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deleteProductTitle": "Delete Product?",
+  "deleteProductMessage": "Remove \"{name}\" from inventory?",
+  "@deleteProductMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteButton": "Delete",
+  "periodHeader": "Period: {start} - {end}",
+  "@periodHeader": {
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "discountsGivenValue": "Discounts Given: {amount} {currency}",
+  "@discountsGivenValue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "currency": {
+        "type": "String"
+      }
+    }
+  },
+  "percentSymbol": "%"
 }

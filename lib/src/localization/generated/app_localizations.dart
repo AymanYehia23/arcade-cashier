@@ -1039,6 +1039,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Discounts'**
   String get discountsLabel;
+
+  /// No description provided for @addMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'+{minutes} {unit}'**
+  String addMinutes(int minutes, String unit);
+
+  /// No description provided for @subtotalWithColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal:'**
+  String get subtotalWithColon;
+
+  /// No description provided for @remainingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'{time} remaining'**
+  String remainingTime(String time);
+
+  /// No description provided for @checkoutAndPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout & Print'**
+  String get checkoutAndPrint;
+
+  /// No description provided for @checkoutShortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout (Ctrl+S)'**
+  String get checkoutShortcut;
+
+  /// No description provided for @stopSessionShortcut.
+  ///
+  /// In en, this message translates to:
+  /// **'{stopSession} (Ctrl+S)'**
+  String stopSessionShortcut(String stopSession);
+
+  /// No description provided for @perHour.
+  ///
+  /// In en, this message translates to:
+  /// **'/hr'**
+  String get perHour;
+
+  /// No description provided for @rateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get rateLabel;
+
+  /// No description provided for @outOfStockLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of Stock'**
+  String get outOfStockLabel;
+
+  /// No description provided for @stockLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Left'**
+  String stockLeft(int count);
+
+  /// No description provided for @deleteProductTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Product?'**
+  String get deleteProductTitle;
+
+  /// No description provided for @deleteProductMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove \"{name}\" from inventory?'**
+  String deleteProductMessage(String name);
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
+  /// No description provided for @periodHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'Period: {start} - {end}'**
+  String periodHeader(String start, String end);
+
+  /// No description provided for @discountsGivenValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts Given: {amount} {currency}'**
+  String discountsGivenValue(String amount, String currency);
+
+  /// No description provided for @percentSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'%'**
+  String get percentSymbol;
 }
 
 class _AppLocalizationsDelegate

@@ -137,7 +137,10 @@ class ShiftReportDialog extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            '${loc.discountsGiven}: ${report.totalDiscount.toStringAsFixed(2)} ${loc.egp}',
+            loc.discountsGivenValue(
+              report.totalDiscount.toStringAsFixed(2),
+              loc.egp,
+            ),
             style: Theme.of(
               context,
             ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),

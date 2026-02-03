@@ -505,4 +505,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get discountsLabel => 'Discounts';
+
+  @override
+  String addMinutes(int minutes, String unit) {
+    return '+$minutes $unit';
+  }
+
+  @override
+  String get subtotalWithColon => 'Subtotal:';
+
+  @override
+  String remainingTime(String time) {
+    return '$time remaining';
+  }
+
+  @override
+  String get checkoutAndPrint => 'Checkout & Print';
+
+  @override
+  String get checkoutShortcut => 'Checkout (Ctrl+S)';
+
+  @override
+  String stopSessionShortcut(String stopSession) {
+    return '$stopSession (Ctrl+S)';
+  }
+
+  @override
+  String get perHour => '/hr';
+
+  @override
+  String get rateLabel => 'Rate';
+
+  @override
+  String get outOfStockLabel => 'Out of Stock';
+
+  @override
+  String stockLeft(int count) {
+    return '$count Left';
+  }
+
+  @override
+  String get deleteProductTitle => 'Delete Product?';
+
+  @override
+  String deleteProductMessage(String name) {
+    return 'Remove \"$name\" from inventory?';
+  }
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
+  String periodHeader(String start, String end) {
+    return 'Period: $start - $end';
+  }
+
+  @override
+  String discountsGivenValue(String amount, String currency) {
+    return 'Discounts Given: $amount $currency';
+  }
+
+  @override
+  String get percentSymbol => '%';
 }
