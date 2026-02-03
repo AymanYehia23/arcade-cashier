@@ -8,17 +8,57 @@ part 'auth_repository.g.dart';
 
 class AuthRepository {
   final supabase.SupabaseClient _supabase;
+  AppUser? _cachedUser;
 
   AuthRepository(this._supabase);
 
-  Stream<AppUser?> authStateChanges() {
-    return _supabase.auth.onAuthStateChange.map((event) {
+  Stream<AppUser?> authStateChanges() async* {
+    await for (final event in _supabase.auth.onAuthStateChange) {
       final user = event.session?.user;
       if (user == null) {
-        return null;
+        yield null;
+        continue;
       }
-      return AppUser(uid: user.id, email: user.email ?? '');
-    });
+
+      // If we have a cached user that matches the current session user, yield it immediately
+      if (_cachedUser != null && _cachedUser!.uid == user.id) {
+        yield _cachedUser;
+      }
+
+      try {
+        // Fetch user data from app_users table
+        // Note: Table uses 'id' instead of 'uid', and email is best taken from auth user
+        final userData = await _supabase
+            .from('app_users')
+            .select('role')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (userData != null) {
+          _cachedUser = AppUser(
+            uid: user.id,
+            email: user.email ?? '',
+            role: userData['role'] as String? ?? 'customer',
+          );
+        } else {
+          // Fallback: create user with default role if not found in table
+          _cachedUser = AppUser(
+            uid: user.id,
+            email: user.email ?? '',
+            role: 'customer',
+          );
+        }
+        yield _cachedUser;
+      } catch (e) {
+        // Fallback on error
+        _cachedUser = AppUser(
+          uid: user.id,
+          email: user.email ?? '',
+          role: 'customer',
+        );
+        yield _cachedUser;
+      }
+    }
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
@@ -26,14 +66,53 @@ class AuthRepository {
   }
 
   Future<void> signOut() async {
+    _cachedUser = null;
     await _supabase.auth.signOut();
   }
 
-  AppUser? get currentUser {
+  Future<AppUser?> getCurrentUser() async {
     final user = _supabase.auth.currentUser;
-    if (user == null) return null;
-    return AppUser(uid: user.id, email: user.email ?? '');
+    if (user == null) {
+      _cachedUser = null;
+      return null;
+    }
+
+    // Return cached user if it matches current session
+    if (_cachedUser != null && _cachedUser!.uid == user.id) {
+      return _cachedUser;
+    }
+
+    try {
+      // Fetch user data from app_users table
+      final userData = await _supabase
+          .from('app_users')
+          .select('role')
+          .eq('id', user.id) // Query by 'id'
+          .maybeSingle();
+
+      if (userData != null) {
+        _cachedUser = AppUser(
+          uid: user.id,
+          email: user.email ?? '',
+          role: userData['role'] as String? ?? 'customer',
+        );
+      } else {
+        // Fallback: create user with default role if not found in table
+        _cachedUser = AppUser(
+          uid: user.id,
+          email: user.email ?? '',
+          role: 'customer',
+        );
+      }
+      return _cachedUser;
+    } catch (e) {
+      // Fallback on error
+      return AppUser(uid: user.id, email: user.email ?? '', role: 'customer');
+    }
   }
+
+  // Synchronous check for basic authentication status
+  bool get isAuthenticated => _supabase.auth.currentUser != null;
 }
 
 @Riverpod(keepAlive: true)

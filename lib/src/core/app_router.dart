@@ -23,8 +23,8 @@ GoRouter goRouter(Ref ref) {
   return GoRouter(
     initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
-    redirect: (context, state) {
-      final isLoggedIn = authRepository.currentUser != null;
+    redirect: (context, state) async {
+      final isLoggedIn = authRepository.isAuthenticated;
       final isLoggingIn = state.uri.path == AppRoutes.login;
       final isSplash = state.uri.path == '/splash';
 
@@ -37,6 +37,17 @@ GoRouter goRouter(Ref ref) {
       }
 
       if (isLoggingIn) {
+        return AppRoutes.dashboard;
+      }
+
+      // Route guard for admin-only routes
+      final currentUser = await authRepository.getCurrentUser();
+      final isAdmin = currentUser?.isAdmin ?? false;
+      final path = state.uri.path;
+
+      if (!isAdmin &&
+          (path.startsWith(AppRoutes.analytics) ||
+              path == AppRoutes.manageRooms)) {
         return AppRoutes.dashboard;
       }
 

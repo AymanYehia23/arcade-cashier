@@ -23,6 +23,7 @@ AppUser _$AppUserFromJson(Map<String, dynamic> json) {
 mixin _$AppUser {
   String get uid => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
+  String get role => throw _privateConstructorUsedError;
 
   /// Serializes this AppUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,7 +39,7 @@ abstract class $AppUserCopyWith<$Res> {
   factory $AppUserCopyWith(AppUser value, $Res Function(AppUser) then) =
       _$AppUserCopyWithImpl<$Res, AppUser>;
   @useResult
-  $Res call({String uid, String email});
+  $Res call({String uid, String email, String role});
 }
 
 /// @nodoc
@@ -55,7 +56,7 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? uid = null, Object? email = null}) {
+  $Res call({Object? uid = null, Object? email = null, Object? role = null}) {
     return _then(
       _value.copyWith(
             uid: null == uid
@@ -65,6 +66,10 @@ class _$AppUserCopyWithImpl<$Res, $Val extends AppUser>
             email: null == email
                 ? _value.email
                 : email // ignore: cast_nullable_to_non_nullable
+                      as String,
+            role: null == role
+                ? _value.role
+                : role // ignore: cast_nullable_to_non_nullable
                       as String,
           )
           as $Val,
@@ -80,7 +85,7 @@ abstract class _$$AppUserImplCopyWith<$Res> implements $AppUserCopyWith<$Res> {
   ) = __$$AppUserImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String uid, String email});
+  $Res call({String uid, String email, String role});
 }
 
 /// @nodoc
@@ -96,7 +101,7 @@ class __$$AppUserImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? uid = null, Object? email = null}) {
+  $Res call({Object? uid = null, Object? email = null, Object? role = null}) {
     return _then(
       _$AppUserImpl(
         uid: null == uid
@@ -107,6 +112,10 @@ class __$$AppUserImplCopyWithImpl<$Res>
             ? _value.email
             : email // ignore: cast_nullable_to_non_nullable
                   as String,
+        role: null == role
+            ? _value.role
+            : role // ignore: cast_nullable_to_non_nullable
+                  as String,
       ),
     );
   }
@@ -114,8 +123,12 @@ class __$$AppUserImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$AppUserImpl implements _AppUser {
-  const _$AppUserImpl({required this.uid, required this.email});
+class _$AppUserImpl extends _AppUser {
+  const _$AppUserImpl({
+    required this.uid,
+    required this.email,
+    this.role = 'customer',
+  }) : super._();
 
   factory _$AppUserImpl.fromJson(Map<String, dynamic> json) =>
       _$$AppUserImplFromJson(json);
@@ -124,10 +137,13 @@ class _$AppUserImpl implements _AppUser {
   final String uid;
   @override
   final String email;
+  @override
+  @JsonKey()
+  final String role;
 
   @override
   String toString() {
-    return 'AppUser(uid: $uid, email: $email)';
+    return 'AppUser(uid: $uid, email: $email, role: $role)';
   }
 
   @override
@@ -136,12 +152,13 @@ class _$AppUserImpl implements _AppUser {
         (other.runtimeType == runtimeType &&
             other is _$AppUserImpl &&
             (identical(other.uid, uid) || other.uid == uid) &&
-            (identical(other.email, email) || other.email == email));
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.role, role) || other.role == role));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, uid, email);
+  int get hashCode => Object.hash(runtimeType, uid, email, role);
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.
@@ -157,11 +174,13 @@ class _$AppUserImpl implements _AppUser {
   }
 }
 
-abstract class _AppUser implements AppUser {
+abstract class _AppUser extends AppUser {
   const factory _AppUser({
     required final String uid,
     required final String email,
+    final String role,
   }) = _$AppUserImpl;
+  const _AppUser._() : super._();
 
   factory _AppUser.fromJson(Map<String, dynamic> json) = _$AppUserImpl.fromJson;
 
@@ -169,6 +188,8 @@ abstract class _AppUser implements AppUser {
   String get uid;
   @override
   String get email;
+  @override
+  String get role;
 
   /// Create a copy of AppUser
   /// with the given fields replaced by the non-null parameter values.

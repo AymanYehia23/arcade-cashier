@@ -34,15 +34,19 @@ class SettingsScreen extends ConsumerWidget {
               secondary: const Icon(Icons.language),
             ),
             const Divider(),
-            _SectionHeader(title: loc.manageRooms),
-            // Let's stick to the plan: "Management" section
-            ListTile(
-              leading: const Icon(Icons.meeting_room),
-              title: Text(loc.manageRooms),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push(AppRoutes.manageRooms),
-            ),
-            const Divider(),
+            // Management section - Only visible to admins
+            if (ref.watch(authStateChangesProvider).value?.isAdmin ??
+                false) ...[
+              _SectionHeader(title: loc.manageRooms),
+              // Let's stick to the plan: "Management" section
+              ListTile(
+                leading: const Icon(Icons.meeting_room),
+                title: Text(loc.manageRooms),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(AppRoutes.manageRooms),
+              ),
+              const Divider(),
+            ],
             const PrinterSettingsSection(),
             const Divider(),
             _SectionHeader(title: loc.account),
