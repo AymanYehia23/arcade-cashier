@@ -8,7 +8,7 @@ import '../domain/room_usage_report.dart';
 part 'reports_providers.g.dart';
 
 @riverpod
-class DateRangeFilter extends _$DateRangeFilter {
+class ReportsDateRange extends _$ReportsDateRange {
   @override
   DateTimeRange build() {
     final end = DateTime.now();
@@ -24,20 +24,20 @@ class DateRangeFilter extends _$DateRangeFilter {
 @riverpod
 Future<List<DailyRevenueReport>> dailyRevenue(DailyRevenueRef ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
-  final range = ref.watch(dateRangeFilterProvider);
+  final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchRevenue(range.start, range.end);
 }
 
 @riverpod
 Future<List<ProductPerformanceReport>> topProducts(TopProductsRef ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
-  final range = ref.watch(dateRangeFilterProvider);
+  final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchTopProducts(start: range.start, end: range.end);
 }
 
 @riverpod
 Future<List<RoomUsageReport>> roomUsage(RoomUsageRef ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
-  final range = ref.watch(dateRangeFilterProvider);
+  final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchRoomUsage(start: range.start, end: range.end);
 }

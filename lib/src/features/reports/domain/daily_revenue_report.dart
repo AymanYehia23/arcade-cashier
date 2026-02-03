@@ -7,7 +7,9 @@ part 'daily_revenue_report.g.dart';
 class DailyRevenueReport with _$DailyRevenueReport {
   const factory DailyRevenueReport({
     @JsonKey(name: 'report_date') required DateTime date,
-    @JsonKey(name: 'total_revenue') required double totalRevenue,
+    @JsonKey(name: 'net_revenue') required double netRevenue,
+    @JsonKey(name: 'gross_revenue') required double grossRevenue,
+    @JsonKey(name: 'total_discount') required double totalDiscount,
     @JsonKey(name: 'total_invoices') required int invoiceCount,
   }) = _DailyRevenueReport;
 

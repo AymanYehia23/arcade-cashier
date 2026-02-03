@@ -23,8 +23,12 @@ DailyRevenueReport _$DailyRevenueReportFromJson(Map<String, dynamic> json) {
 mixin _$DailyRevenueReport {
   @JsonKey(name: 'report_date')
   DateTime get date => throw _privateConstructorUsedError;
-  @JsonKey(name: 'total_revenue')
-  double get totalRevenue => throw _privateConstructorUsedError;
+  @JsonKey(name: 'net_revenue')
+  double get netRevenue => throw _privateConstructorUsedError;
+  @JsonKey(name: 'gross_revenue')
+  double get grossRevenue => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_discount')
+  double get totalDiscount => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_invoices')
   int get invoiceCount => throw _privateConstructorUsedError;
 
@@ -47,7 +51,9 @@ abstract class $DailyRevenueReportCopyWith<$Res> {
   @useResult
   $Res call({
     @JsonKey(name: 'report_date') DateTime date,
-    @JsonKey(name: 'total_revenue') double totalRevenue,
+    @JsonKey(name: 'net_revenue') double netRevenue,
+    @JsonKey(name: 'gross_revenue') double grossRevenue,
+    @JsonKey(name: 'total_discount') double totalDiscount,
     @JsonKey(name: 'total_invoices') int invoiceCount,
   });
 }
@@ -68,7 +74,9 @@ class _$DailyRevenueReportCopyWithImpl<$Res, $Val extends DailyRevenueReport>
   @override
   $Res call({
     Object? date = null,
-    Object? totalRevenue = null,
+    Object? netRevenue = null,
+    Object? grossRevenue = null,
+    Object? totalDiscount = null,
     Object? invoiceCount = null,
   }) {
     return _then(
@@ -77,9 +85,17 @@ class _$DailyRevenueReportCopyWithImpl<$Res, $Val extends DailyRevenueReport>
                 ? _value.date
                 : date // ignore: cast_nullable_to_non_nullable
                       as DateTime,
-            totalRevenue: null == totalRevenue
-                ? _value.totalRevenue
-                : totalRevenue // ignore: cast_nullable_to_non_nullable
+            netRevenue: null == netRevenue
+                ? _value.netRevenue
+                : netRevenue // ignore: cast_nullable_to_non_nullable
+                      as double,
+            grossRevenue: null == grossRevenue
+                ? _value.grossRevenue
+                : grossRevenue // ignore: cast_nullable_to_non_nullable
+                      as double,
+            totalDiscount: null == totalDiscount
+                ? _value.totalDiscount
+                : totalDiscount // ignore: cast_nullable_to_non_nullable
                       as double,
             invoiceCount: null == invoiceCount
                 ? _value.invoiceCount
@@ -102,7 +118,9 @@ abstract class _$$DailyRevenueReportImplCopyWith<$Res>
   @useResult
   $Res call({
     @JsonKey(name: 'report_date') DateTime date,
-    @JsonKey(name: 'total_revenue') double totalRevenue,
+    @JsonKey(name: 'net_revenue') double netRevenue,
+    @JsonKey(name: 'gross_revenue') double grossRevenue,
+    @JsonKey(name: 'total_discount') double totalDiscount,
     @JsonKey(name: 'total_invoices') int invoiceCount,
   });
 }
@@ -122,7 +140,9 @@ class __$$DailyRevenueReportImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? date = null,
-    Object? totalRevenue = null,
+    Object? netRevenue = null,
+    Object? grossRevenue = null,
+    Object? totalDiscount = null,
     Object? invoiceCount = null,
   }) {
     return _then(
@@ -131,9 +151,17 @@ class __$$DailyRevenueReportImplCopyWithImpl<$Res>
             ? _value.date
             : date // ignore: cast_nullable_to_non_nullable
                   as DateTime,
-        totalRevenue: null == totalRevenue
-            ? _value.totalRevenue
-            : totalRevenue // ignore: cast_nullable_to_non_nullable
+        netRevenue: null == netRevenue
+            ? _value.netRevenue
+            : netRevenue // ignore: cast_nullable_to_non_nullable
+                  as double,
+        grossRevenue: null == grossRevenue
+            ? _value.grossRevenue
+            : grossRevenue // ignore: cast_nullable_to_non_nullable
+                  as double,
+        totalDiscount: null == totalDiscount
+            ? _value.totalDiscount
+            : totalDiscount // ignore: cast_nullable_to_non_nullable
                   as double,
         invoiceCount: null == invoiceCount
             ? _value.invoiceCount
@@ -149,7 +177,9 @@ class __$$DailyRevenueReportImplCopyWithImpl<$Res>
 class _$DailyRevenueReportImpl implements _DailyRevenueReport {
   const _$DailyRevenueReportImpl({
     @JsonKey(name: 'report_date') required this.date,
-    @JsonKey(name: 'total_revenue') required this.totalRevenue,
+    @JsonKey(name: 'net_revenue') required this.netRevenue,
+    @JsonKey(name: 'gross_revenue') required this.grossRevenue,
+    @JsonKey(name: 'total_discount') required this.totalDiscount,
     @JsonKey(name: 'total_invoices') required this.invoiceCount,
   });
 
@@ -160,15 +190,21 @@ class _$DailyRevenueReportImpl implements _DailyRevenueReport {
   @JsonKey(name: 'report_date')
   final DateTime date;
   @override
-  @JsonKey(name: 'total_revenue')
-  final double totalRevenue;
+  @JsonKey(name: 'net_revenue')
+  final double netRevenue;
+  @override
+  @JsonKey(name: 'gross_revenue')
+  final double grossRevenue;
+  @override
+  @JsonKey(name: 'total_discount')
+  final double totalDiscount;
   @override
   @JsonKey(name: 'total_invoices')
   final int invoiceCount;
 
   @override
   String toString() {
-    return 'DailyRevenueReport(date: $date, totalRevenue: $totalRevenue, invoiceCount: $invoiceCount)';
+    return 'DailyRevenueReport(date: $date, netRevenue: $netRevenue, grossRevenue: $grossRevenue, totalDiscount: $totalDiscount, invoiceCount: $invoiceCount)';
   }
 
   @override
@@ -177,16 +213,26 @@ class _$DailyRevenueReportImpl implements _DailyRevenueReport {
         (other.runtimeType == runtimeType &&
             other is _$DailyRevenueReportImpl &&
             (identical(other.date, date) || other.date == date) &&
-            (identical(other.totalRevenue, totalRevenue) ||
-                other.totalRevenue == totalRevenue) &&
+            (identical(other.netRevenue, netRevenue) ||
+                other.netRevenue == netRevenue) &&
+            (identical(other.grossRevenue, grossRevenue) ||
+                other.grossRevenue == grossRevenue) &&
+            (identical(other.totalDiscount, totalDiscount) ||
+                other.totalDiscount == totalDiscount) &&
             (identical(other.invoiceCount, invoiceCount) ||
                 other.invoiceCount == invoiceCount));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, totalRevenue, invoiceCount);
+  int get hashCode => Object.hash(
+    runtimeType,
+    date,
+    netRevenue,
+    grossRevenue,
+    totalDiscount,
+    invoiceCount,
+  );
 
   /// Create a copy of DailyRevenueReport
   /// with the given fields replaced by the non-null parameter values.
@@ -208,7 +254,9 @@ class _$DailyRevenueReportImpl implements _DailyRevenueReport {
 abstract class _DailyRevenueReport implements DailyRevenueReport {
   const factory _DailyRevenueReport({
     @JsonKey(name: 'report_date') required final DateTime date,
-    @JsonKey(name: 'total_revenue') required final double totalRevenue,
+    @JsonKey(name: 'net_revenue') required final double netRevenue,
+    @JsonKey(name: 'gross_revenue') required final double grossRevenue,
+    @JsonKey(name: 'total_discount') required final double totalDiscount,
     @JsonKey(name: 'total_invoices') required final int invoiceCount,
   }) = _$DailyRevenueReportImpl;
 
@@ -219,8 +267,14 @@ abstract class _DailyRevenueReport implements DailyRevenueReport {
   @JsonKey(name: 'report_date')
   DateTime get date;
   @override
-  @JsonKey(name: 'total_revenue')
-  double get totalRevenue;
+  @JsonKey(name: 'net_revenue')
+  double get netRevenue;
+  @override
+  @JsonKey(name: 'gross_revenue')
+  double get grossRevenue;
+  @override
+  @JsonKey(name: 'total_discount')
+  double get totalDiscount;
   @override
   @JsonKey(name: 'total_invoices')
   int get invoiceCount;

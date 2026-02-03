@@ -6,7 +6,7 @@ part of 'reports_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dailyRevenueHash() => r'b3c1e51272b221c571a11feaf1a6e2d8f8744e80';
+String _$dailyRevenueHash() => r'4b62be0eb19d2e5ca324ba912057d9a629f80f32';
 
 /// See also [dailyRevenue].
 @ProviderFor(dailyRevenue)
@@ -25,7 +25,7 @@ final dailyRevenueProvider =
 // ignore: unused_element
 typedef DailyRevenueRef =
     AutoDisposeFutureProviderRef<List<DailyRevenueReport>>;
-String _$topProductsHash() => r'd0cff8953c332cf6edab873ea958f228a20b0cd5';
+String _$topProductsHash() => r'9978a7cef151da69fbbd527e05eed3531649a4b2';
 
 /// See also [topProducts].
 @ProviderFor(topProducts)
@@ -44,7 +44,7 @@ final topProductsProvider =
 // ignore: unused_element
 typedef TopProductsRef =
     AutoDisposeFutureProviderRef<List<ProductPerformanceReport>>;
-String _$roomUsageHash() => r'77b75222feddb7641840d7e4fd45772be42fefb8';
+String _$roomUsageHash() => r'03fa1058dca1d4baa1dd8c682d46212cfd3f9bc6';
 
 /// See also [roomUsage].
 @ProviderFor(roomUsage)
@@ -62,21 +62,21 @@ final roomUsageProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RoomUsageRef = AutoDisposeFutureProviderRef<List<RoomUsageReport>>;
-String _$dateRangeFilterHash() => r'a977ca18449dac9a3cf40938b2dc45954d1b33fd';
+String _$reportsDateRangeHash() => r'e9bddcb3a9732de06e945b39eec892c854237bbd';
 
-/// See also [DateRangeFilter].
-@ProviderFor(DateRangeFilter)
-final dateRangeFilterProvider =
-    AutoDisposeNotifierProvider<DateRangeFilter, DateTimeRange>.internal(
-      DateRangeFilter.new,
-      name: r'dateRangeFilterProvider',
+/// See also [ReportsDateRange].
+@ProviderFor(ReportsDateRange)
+final reportsDateRangeProvider =
+    AutoDisposeNotifierProvider<ReportsDateRange, DateTimeRange>.internal(
+      ReportsDateRange.new,
+      name: r'reportsDateRangeProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$dateRangeFilterHash,
+          : _$reportsDateRangeHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$DateRangeFilter = AutoDisposeNotifier<DateTimeRange>;
+typedef _$ReportsDateRange = AutoDisposeNotifier<DateTimeRange>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

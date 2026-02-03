@@ -17,9 +17,17 @@ class RevenueTab extends ConsumerWidget {
           return const Center(child: Text('No revenue data available.'));
         }
 
-        final double totalWeekRevenue = data.fold(
+        final double totalWeekNetRevenue = data.fold(
           0,
-          (sum, item) => sum + item.totalRevenue,
+          (sum, item) => sum + item.netRevenue,
+        );
+        final double totalWeekGrossRevenue = data.fold(
+          0,
+          (sum, item) => sum + item.grossRevenue,
+        );
+        final double totalWeekDiscount = data.fold(
+          0,
+          (sum, item) => sum + item.totalDiscount,
         );
 
         // Sort by date just in case
@@ -34,8 +42,8 @@ class RevenueTab extends ConsumerWidget {
             x: index,
             barRods: [
               BarChartRodData(
-                toY: item.totalRevenue,
-                color: Theme.of(context).primaryColor,
+                toY: item.netRevenue,
+                color: Colors.green, // Use Green for Net Revenue
                 width: 16,
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(4),
@@ -47,7 +55,7 @@ class RevenueTab extends ConsumerWidget {
 
         final maxRevenue =
             sortedData
-                .map((e) => e.totalRevenue)
+                .map((e) => e.netRevenue)
                 .reduce((value, element) => value > element ? value : element) *
             1.2; // Add some buffer
 
@@ -56,29 +64,34 @@ class RevenueTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Total Revenue This Week',
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        NumberFormat.currency(
-                          symbol: '\$',
-                        ).format(totalWeekRevenue),
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ],
+              // Summary Cards Row
+              Row(
+                children: [
+                  Expanded(
+                    child: _SummaryCard(
+                      title: 'Gross Sales',
+                      value: totalWeekGrossRevenue,
+                      valueColor: Colors.grey.shade700,
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _SummaryCard(
+                      title: 'Discounts',
+                      value: -totalWeekDiscount,
+                      valueColor: Colors.red,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: _SummaryCard(
+                      title: 'Net Revenue',
+                      value: totalWeekNetRevenue,
+                      valueColor: Colors.green.shade700,
+                      isBold: true,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 32),
               Expanded(
@@ -101,7 +114,7 @@ class RevenueTab extends ConsumerWidget {
                             children: [
                               TextSpan(
                                 text: NumberFormat.currency(
-                                  symbol: '\$',
+                                  symbol: 'EGP',
                                 ).format(rod.toY),
                                 style: const TextStyle(
                                   color: Colors.yellow,
@@ -165,6 +178,54 @@ class RevenueTab extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('Error: $err')),
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  final String title;
+  final double value;
+  final Color valueColor;
+  final bool isBold;
+
+  const _SummaryCard({
+    required this.title,
+    required this.value,
+    required this.valueColor,
+    this.isBold = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+        child: Column(
+          children: [
+            Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                NumberFormat.currency(symbol: 'EGP ').format(value),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                  color: valueColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

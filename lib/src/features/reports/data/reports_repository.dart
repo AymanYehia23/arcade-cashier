@@ -36,12 +36,15 @@ class ReportsRepository {
     DateTime? start,
     DateTime? end,
   }) async {
-    // Note: View doesn't support date filtering yet.
-    // If we wanted to filter by date, we'd need to change query or view.
-    final response = await _supabase
-        .from('view_top_products')
-        .select()
-        .limit(10);
+    final params = {
+      if (start != null) 'start_date': start.toIso8601String(),
+      if (end != null) 'end_date': end.toIso8601String(),
+    };
+
+    final response = await _supabase.rpc(
+      'get_product_performance',
+      params: params,
+    );
 
     return (response as List)
         .map((e) => ProductPerformanceReport.fromJson(e))
@@ -52,8 +55,12 @@ class ReportsRepository {
     DateTime? start,
     DateTime? end,
   }) async {
-    // Note: View doesn't support date filtering yet.
-    final response = await _supabase.from('view_room_usage').select();
+    final params = {
+      if (start != null) 'start_date': start.toIso8601String(),
+      if (end != null) 'end_date': end.toIso8601String(),
+    };
+
+    final response = await _supabase.rpc('get_room_usage', params: params);
 
     return (response as List).map((e) => RoomUsageReport.fromJson(e)).toList();
   }

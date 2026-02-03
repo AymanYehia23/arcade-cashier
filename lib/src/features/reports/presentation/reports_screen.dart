@@ -10,40 +10,64 @@ class ReportsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final dateRange = ref.watch(reportsDateRangeProvider);
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Reports & Analytics'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Revenue', icon: Icon(Icons.bar_chart)),
-              Tab(text: 'Products', icon: Icon(Icons.shopping_cart)),
-              Tab(text: 'Room Usage', icon: Icon(Icons.pie_chart)),
-            ],
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.calendar_today),
-              onPressed: () async {
-                final currentRange = ref.read(dateRangeFilterProvider);
-                final picked = await showDateRangePicker(
-                  context: context,
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime.now(),
-                  initialDateRange: currentRange,
-                );
-                if (picked != null) {
-                  ref.read(dateRangeFilterProvider.notifier).setRange(picked);
-                }
-              },
+        appBar: AppBar(title: const Text('Reports & Analytics')),
+        body: Column(
+          children: [
+            // Filter Bar
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Period: ${_formatDate(dateRange.start)} - ${_formatDate(dateRange.end)}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.calendar_month),
+                    onPressed: () async {
+                      final picked = await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime.now(),
+                        initialDateRange: dateRange,
+                      );
+                      if (picked != null) {
+                        ref
+                            .read(reportsDateRangeProvider.notifier)
+                            .setRange(picked);
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Divider(height: 1),
+            // Tabs
+            const TabBar(
+              tabs: [
+                Tab(text: 'Revenue', icon: Icon(Icons.bar_chart)),
+                Tab(text: 'Products', icon: Icon(Icons.shopping_cart)),
+                Tab(text: 'Room Usage', icon: Icon(Icons.pie_chart)),
+              ],
+            ),
+            const Expanded(
+              child: TabBarView(
+                children: [RevenueTab(), ProductsTab(), RoomsTab()],
+              ),
             ),
           ],
         ),
-        body: const TabBarView(
-          children: [RevenueTab(), ProductsTab(), RoomsTab()],
-        ),
       ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
   }
 }
