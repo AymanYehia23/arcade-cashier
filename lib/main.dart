@@ -1,4 +1,4 @@
-import 'package:arcade_cashier/src/constants/app_constants.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:arcade_cashier/src/app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,7 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   usePathUrlStrategy();
   if (!kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.windows ||
@@ -37,8 +38,8 @@ void main() async {
   final sharedPrefs = await SharedPreferences.getInstance();
 
   await Supabase.initialize(
-    url: AppConstants.supabaseUrl,
-    anonKey: AppConstants.supabaseAnonKey,
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
     httpClient: httpClient,
   );
 
