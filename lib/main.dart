@@ -21,8 +21,8 @@ void main() async {
           defaultTargetPlatform == TargetPlatform.macOS)) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(1000, 700),
-      minimumSize: Size(1000, 700),
+      size: Size(1280, 720), // Default start size
+      minimumSize: Size(1024, 768), // Minimum usable size
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
