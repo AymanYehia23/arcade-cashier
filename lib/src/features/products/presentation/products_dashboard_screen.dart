@@ -91,7 +91,13 @@ class ProductsDashboardScreen extends ConsumerWidget {
                               AppSizes.p8,
                             ),
                             child: Text(
-                              entry.key,
+                              switch (entry.key) {
+                                'Drinks' => loc.drinks,
+                                'Snacks' => loc.snacks,
+                                'Food' => loc.food,
+                                'Other' => loc.other,
+                                _ => entry.key,
+                              },
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
                           ),

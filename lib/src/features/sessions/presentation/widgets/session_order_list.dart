@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,10 +11,11 @@ class SessionOrderList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     return ordersAsync.when(
       data: (orders) {
         if (orders.isEmpty) {
-          return const Center(child: Text('No orders yet'));
+          return Center(child: Text(loc.noOrdersYet));
         }
         return ListView.separated(
           itemCount: orders.length,
@@ -21,7 +23,8 @@ class SessionOrderList extends ConsumerWidget {
           itemBuilder: (context, index) {
             final order = orders[index];
             final productName =
-                order.product?.name ?? 'Unknown #${order.productId}';
+                order.product?.name ??
+                loc.unknownProduct(order.productId.toString());
             return ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
@@ -33,7 +36,7 @@ class SessionOrderList extends ConsumerWidget {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('${order.totalPrice} EGP'),
+                  Text('${order.totalPrice} ${loc.egp}'),
                   IconButton(
                     icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
@@ -49,7 +52,7 @@ class SessionOrderList extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => const Center(child: Text('Error loading orders')),
+      error: (e, s) => Center(child: Text(loc.errorLoadingOrders)),
     );
   }
 }

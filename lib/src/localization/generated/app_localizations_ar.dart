@@ -598,4 +598,27 @@ class AppLocalizationsAr extends AppLocalizations {
   String printFailed(String error) {
     return 'فشل الطباعة: $error';
   }
+
+  @override
+  String get noOrdersYet => 'لا توجد طلبات بعد';
+
+  @override
+  String get errorLoadingOrders => 'خطأ في تحميل الطلبات';
+
+  @override
+  String unknownProduct(String id) {
+    return 'منتج غير معروف #$id';
+  }
+
+  @override
+  String get filterToday => 'اليوم';
+
+  @override
+  String get filterThisMonth => 'هذا الشهر';
+
+  @override
+  String get filterLast3Months => 'آخر 3 شهور';
+
+  @override
+  String get filterThisYear => 'هذه السنة';
 }

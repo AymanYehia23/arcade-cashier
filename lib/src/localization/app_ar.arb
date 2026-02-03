@@ -180,5 +180,12 @@
   "voidInvoiceTitle": "إلغاء الفاتورة",
   "voidInvoiceConfirm": "هل أنت متأكد أنك تريد إلغاء هذه الفاتورة؟ سيتم حذفها من الإيراد اليومي.",
   "voidAction": "إلغاء الآن",
-  "printFailed": "فشل الطباعة: {error}"
+  "printFailed": "فشل الطباعة: {error}",
+  "noOrdersYet": "لا توجد طلبات بعد",
+  "errorLoadingOrders": "خطأ في تحميل الطلبات",
+  "unknownProduct": "منتج غير معروف #{id}",
+  "filterToday": "اليوم",
+  "filterThisMonth": "هذا الشهر",
+  "filterLast3Months": "آخر 3 شهور",
+  "filterThisYear": "هذه السنة"
 }

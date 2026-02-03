@@ -299,5 +299,19 @@
         "type": "String"
       }
     }
-  }
+  },
+  "noOrdersYet": "No orders yet",
+  "errorLoadingOrders": "Error loading orders",
+  "unknownProduct": "Unknown #{id}",
+  "@unknownProduct": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "filterToday": "Today",
+  "filterThisMonth": "This Month",
+  "filterLast3Months": "Last 3 Months",
+  "filterThisYear": "This Year"
 }

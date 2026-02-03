@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,6 +9,7 @@ class DateFilterChips extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentRange = ref.watch(invoiceDateRangeProvider);
+    final loc = AppLocalizations.of(context)!;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -15,7 +17,7 @@ class DateFilterChips extends ConsumerWidget {
       child: Row(
         children: [
           _FilterChip(
-            label: 'Today',
+            label: loc.filterToday,
             isSelected: _isToday(currentRange),
             onSelected: () {
               final now = DateTime.now();
@@ -30,7 +32,7 @@ class DateFilterChips extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           _FilterChip(
-            label: 'This Month',
+            label: loc.filterThisMonth,
             isSelected: _isThisMonth(currentRange),
             onSelected: () {
               final now = DateTime.now();
@@ -43,7 +45,7 @@ class DateFilterChips extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           _FilterChip(
-            label: 'Last 3 Months',
+            label: loc.filterLast3Months,
             isSelected: _isLast3Months(currentRange),
             onSelected: () {
               final now = DateTime.now();
@@ -58,7 +60,7 @@ class DateFilterChips extends ConsumerWidget {
           ),
           const SizedBox(width: 8),
           _FilterChip(
-            label: 'This Year',
+            label: loc.filterThisYear,
             isSelected: _isThisYear(currentRange),
             onSelected: () {
               final now = DateTime.now();

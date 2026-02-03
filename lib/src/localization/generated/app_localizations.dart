@@ -1189,6 +1189,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Print failed: {error}'**
   String printFailed(String error);
+
+  /// No description provided for @noOrdersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get noOrdersYet;
+
+  /// No description provided for @errorLoadingOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading orders'**
+  String get errorLoadingOrders;
+
+  /// No description provided for @unknownProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown #{id}'**
+  String unknownProduct(String id);
+
+  /// No description provided for @filterToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get filterToday;
+
+  /// No description provided for @filterThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'This Month'**
+  String get filterThisMonth;
+
+  /// No description provided for @filterLast3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get filterLast3Months;
+
+  /// No description provided for @filterThisYear.
+  ///
+  /// In en, this message translates to:
+  /// **'This Year'**
+  String get filterThisYear;
 }
 
 class _AppLocalizationsDelegate

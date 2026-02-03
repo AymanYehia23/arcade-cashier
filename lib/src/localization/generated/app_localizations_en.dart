@@ -598,4 +598,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String printFailed(String error) {
     return 'Print failed: $error';
   }
+
+  @override
+  String get noOrdersYet => 'No orders yet';
+
+  @override
+  String get errorLoadingOrders => 'Error loading orders';
+
+  @override
+  String unknownProduct(String id) {
+    return 'Unknown #$id';
+  }
+
+  @override
+  String get filterToday => 'Today';
+
+  @override
+  String get filterThisMonth => 'This Month';
+
+  @override
+  String get filterLast3Months => 'Last 3 Months';
+
+  @override
+  String get filterThisYear => 'This Year';
 }

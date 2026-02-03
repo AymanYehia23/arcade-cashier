@@ -124,6 +124,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
     Color textColor,
     bool isExpired,
   ) {
+    final loc = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _pulseController ?? const AlwaysStoppedAnimation(0),
       builder: (context, child) {
@@ -186,7 +187,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 8.0),
                                     child: Text(
-                                      "TIME UP!",
+                                      loc.timeUp,
                                       style: TextStyle(
                                         color: textColor,
                                         fontWeight: FontWeight.bold,
