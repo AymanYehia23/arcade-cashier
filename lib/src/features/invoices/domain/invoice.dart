@@ -14,6 +14,10 @@ class Invoice with _$Invoice {
     @JsonKey(name: 'shop_name') required String shopName,
     @JsonKey(name: 'total_amount') required double totalAmount,
     @JsonKey(name: 'payment_method') @Default('cash') String paymentMethod,
+    @JsonKey(name: 'discount_amount') @Default(0.0) double discountAmount,
+    @JsonKey(name: 'discount_percentage')
+    @Default(0.0)
+    double discountPercentage,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
     @Default('paid') String status,
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,

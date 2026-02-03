@@ -86,53 +86,149 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     required BuildContext context,
     required Session session,
     required List<Order> orders,
-    required SessionBill bill,
+    required SessionBill
+    initialBill, // Renamed to clarify it's the starting point
   }) async {
     final loc = AppLocalizations.of(context)!;
+    final discountController = TextEditingController();
 
-    final confirmed = await showDialog<bool>(
+    // Variable to hold the bill as it gets recalculated
+    SessionBill currentBill = initialBill;
+
+    await showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(loc.completeSession),
-          content: Text(
-            loc.totalBillAmount(bill.totalAmount.toStringAsFixed(2)),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext, false),
-              child: Text(loc.cancel),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text(loc.finishAndPrint),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (sbContext, setState) {
+            void updateBill() {
+              final discountInput =
+                  double.tryParse(discountController.text) ?? 0.0;
+
+              // Recalculate bill using the service logic
+              final billingService = ref.read(billingServiceProvider);
+              final newBill = billingService.calculateSessionBill(
+                session,
+                orders,
+                discountPercentage: discountInput.clamp(0.0, 100.0),
+              );
+
+              setState(() {
+                currentBill = newBill;
+              });
+            }
+
+            return AlertDialog(
+              title: Text(loc.completeSession),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Summary Rows
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('Subtotal:'),
+                      Text('${currentBill.subtotal.toStringAsFixed(2)} EGP'),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Discount Input
+                  TextField(
+                    controller: discountController,
+                    decoration: const InputDecoration(
+                      labelText: 'Discount (%)',
+                      border: OutlineInputBorder(),
+                      prefixText: '% ',
+                      suffixText: '',
+                      isDense: true,
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                    onChanged: (_) => updateBill(),
+                  ),
+                  if (currentBill.discountAmount > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        'Discount: - ${currentBill.discountAmount.toStringAsFixed(2)} EGP',
+                        style: const TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.end,
+                      ),
+                    ),
+
+                  const SizedBox(height: 12),
+                  const Divider(),
+                  const SizedBox(height: 12),
+
+                  // Final Total
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        loc.total,
+                        style: Theme.of(sbContext).textTheme.titleLarge,
+                      ),
+                      Text(
+                        '${currentBill.totalAmount.toStringAsFixed(2)} EGP',
+                        style: Theme.of(sbContext).textTheme.titleLarge
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(sbContext).primaryColor,
+                            ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext), // Just close
+                  child: Text(loc.cancel),
+                ),
+                FilledButton(
+                  onPressed: () async {
+                    Navigator.pop(dialogContext); // Close dialog
+
+                    // Proceed with completion using the FINAL currentBill
+                    final result = await ref
+                        .read(sessionCompletionControllerProvider.notifier)
+                        .completeSession(
+                          session: session,
+                          roomId: widget.room?.id,
+                          orders: orders,
+                          bill: currentBill,
+                        );
+
+                    if (result != null && context.mounted) {
+                      Navigator.of(context).pop(); // Close ActiveSessionDialog
+                      showDialog(
+                        context: context,
+                        builder: (_) => InvoicePreviewDialog(
+                          pdfBytes: result.pdfBytes,
+                          invoice: result.invoice,
+                        ),
+                      );
+                    }
+                  },
+                  child: Text(loc.finishAndPrint),
+                ),
+              ],
+            );
+          },
         );
       },
     );
-
-    if (confirmed == true && context.mounted) {
-      final result = await ref
-          .read(sessionCompletionControllerProvider.notifier)
-          .completeSession(
-            session: session,
-            roomId: widget.room?.id,
-            orders: orders,
-            bill: bill,
-          );
-
-      if (result != null && context.mounted) {
-        Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (_) => InvoicePreviewDialog(
-            pdfBytes: result.pdfBytes,
-            invoice: result.invoice,
-          ),
-        );
-      }
-    }
   }
 
   @override
@@ -181,7 +277,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               context: context,
               session: session,
               orders: orders,
-              bill: bill,
+              initialBill: bill,
             );
           });
         },
@@ -302,7 +398,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   context: context,
                   session: session,
                   orders: orders,
-                  bill: bill,
+                  initialBill: bill,
                 ),
                 isCheckoutLoading: completionState.isLoading,
                 isQuickOrder: session.isQuickOrder,

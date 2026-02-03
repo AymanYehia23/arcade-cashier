@@ -7,7 +7,7 @@ part of 'invoice_reprint_controller.dart';
 // **************************************************************************
 
 String _$invoiceReprintControllerHash() =>
-    r'8312dba049b243b1444c5951373990464cdbabef';
+    r'b8bd8a988f728ddd5b5853bb73151c2e7bd6235e';
 
 /// See also [InvoiceReprintController].
 @ProviderFor(InvoiceReprintController)

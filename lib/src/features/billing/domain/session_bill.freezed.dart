@@ -20,6 +20,8 @@ mixin _$SessionBill {
   double get timeCost => throw _privateConstructorUsedError;
   double get ordersTotal => throw _privateConstructorUsedError;
   double get totalAmount => throw _privateConstructorUsedError;
+  double get discountAmount => throw _privateConstructorUsedError;
+  double get discountPercentage => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
 
   /// Create a copy of SessionBill
@@ -40,6 +42,8 @@ abstract class $SessionBillCopyWith<$Res> {
     double timeCost,
     double ordersTotal,
     double totalAmount,
+    double discountAmount,
+    double discountPercentage,
     Duration duration,
   });
 }
@@ -62,6 +66,8 @@ class _$SessionBillCopyWithImpl<$Res, $Val extends SessionBill>
     Object? timeCost = null,
     Object? ordersTotal = null,
     Object? totalAmount = null,
+    Object? discountAmount = null,
+    Object? discountPercentage = null,
     Object? duration = null,
   }) {
     return _then(
@@ -77,6 +83,14 @@ class _$SessionBillCopyWithImpl<$Res, $Val extends SessionBill>
             totalAmount: null == totalAmount
                 ? _value.totalAmount
                 : totalAmount // ignore: cast_nullable_to_non_nullable
+                      as double,
+            discountAmount: null == discountAmount
+                ? _value.discountAmount
+                : discountAmount // ignore: cast_nullable_to_non_nullable
+                      as double,
+            discountPercentage: null == discountPercentage
+                ? _value.discountPercentage
+                : discountPercentage // ignore: cast_nullable_to_non_nullable
                       as double,
             duration: null == duration
                 ? _value.duration
@@ -101,6 +115,8 @@ abstract class _$$SessionBillImplCopyWith<$Res>
     double timeCost,
     double ordersTotal,
     double totalAmount,
+    double discountAmount,
+    double discountPercentage,
     Duration duration,
   });
 }
@@ -122,6 +138,8 @@ class __$$SessionBillImplCopyWithImpl<$Res>
     Object? timeCost = null,
     Object? ordersTotal = null,
     Object? totalAmount = null,
+    Object? discountAmount = null,
+    Object? discountPercentage = null,
     Object? duration = null,
   }) {
     return _then(
@@ -138,6 +156,14 @@ class __$$SessionBillImplCopyWithImpl<$Res>
             ? _value.totalAmount
             : totalAmount // ignore: cast_nullable_to_non_nullable
                   as double,
+        discountAmount: null == discountAmount
+            ? _value.discountAmount
+            : discountAmount // ignore: cast_nullable_to_non_nullable
+                  as double,
+        discountPercentage: null == discountPercentage
+            ? _value.discountPercentage
+            : discountPercentage // ignore: cast_nullable_to_non_nullable
+                  as double,
         duration: null == duration
             ? _value.duration
             : duration // ignore: cast_nullable_to_non_nullable
@@ -149,13 +175,15 @@ class __$$SessionBillImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SessionBillImpl implements _SessionBill {
+class _$SessionBillImpl extends _SessionBill {
   const _$SessionBillImpl({
     required this.timeCost,
     required this.ordersTotal,
     required this.totalAmount,
+    this.discountAmount = 0.0,
+    this.discountPercentage = 0.0,
     required this.duration,
-  });
+  }) : super._();
 
   @override
   final double timeCost;
@@ -164,11 +192,17 @@ class _$SessionBillImpl implements _SessionBill {
   @override
   final double totalAmount;
   @override
+  @JsonKey()
+  final double discountAmount;
+  @override
+  @JsonKey()
+  final double discountPercentage;
+  @override
   final Duration duration;
 
   @override
   String toString() {
-    return 'SessionBill(timeCost: $timeCost, ordersTotal: $ordersTotal, totalAmount: $totalAmount, duration: $duration)';
+    return 'SessionBill(timeCost: $timeCost, ordersTotal: $ordersTotal, totalAmount: $totalAmount, discountAmount: $discountAmount, discountPercentage: $discountPercentage, duration: $duration)';
   }
 
   @override
@@ -182,13 +216,24 @@ class _$SessionBillImpl implements _SessionBill {
                 other.ordersTotal == ordersTotal) &&
             (identical(other.totalAmount, totalAmount) ||
                 other.totalAmount == totalAmount) &&
+            (identical(other.discountAmount, discountAmount) ||
+                other.discountAmount == discountAmount) &&
+            (identical(other.discountPercentage, discountPercentage) ||
+                other.discountPercentage == discountPercentage) &&
             (identical(other.duration, duration) ||
                 other.duration == duration));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, timeCost, ordersTotal, totalAmount, duration);
+  int get hashCode => Object.hash(
+    runtimeType,
+    timeCost,
+    ordersTotal,
+    totalAmount,
+    discountAmount,
+    discountPercentage,
+    duration,
+  );
 
   /// Create a copy of SessionBill
   /// with the given fields replaced by the non-null parameter values.
@@ -199,13 +244,16 @@ class _$SessionBillImpl implements _SessionBill {
       __$$SessionBillImplCopyWithImpl<_$SessionBillImpl>(this, _$identity);
 }
 
-abstract class _SessionBill implements SessionBill {
+abstract class _SessionBill extends SessionBill {
   const factory _SessionBill({
     required final double timeCost,
     required final double ordersTotal,
     required final double totalAmount,
+    final double discountAmount,
+    final double discountPercentage,
     required final Duration duration,
   }) = _$SessionBillImpl;
+  const _SessionBill._() : super._();
 
   @override
   double get timeCost;
@@ -213,6 +261,10 @@ abstract class _SessionBill implements SessionBill {
   double get ordersTotal;
   @override
   double get totalAmount;
+  @override
+  double get discountAmount;
+  @override
+  double get discountPercentage;
   @override
   Duration get duration;
 

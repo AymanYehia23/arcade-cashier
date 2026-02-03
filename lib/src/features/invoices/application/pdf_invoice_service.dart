@@ -39,7 +39,11 @@ class PdfInvoiceService {
             pw.SizedBox(height: 8),
             pw.Divider(thickness: 2),
             pw.SizedBox(height: 8),
-            _buildTotal(invoice.totalAmount),
+            _buildTotal(
+              invoice.totalAmount,
+              invoice.discountAmount,
+              invoice.discountPercentage,
+            ),
             pw.SizedBox(height: 16),
             _buildFooter(),
           ],
@@ -177,17 +181,72 @@ class PdfInvoiceService {
     );
   }
 
-  pw.Widget _buildTotal(double totalAmount) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  pw.Widget _buildTotal(
+    double totalAmount,
+    double discountAmount,
+    double discountPercentage,
+  ) {
+    // If no discount, show just the total
+    if (discountAmount <= 0) {
+      return pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        children: [
+          pw.Text(
+            'TOTAL:',
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+          ),
+          pw.Text(
+            '${totalAmount.toStringAsFixed(2)} EGP',
+            style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+          ),
+        ],
+      );
+    }
+
+    // If there is a discount, show Subtotal, Discount, then Total
+    final subtotal = totalAmount + discountAmount;
+
+    return pw.Column(
       children: [
-        pw.Text(
-          'TOTAL:',
-          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text('Subtotal:', style: const pw.TextStyle(fontSize: 10)),
+            pw.Text(
+              '${subtotal.toStringAsFixed(2)} EGP',
+              style: const pw.TextStyle(fontSize: 10),
+            ),
+          ],
         ),
-        pw.Text(
-          '${totalAmount.toStringAsFixed(2)} EGP',
-          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+        pw.SizedBox(height: 2),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              'Discount (${discountPercentage.toStringAsFixed(0)}%):',
+              style: const pw.TextStyle(fontSize: 10),
+            ),
+            pw.Text(
+              '-${discountAmount.toStringAsFixed(2)} EGP',
+              style: const pw.TextStyle(fontSize: 10),
+            ),
+          ],
+        ),
+        pw.SizedBox(height: 4),
+        pw.Divider(),
+        pw.SizedBox(height: 4),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            pw.Text(
+              'TOTAL:',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+            ),
+            pw.Text(
+              '${totalAmount.toStringAsFixed(2)} EGP',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+            ),
+          ],
         ),
       ],
     );

@@ -60,6 +60,8 @@ class SessionCompletionController extends _$SessionCompletionController {
         invoiceNumber: invoiceNumber,
         shopName: shopName,
         totalAmount: bill.totalAmount,
+        discountAmount: bill.discountAmount,
+        discountPercentage: bill.discountPercentage,
         paymentMethod: 'cash',
         issuedAt: DateTime.now(),
       );

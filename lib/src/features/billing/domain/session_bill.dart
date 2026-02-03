@@ -8,6 +8,12 @@ class SessionBill with _$SessionBill {
     required double timeCost,
     required double ordersTotal,
     required double totalAmount,
+    @Default(0.0) double discountAmount,
+    @Default(0.0) double discountPercentage,
     required Duration duration,
   }) = _SessionBill;
+
+  const SessionBill._();
+
+  double get subtotal => timeCost + ordersTotal;
 }

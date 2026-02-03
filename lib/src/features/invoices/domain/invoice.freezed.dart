@@ -33,6 +33,10 @@ mixin _$Invoice {
   double get totalAmount => throw _privateConstructorUsedError;
   @JsonKey(name: 'payment_method')
   String get paymentMethod => throw _privateConstructorUsedError;
+  @JsonKey(name: 'discount_amount')
+  double get discountAmount => throw _privateConstructorUsedError;
+  @JsonKey(name: 'discount_percentage')
+  double get discountPercentage => throw _privateConstructorUsedError;
   @JsonKey(name: 'issued_at')
   DateTime? get issuedAt => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
@@ -60,6 +64,8 @@ abstract class $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'shop_name') String shopName,
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'payment_method') String paymentMethod,
+    @JsonKey(name: 'discount_amount') double discountAmount,
+    @JsonKey(name: 'discount_percentage') double discountPercentage,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
     String status,
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
@@ -87,6 +93,8 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
     Object? shopName = null,
     Object? totalAmount = null,
     Object? paymentMethod = null,
+    Object? discountAmount = null,
+    Object? discountPercentage = null,
     Object? issuedAt = freezed,
     Object? status = null,
     Object? cancelledAt = freezed,
@@ -117,6 +125,14 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
                 ? _value.paymentMethod
                 : paymentMethod // ignore: cast_nullable_to_non_nullable
                       as String,
+            discountAmount: null == discountAmount
+                ? _value.discountAmount
+                : discountAmount // ignore: cast_nullable_to_non_nullable
+                      as double,
+            discountPercentage: null == discountPercentage
+                ? _value.discountPercentage
+                : discountPercentage // ignore: cast_nullable_to_non_nullable
+                      as double,
             issuedAt: freezed == issuedAt
                 ? _value.issuedAt
                 : issuedAt // ignore: cast_nullable_to_non_nullable
@@ -150,6 +166,8 @@ abstract class _$$InvoiceImplCopyWith<$Res> implements $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'shop_name') String shopName,
     @JsonKey(name: 'total_amount') double totalAmount,
     @JsonKey(name: 'payment_method') String paymentMethod,
+    @JsonKey(name: 'discount_amount') double discountAmount,
+    @JsonKey(name: 'discount_percentage') double discountPercentage,
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
     String status,
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
@@ -176,6 +194,8 @@ class __$$InvoiceImplCopyWithImpl<$Res>
     Object? shopName = null,
     Object? totalAmount = null,
     Object? paymentMethod = null,
+    Object? discountAmount = null,
+    Object? discountPercentage = null,
     Object? issuedAt = freezed,
     Object? status = null,
     Object? cancelledAt = freezed,
@@ -206,6 +226,14 @@ class __$$InvoiceImplCopyWithImpl<$Res>
             ? _value.paymentMethod
             : paymentMethod // ignore: cast_nullable_to_non_nullable
                   as String,
+        discountAmount: null == discountAmount
+            ? _value.discountAmount
+            : discountAmount // ignore: cast_nullable_to_non_nullable
+                  as double,
+        discountPercentage: null == discountPercentage
+            ? _value.discountPercentage
+            : discountPercentage // ignore: cast_nullable_to_non_nullable
+                  as double,
         issuedAt: freezed == issuedAt
             ? _value.issuedAt
             : issuedAt // ignore: cast_nullable_to_non_nullable
@@ -233,6 +261,8 @@ class _$InvoiceImpl extends _Invoice {
     @JsonKey(name: 'shop_name') required this.shopName,
     @JsonKey(name: 'total_amount') required this.totalAmount,
     @JsonKey(name: 'payment_method') this.paymentMethod = 'cash',
+    @JsonKey(name: 'discount_amount') this.discountAmount = 0.0,
+    @JsonKey(name: 'discount_percentage') this.discountPercentage = 0.0,
     @JsonKey(name: 'issued_at') this.issuedAt,
     this.status = 'paid',
     @JsonKey(name: 'cancelled_at') this.cancelledAt,
@@ -260,6 +290,12 @@ class _$InvoiceImpl extends _Invoice {
   @JsonKey(name: 'payment_method')
   final String paymentMethod;
   @override
+  @JsonKey(name: 'discount_amount')
+  final double discountAmount;
+  @override
+  @JsonKey(name: 'discount_percentage')
+  final double discountPercentage;
+  @override
   @JsonKey(name: 'issued_at')
   final DateTime? issuedAt;
   @override
@@ -271,7 +307,7 @@ class _$InvoiceImpl extends _Invoice {
 
   @override
   String toString() {
-    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, issuedAt: $issuedAt, status: $status, cancelledAt: $cancelledAt)';
+    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, discountAmount: $discountAmount, discountPercentage: $discountPercentage, issuedAt: $issuedAt, status: $status, cancelledAt: $cancelledAt)';
   }
 
   @override
@@ -290,6 +326,10 @@ class _$InvoiceImpl extends _Invoice {
                 other.totalAmount == totalAmount) &&
             (identical(other.paymentMethod, paymentMethod) ||
                 other.paymentMethod == paymentMethod) &&
+            (identical(other.discountAmount, discountAmount) ||
+                other.discountAmount == discountAmount) &&
+            (identical(other.discountPercentage, discountPercentage) ||
+                other.discountPercentage == discountPercentage) &&
             (identical(other.issuedAt, issuedAt) ||
                 other.issuedAt == issuedAt) &&
             (identical(other.status, status) || other.status == status) &&
@@ -307,6 +347,8 @@ class _$InvoiceImpl extends _Invoice {
     shopName,
     totalAmount,
     paymentMethod,
+    discountAmount,
+    discountPercentage,
     issuedAt,
     status,
     cancelledAt,
@@ -334,6 +376,8 @@ abstract class _Invoice extends Invoice {
     @JsonKey(name: 'shop_name') required final String shopName,
     @JsonKey(name: 'total_amount') required final double totalAmount,
     @JsonKey(name: 'payment_method') final String paymentMethod,
+    @JsonKey(name: 'discount_amount') final double discountAmount,
+    @JsonKey(name: 'discount_percentage') final double discountPercentage,
     @JsonKey(name: 'issued_at') final DateTime? issuedAt,
     final String status,
     @JsonKey(name: 'cancelled_at') final DateTime? cancelledAt,
@@ -360,6 +404,12 @@ abstract class _Invoice extends Invoice {
   @override
   @JsonKey(name: 'payment_method')
   String get paymentMethod;
+  @override
+  @JsonKey(name: 'discount_amount')
+  double get discountAmount;
+  @override
+  @JsonKey(name: 'discount_percentage')
+  double get discountPercentage;
   @override
   @JsonKey(name: 'issued_at')
   DateTime? get issuedAt;
