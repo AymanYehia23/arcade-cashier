@@ -1231,6 +1231,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This Year'**
   String get filterThisYear;
+
+  /// No description provided for @noRoomUsageData.
+  ///
+  /// In en, this message translates to:
+  /// **'No room usage data available.'**
+  String get noRoomUsageData;
+
+  /// No description provided for @hoursAbbr.
+  ///
+  /// In en, this message translates to:
+  /// **'hrs'**
+  String get hoursAbbr;
+
+  /// No description provided for @noProductData.
+  ///
+  /// In en, this message translates to:
+  /// **'No product data available.'**
+  String get noProductData;
+
+  /// No description provided for @qtySold.
+  ///
+  /// In en, this message translates to:
+  /// **'Qty Sold'**
+  String get qtySold;
+
+  /// No description provided for @rankSymbol.
+  ///
+  /// In en, this message translates to:
+  /// **'#'**
+  String get rankSymbol;
 }
 
 class _AppLocalizationsDelegate

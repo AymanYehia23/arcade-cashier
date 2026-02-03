@@ -313,5 +313,10 @@
   "filterToday": "Today",
   "filterThisMonth": "This Month",
   "filterLast3Months": "Last 3 Months",
-  "filterThisYear": "This Year"
+  "filterThisYear": "This Year",
+  "noRoomUsageData": "No room usage data available.",
+  "hoursAbbr": "hrs",
+  "noProductData": "No product data available.",
+  "qtySold": "Qty Sold",
+  "rankSymbol": "#"
 }

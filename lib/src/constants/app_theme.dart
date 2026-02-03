@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Color Palette
@@ -10,7 +11,10 @@ class AppTheme {
   static const Color _textWhite = Colors.white;
   static const Color _textGrey = Color(0xFFB0B0C0);
 
-  static ThemeData get darkTheme {
+  static ThemeData getDarkTheme(Locale locale) {
+    final isArabic = locale.languageCode == 'ar';
+    final fontFamily = isArabic ? 'Cairo' : GoogleFonts.roboto().fontFamily;
+
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
@@ -113,6 +117,7 @@ class AppTheme {
       ),
 
       // Text Theme
+      fontFamily: fontFamily,
       textTheme: const TextTheme(
         headlineLarge: TextStyle(
           color: _textWhite,

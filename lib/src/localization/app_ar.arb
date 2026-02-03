@@ -187,5 +187,10 @@
   "filterToday": "اليوم",
   "filterThisMonth": "هذا الشهر",
   "filterLast3Months": "آخر 3 شهور",
-  "filterThisYear": "هذه السنة"
+  "filterThisYear": "هذه السنة",
+  "noRoomUsageData": "لا توجد بيانات لاستخدام الغرف.",
+  "hoursAbbr": "س",
+  "noProductData": "لا توجد بيانات للمنتجات.",
+  "qtySold": "الكمية المباعة",
+  "rankSymbol": "#"
 }

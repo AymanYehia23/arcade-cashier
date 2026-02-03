@@ -621,4 +621,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get filterThisYear => 'هذه السنة';
+
+  @override
+  String get noRoomUsageData => 'لا توجد بيانات لاستخدام الغرف.';
+
+  @override
+  String get hoursAbbr => 'س';
+
+  @override
+  String get noProductData => 'لا توجد بيانات للمنتجات.';
+
+  @override
+  String get qtySold => 'الكمية المباعة';
+
+  @override
+  String get rankSymbol => '#';
 }

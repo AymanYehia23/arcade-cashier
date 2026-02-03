@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,22 +11,23 @@ class ProductsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     final productsAsync = ref.watch(topProductsProvider);
 
     return productsAsync.when(
       data: (products) {
         if (products.isEmpty) {
-          return const Center(child: Text('No product data available.'));
+          return Center(child: Text(loc.noProductData));
         }
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: DataTable(
-            columns: const [
-              DataColumn(label: Text('#')),
-              DataColumn(label: Text('Product Name')),
-              DataColumn(label: Text('Qty Sold'), numeric: true),
-              DataColumn(label: Text('Revenue'), numeric: true),
+            columns: [
+              DataColumn(label: Text(loc.rankSymbol)),
+              DataColumn(label: Text(loc.productName)),
+              DataColumn(label: Text(loc.qtySold), numeric: true),
+              DataColumn(label: Text(loc.tableRevenue), numeric: true),
             ],
             rows: products.asMap().entries.map((entry) {
               final index = entry.key;
@@ -49,7 +51,9 @@ class ProductsTab extends ConsumerWidget {
                   DataCell(Text('${item.totalSold}')),
                   DataCell(
                     Text(
-                      NumberFormat.currency(symbol: '\$').format(item.revenue),
+                      NumberFormat.currency(
+                        symbol: loc.egp,
+                      ).format(item.revenue),
                     ),
                   ),
                 ],

@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -10,12 +11,13 @@ class RoomsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context)!;
     final roomsAsync = ref.watch(roomUsageProvider);
 
     return roomsAsync.when(
       data: (data) {
         if (data.isEmpty) {
-          return const Center(child: Text('No room usage data available.'));
+          return Center(child: Text(loc.noRoomUsageData));
         }
 
         final double totalHours = data.fold(
@@ -46,7 +48,8 @@ class RoomsTab extends ConsumerWidget {
                         return PieChartSectionData(
                           color: color,
                           value: item.totalHours,
-                          title: '${percentage.toStringAsFixed(1)}%',
+                          title:
+                              '${percentage.toStringAsFixed(1)}${loc.percentSymbol}',
                           radius: 100,
                           titleStyle: const TextStyle(
                             fontSize: 12,
@@ -83,7 +86,7 @@ class RoomsTab extends ConsumerWidget {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            '${item.roomName}: ${item.totalHours.toStringAsFixed(1)} hrs',
+                            '${item.roomName}: ${item.totalHours.toStringAsFixed(1)} ${loc.hoursAbbr}',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],

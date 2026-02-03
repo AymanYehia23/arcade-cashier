@@ -621,4 +621,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterThisYear => 'This Year';
+
+  @override
+  String get noRoomUsageData => 'No room usage data available.';
+
+  @override
+  String get hoursAbbr => 'hrs';
+
+  @override
+  String get noProductData => 'No product data available.';
+
+  @override
+  String get qtySold => 'Qty Sold';
+
+  @override
+  String get rankSymbol => '#';
 }

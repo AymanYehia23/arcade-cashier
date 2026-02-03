@@ -35,8 +35,8 @@ class MyApp extends ConsumerWidget {
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context)!.appTitle,
       themeMode: ThemeMode.dark,
-      theme: AppTheme.darkTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: AppTheme.getDarkTheme(locale),
+      darkTheme: AppTheme.getDarkTheme(locale),
       builder: (context, child) {
         return Consumer(
           builder: (context, ref, _) {
