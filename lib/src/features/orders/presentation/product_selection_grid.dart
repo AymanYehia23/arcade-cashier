@@ -1,6 +1,8 @@
+import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -88,7 +90,10 @@ class ProductSelectionGrid extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, st) => Center(child: Text('Error: $err')),
+      error: (err, st) => ErrorStateWidget(
+        message: getUserFriendlyErrorMessage(err),
+        onRetry: () => ref.invalidate(productsProvider),
+      ),
     );
   }
 

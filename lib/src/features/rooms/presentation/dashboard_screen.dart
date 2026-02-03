@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
@@ -9,6 +10,7 @@ import 'package:arcade_cashier/src/features/sessions/presentation/start_session_
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -85,34 +87,9 @@ class DashboardScreen extends ConsumerWidget {
             },
           );
         },
-        error: (e, st) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                loc.errorTitle,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  e.toString().contains('RealtimeSubscribeException')
-                      ? loc.connectionError
-                      : loc.errorMessage(e.toString()),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(height: 16),
-              FilledButton.icon(
-                onPressed: () => ref.refresh(roomsValuesProvider),
-                icon: const Icon(Icons.refresh),
-                label: Text(loc.retry),
-              ),
-            ],
-          ),
+        error: (e, st) => ErrorStateWidget(
+          message: getUserFriendlyErrorMessage(e),
+          onRetry: () => ref.refresh(roomsValuesProvider),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
       ),

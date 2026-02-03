@@ -1,3 +1,5 @@
+import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,7 +179,10 @@ class RevenueTab extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Error: $err')),
+      error: (err, stack) => ErrorStateWidget(
+        message: getUserFriendlyErrorMessage(err),
+        onRetry: () => ref.invalidate(dailyRevenueProvider),
+      ),
     );
   }
 }

@@ -1,8 +1,10 @@
+import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_form_controller.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_form_dialog.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -130,7 +132,10 @@ class ManageRoomsScreen extends ConsumerWidget {
               },
             );
           },
-          error: (e, st) => Center(child: Text(loc.errorMessage(e.toString()))),
+          error: (e, st) => ErrorStateWidget(
+            message: getUserFriendlyErrorMessage(e),
+            onRetry: () => ref.refresh(roomsValuesProvider),
+          ),
           loading: () => const Center(child: CircularProgressIndicator()),
         ),
       ),

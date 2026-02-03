@@ -2,6 +2,8 @@ import 'package:arcade_cashier/src/features/settings/application/locale_controll
 import 'package:arcade_cashier/src/constants/app_constants.dart';
 import 'package:arcade_cashier/src/constants/app_theme.dart';
 import 'package:arcade_cashier/src/core/app_router.dart';
+import 'package:arcade_cashier/src/core/connectivity_provider.dart';
+import 'package:arcade_cashier/src/common_widgets/offline_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,6 +37,26 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.dark,
       theme: AppTheme.darkTheme,
       darkTheme: AppTheme.darkTheme,
+      builder: (context, child) {
+        return Consumer(
+          builder: (context, ref, _) {
+            final hasInternetAsync = ref.watch(hasInternetConnectionV2Provider);
+
+            return hasInternetAsync.when(
+              data: (hasInternet) {
+                // Show full-screen offline state when no internet
+                if (!hasInternet) {
+                  return const OfflineScreen();
+                }
+                // Show normal app when internet is available
+                return child ?? const SizedBox.shrink();
+              },
+              loading: () => child ?? const SizedBox.shrink(),
+              error: (_, __) => child ?? const SizedBox.shrink(),
+            );
+          },
+        );
+      },
     );
   }
 }

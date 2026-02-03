@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
+import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/constants/app_sizes.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
 import 'package:arcade_cashier/src/features/products/application/products_search_provider.dart';
@@ -6,6 +7,7 @@ import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/product_form_dialog.dart';
 import 'package:arcade_cashier/src/features/products/presentation/widgets/product_dashboard_card.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
@@ -124,7 +126,13 @@ class ProductsDashboardScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, st) => Center(child: Text('Error: $e')),
+                error: (e, st) => ErrorStateWidget(
+                  message: getUserFriendlyErrorMessage(e),
+                  onRetry: () {
+                    ref.invalidate(productSearchQueryProvider);
+                    ref.invalidate(productsProvider);
+                  },
+                ),
               ),
             ),
           ],
