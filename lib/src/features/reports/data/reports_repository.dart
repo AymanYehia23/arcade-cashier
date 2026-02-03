@@ -4,6 +4,7 @@ import '../domain/daily_revenue_report.dart';
 import '../domain/product_performance_report.dart';
 import '../domain/room_usage_report.dart';
 import '../domain/room_financial_report.dart';
+import '../domain/shift_report.dart';
 
 part 'reports_repository.g.dart';
 
@@ -80,5 +81,16 @@ class ReportsRepository {
     return (response as List)
         .map((e) => RoomFinancialReport.fromJson(e))
         .toList();
+  }
+
+  Future<ShiftReport> fetchShiftReport(DateTime date) async {
+    final response = await _supabase.rpc(
+      'get_shift_report',
+      params: {'target_date': date.toIso8601String()},
+    );
+
+    // The RPC returns an array with a single object, so we need to extract it
+    final data = (response as List).first as Map<String, dynamic>;
+    return ShiftReport.fromJson(data);
   }
 }

@@ -4,6 +4,7 @@ import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/settings/data/printer_repository.dart';
 import 'package:flutter/services.dart';
@@ -327,6 +328,128 @@ class PdfInvoiceService {
               style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  /// Generates a Z-Report (Shift Report) PDF optimized for 80mm thermal printer roll.
+  Future<Uint8List> generateShiftReportPdf(ShiftReport report) async {
+    final pdf = pw.Document();
+
+    // Load bundled Cairo font for Arabic + English support
+    final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
+    final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
+    final font = pw.Font.ttf(fontData);
+    final fontBold = pw.Font.ttf(fontBoldData);
+
+    final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+    final generatedDate = report.generatedAt ?? DateTime.now();
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.roll80,
+        margin: const pw.EdgeInsets.all(8),
+        theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+        build: (context) => pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.stretch,
+          children: [
+            // Header
+            pw.Text(
+              'Z-REPORT',
+              style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold),
+              textAlign: pw.TextAlign.center,
+            ),
+            pw.SizedBox(height: 4),
+            pw.Text(
+              'Arcade Cashier',
+              style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
+              textAlign: pw.TextAlign.center,
+            ),
+            pw.SizedBox(height: 4),
+            pw.Text(
+              dateFormat.format(generatedDate),
+              style: const pw.TextStyle(fontSize: 10),
+              textAlign: pw.TextAlign.center,
+            ),
+            pw.SizedBox(height: 8),
+            pw.Divider(),
+            pw.SizedBox(height: 8),
+
+            // Body - Sales Breakdown
+            _buildReportRow('Cash Sales', report.totalCash),
+            pw.SizedBox(height: 4),
+            _buildReportRow('Card Sales', report.totalCard),
+            pw.SizedBox(height: 4),
+            _buildReportRow(
+              'Total Transactions',
+              report.transactionsCount.toDouble(),
+              isCount: true,
+            ),
+
+            pw.SizedBox(height: 8),
+            pw.Divider(thickness: 2),
+            pw.SizedBox(height: 8),
+
+            // Totals
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Text(
+                  'NET REVENUE',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+                pw.Text(
+                  '${report.totalRevenue.toStringAsFixed(2)} EGP',
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+
+            pw.SizedBox(height: 16),
+            pw.Divider(),
+            pw.SizedBox(height: 8),
+
+            // Footer
+            pw.Text(
+              'Discounts Given: ${report.totalDiscount.toStringAsFixed(2)} EGP',
+              style: const pw.TextStyle(fontSize: 9),
+              textAlign: pw.TextAlign.center,
+            ),
+            pw.SizedBox(height: 16),
+            pw.Text(
+              'Cashier Signature: ______________',
+              style: const pw.TextStyle(fontSize: 10),
+              textAlign: pw.TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+
+    return pdf.save();
+  }
+
+  pw.Widget _buildReportRow(
+    String label,
+    double value, {
+    bool isCount = false,
+  }) {
+    return pw.Row(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        pw.Text(label, style: const pw.TextStyle(fontSize: 11)),
+        pw.Text(
+          isCount
+              ? value.toInt().toString()
+              : '${value.toStringAsFixed(2)} EGP',
+          style: const pw.TextStyle(fontSize: 11),
         ),
       ],
     );

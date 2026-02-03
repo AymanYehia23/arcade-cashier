@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
+import 'package:arcade_cashier/src/features/reports/presentation/shift_report_dialog.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_card.dart';
@@ -36,6 +37,11 @@ class DashboardScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(loc.dashboardTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.assessment),
+            onPressed: () => ShiftReportDialog.show(context),
+            tooltip: 'End Shift',
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.refresh(roomsValuesProvider),
