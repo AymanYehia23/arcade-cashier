@@ -137,5 +137,9 @@
   "pause": "Pause",
   "resume": "Resume",
   "paused": "PAUSED",
-  "analytics": "Analytics"
+  "analytics": "Analytics",
+  "name": "Name",
+  "phone": "Phone",
+  "newCustomer": "New Customer",
+  "searchCustomer": "Search Customer (Name or Phone)"
 }

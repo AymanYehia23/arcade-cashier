@@ -21,7 +21,15 @@ class ManageRoomsScreen extends ConsumerWidget {
     final loc = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(loc.manageRooms)),
+      appBar: AppBar(
+        title: Text(loc.manageRooms),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.refresh(roomsValuesProvider),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showDialog(
           context: context,

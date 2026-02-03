@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
+import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
+
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
@@ -86,14 +89,14 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     required BuildContext context,
     required Session session,
     required List<Order> orders,
-    required SessionBill
-    initialBill, // Renamed to clarify it's the starting point
+    required SessionBill initialBill,
   }) async {
     final loc = AppLocalizations.of(context)!;
     final discountController = TextEditingController();
 
     // Variable to hold the bill as it gets recalculated
     SessionBill currentBill = initialBill;
+    Customer? selectedCustomer;
 
     await showDialog<void>(
       context: context,
@@ -120,76 +123,106 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
             return AlertDialog(
               title: Text(loc.completeSession),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Summary Rows
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              content: SizedBox(
+                width: 600, // Wider dialog for better layout
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text('Subtotal:'),
-                      Text('${currentBill.subtotal.toStringAsFixed(2)} EGP'),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Discount Input
-                  TextField(
-                    controller: discountController,
-                    decoration: const InputDecoration(
-                      labelText: 'Discount (%)',
-                      border: OutlineInputBorder(),
-                      prefixText: '% ',
-                      suffixText: '',
-                      isDense: true,
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
+                      // Section 1: Customer Selection
+                      Text(
+                        'Customer', // Localize if possible, or use "Customer"
+                        style: Theme.of(sbContext).textTheme.titleMedium,
                       ),
-                    ],
-                    onChanged: (_) => updateBill(),
-                  ),
-                  if (currentBill.discountAmount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'Discount: - ${currentBill.discountAmount.toStringAsFixed(2)} EGP',
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                      CustomerSelectionWidget(
+                        onCustomerSelected: (customer) {
+                          setState(() {
+                            selectedCustomer = customer;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      const Divider(),
+                      const SizedBox(height: 16),
+
+                      // Section 2: Financials
+                      Text(
+                        'Payment Details', // Localize
+                        style: Theme.of(sbContext).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      // Summary Rows
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Subtotal:'),
+                          Text(
+                            '${currentBill.subtotal.toStringAsFixed(2)} EGP',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Discount Input
+                      TextField(
+                        controller: discountController,
+                        decoration: const InputDecoration(
+                          labelText: 'Discount (%)',
+                          border: OutlineInputBorder(),
+                          prefixText: '% ',
+                          suffixText: '',
+                          isDense: true,
                         ),
-                        textAlign: TextAlign.end,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d{0,2}'),
+                          ),
+                        ],
+                        onChanged: (_) => updateBill(),
                       ),
-                    ),
-
-                  const SizedBox(height: 12),
-                  const Divider(),
-                  const SizedBox(height: 12),
-
-                  // Final Total
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        loc.total,
-                        style: Theme.of(sbContext).textTheme.titleLarge,
-                      ),
-                      Text(
-                        '${currentBill.totalAmount.toStringAsFixed(2)} EGP',
-                        style: Theme.of(sbContext).textTheme.titleLarge
-                            ?.copyWith(
+                      if (currentBill.discountAmount > 0)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            'Discount: - ${currentBill.discountAmount.toStringAsFixed(2)} EGP',
+                            style: const TextStyle(
+                              color: Colors.red,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(sbContext).primaryColor,
                             ),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+
+                      const SizedBox(height: 12),
+                      const Divider(),
+                      const SizedBox(height: 12),
+
+                      // Final Total
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            loc.total,
+                            style: Theme.of(sbContext).textTheme.titleLarge,
+                          ),
+                          Text(
+                            '${currentBill.totalAmount.toStringAsFixed(2)} EGP',
+                            style: Theme.of(sbContext).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(sbContext).primaryColor,
+                                ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
               actions: [
                 TextButton(
@@ -208,6 +241,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                           roomId: widget.room?.id,
                           orders: orders,
                           bill: currentBill,
+                          customer: selectedCustomer,
                         );
 
                     if (result != null && context.mounted) {

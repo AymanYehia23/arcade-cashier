@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:arcade_cashier/src/constants/app_sizes.dart';
+import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
 import 'package:arcade_cashier/src/features/products/application/products_search_provider.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/product_form_dialog.dart';
@@ -34,16 +35,33 @@ class ProductsDashboardScreen extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(AppSizes.p16),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: loc.search, // Use localized "Search"
-                  prefixIcon: const Icon(Icons.search),
-                  border: const OutlineInputBorder(),
-                  filled: true,
-                ),
-                onChanged: (value) {
-                  ref.read(productSearchQueryProvider.notifier).setQuery(value);
-                },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: loc.search, // Use localized "Search"
+                        prefixIcon: const Icon(Icons.search),
+                        border: const OutlineInputBorder(),
+                        filled: true,
+                      ),
+                      onChanged: (value) {
+                        ref
+                            .read(productSearchQueryProvider.notifier)
+                            .setQuery(value);
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: AppSizes.p16),
+                  IconButton.filledTonal(
+                    onPressed: () {
+                      ref.invalidate(productSearchQueryProvider);
+                      ref.invalidate(productsProvider);
+                    },
+                    icon: const Icon(Icons.refresh),
+                    tooltip: loc.retry,
+                  ),
+                ],
               ),
             ),
             Expanded(

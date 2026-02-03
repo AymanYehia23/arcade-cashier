@@ -30,6 +30,15 @@ class ReportsScreen extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () {
+                      ref.invalidate(dailyRevenueProvider);
+                      ref.invalidate(topProductsProvider);
+                      ref.invalidate(roomUsageProvider);
+                      ref.invalidate(roomFinancialsProvider);
+                    },
+                  ),
+                  IconButton(
                     icon: const Icon(Icons.calendar_month),
                     onPressed: () async {
                       final picked = await showDateRangePicker(

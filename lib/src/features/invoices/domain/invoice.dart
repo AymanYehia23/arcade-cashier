@@ -21,6 +21,8 @@ class Invoice with _$Invoice {
     @JsonKey(name: 'issued_at') DateTime? issuedAt,
     @Default('paid') String status,
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
+    @JsonKey(name: 'customer_id') int? customerId,
+    @JsonKey(name: 'customer_name') String? customerName,
   }) = _Invoice;
 
   const Invoice._();

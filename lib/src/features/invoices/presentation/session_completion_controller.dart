@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
+import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
@@ -34,6 +35,7 @@ class SessionCompletionController extends _$SessionCompletionController {
     int? roomId,
     required List<Order> orders,
     required SessionBill bill,
+    Customer? customer,
     String shopName = 'Arcade',
   }) async {
     state = const AsyncLoading();
@@ -64,6 +66,8 @@ class SessionCompletionController extends _$SessionCompletionController {
         discountPercentage: bill.discountPercentage,
         paymentMethod: 'cash',
         issuedAt: DateTime.now(),
+        customerId: customer?.id,
+        customerName: customer?.name,
       );
 
       final createdInvoice = await ref

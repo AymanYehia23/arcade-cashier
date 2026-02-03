@@ -44,7 +44,7 @@ final topProductsProvider =
 // ignore: unused_element
 typedef TopProductsRef =
     AutoDisposeFutureProviderRef<List<ProductPerformanceReport>>;
-String _$roomUsageHash() => r'03fa1058dca1d4baa1dd8c682d46212cfd3f9bc6';
+String _$roomUsageHash() => r'86c21467743c6cd339e44fa8cfea572d8b625789';
 
 /// See also [roomUsage].
 @ProviderFor(roomUsage)
@@ -62,7 +62,7 @@ final roomUsageProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef RoomUsageRef = AutoDisposeFutureProviderRef<List<RoomUsageReport>>;
-String _$roomFinancialsHash() => r'36a68a5c0ebf479e268ffb9172b619be6abce4ee';
+String _$roomFinancialsHash() => r'531077bebd0eb1374ad531ee94ecde5f3b3d7c88';
 
 /// See also [roomFinancials].
 @ProviderFor(roomFinancials)

@@ -35,6 +35,10 @@ class DashboardScreen extends ConsumerWidget {
         title: Text(loc.dashboardTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.refresh(roomsValuesProvider),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () => context.push(AppRoutes.settings),
           ),

@@ -327,4 +327,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get analytics => 'Analytics';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get newCustomer => 'New Customer';
+
+  @override
+  String get searchCustomer => 'Search Customer (Name or Phone)';
 }

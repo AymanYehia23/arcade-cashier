@@ -116,6 +116,15 @@ class PdfInvoiceService {
           style: const pw.TextStyle(fontSize: 10),
           textAlign: pw.TextAlign.center,
         ),
+        if (invoice.customerName != null &&
+            invoice.customerName!.trim().isNotEmpty) ...[
+          pw.SizedBox(height: 4),
+          pw.Text(
+            'Customer: ${invoice.customerName}',
+            style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
+            textAlign: pw.TextAlign.center,
+          ),
+        ],
       ],
     );
   }

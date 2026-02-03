@@ -40,6 +40,10 @@ class _InvoicesHistoryScreenState extends ConsumerState<InvoicesHistoryScreen> {
         title: Text(loc.invoiceHistory),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.refresh(invoicesPaginationProvider),
+          ),
+          IconButton(
             icon: Icon(
               Icons.calendar_today,
               color: dateRange != null
