@@ -66,7 +66,7 @@ class InvoiceReprintController extends _$InvoiceReprintController {
             : Duration.zero,
       );
 
-      final pdfService = PdfInvoiceService();
+      final pdfService = ref.read(pdfInvoiceServiceProvider);
       final Uint8List pdfBytes = await pdfService.generateInvoicePdf(
         invoice: invoice,
         session: session,
@@ -84,7 +84,14 @@ class InvoiceReprintController extends _$InvoiceReprintController {
         );
       }
     } catch (e, st) {
+      debugPrint('InvoiceReprintController error: $e');
+      debugPrint('Stack trace: $st');
       state = AsyncError(e, st);
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error loading invoice: $e')));
+      }
     }
   }
 }

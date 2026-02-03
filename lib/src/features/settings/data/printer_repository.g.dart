@@ -1,27 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'invoice_reprint_controller.dart';
+part of 'printer_repository.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$invoiceReprintControllerHash() =>
-    r'b9778f277c2dac638b60fbe9068a559acc287f4a';
+String _$printerRepositoryHash() => r'cb5784a7850508bba53781b9db6b98b16a28ff0e';
 
-/// See also [InvoiceReprintController].
-@ProviderFor(InvoiceReprintController)
-final invoiceReprintControllerProvider =
-    AutoDisposeAsyncNotifierProvider<InvoiceReprintController, void>.internal(
-      InvoiceReprintController.new,
-      name: r'invoiceReprintControllerProvider',
+/// See also [printerRepository].
+@ProviderFor(printerRepository)
+final printerRepositoryProvider =
+    AutoDisposeProvider<PrinterRepository>.internal(
+      printerRepository,
+      name: r'printerRepositoryProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$invoiceReprintControllerHash,
+          : _$printerRepositoryHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$InvoiceReprintController = AutoDisposeAsyncNotifier<void>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef PrinterRepositoryRef = AutoDisposeProviderRef<PrinterRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

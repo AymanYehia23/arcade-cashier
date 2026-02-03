@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/features/settings/presentation/printer_settings_section.dart';
 import 'package:arcade_cashier/src/features/settings/application/locale_controller.dart';
 import 'package:arcade_cashier/src/features/authentication/data/auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,6 +42,8 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right),
               onTap: () => context.push(AppRoutes.manageRooms),
             ),
+            const Divider(),
+            const PrinterSettingsSection(),
             const Divider(),
             _SectionHeader(title: loc.account),
             ListTile(

@@ -5,12 +5,76 @@ import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
+import 'package:arcade_cashier/src/features/settings/data/printer_repository.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'pdf_invoice_service.g.dart';
+
+@riverpod
+PdfInvoiceService pdfInvoiceService(PdfInvoiceServiceRef ref) {
+  return PdfInvoiceService(ref);
+}
 
 /// Service for generating invoice PDFs optimized for thermal printers.
 class PdfInvoiceService {
+  final PdfInvoiceServiceRef _ref;
+
+  PdfInvoiceService(this._ref);
+
+  /// Generates invoice PDF and handles printing (silent if default set, else dialog).
+  Future<Uint8List> printInvoice({
+    required Invoice invoice,
+    required Session session,
+    required List<Order> orders,
+    required SessionBill bill,
+  }) async {
+    final pdfBytes = await generateInvoicePdf(
+      invoice: invoice,
+      session: session,
+      orders: orders,
+      bill: bill,
+    );
+
+    await _printPdf(pdfBytes, invoice.invoiceNumber);
+
+    return pdfBytes;
+  }
+
+  Future<void> _printPdf(Uint8List pdfBytes, String invoiceNumber) async {
+    final printerRepo = _ref.read(printerRepositoryProvider);
+    final defaultPrinterUrl = await printerRepo.loadDefaultPrinter();
+    Printer? targetPrinter;
+
+    if (defaultPrinterUrl != null) {
+      final printers = await Printing.listPrinters();
+      try {
+        targetPrinter = printers.firstWhere((p) => p.url == defaultPrinterUrl);
+      } catch (_) {
+        // Printer not found in current list, fallback to dialog
+        targetPrinter = null;
+      }
+    }
+
+    if (targetPrinter != null) {
+      await Printing.directPrintPdf(
+        printer: targetPrinter,
+        onLayout: (format) async => pdfBytes,
+        name: 'Invoice-$invoiceNumber',
+      );
+    } else {
+      await Printing.layoutPdf(
+        onLayout: (format) async => pdfBytes,
+        name: 'Invoice-$invoiceNumber',
+      );
+    }
+  }
+
   /// Generates a PDF invoice optimized for 80mm thermal printer roll.
   Future<Uint8List> generateInvoicePdf({
     required Invoice invoice,
@@ -24,10 +88,17 @@ class PdfInvoiceService {
     // Build invoice items list
     final items = _buildInvoiceItems(orders: orders, bill: bill);
 
+    // Load bundled Cairo font for Arabic + English support
+    final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
+    final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
+    final font = pw.Font.ttf(fontData);
+    final fontBold = pw.Font.ttf(fontBoldData);
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.roll80,
         margin: const pw.EdgeInsets.all(8),
+        theme: pw.ThemeData.withFont(base: font, bold: fontBold),
         build: (context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
           children: [

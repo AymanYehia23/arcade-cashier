@@ -5,7 +5,6 @@ import 'package:arcade_cashier/src/features/customers/presentation/customer_sele
 
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
-import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
@@ -246,11 +245,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
                     if (result != null && context.mounted) {
                       Navigator.of(context).pop(); // Close ActiveSessionDialog
-                      showDialog(
-                        context: context,
-                        builder: (_) => InvoicePreviewDialog(
-                          pdfBytes: result.pdfBytes,
-                          invoice: result.invoice,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Session completed - Invoice created'),
                         ),
                       );
                     }

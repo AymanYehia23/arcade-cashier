@@ -77,13 +77,13 @@ class SessionCompletionController extends _$SessionCompletionController {
       // Invalidate history to ensure it updates (in case Realtime is off)
       ref.invalidate(invoicesPaginationProvider);
 
-      // 4. Generate PDF
+      // 4. Print Invoice (Generate PDF and print/show dialog)
       // Calculate the actual session duration before generating PDF
       final endTimeUtc = DateTime.now().toUtc();
       final sessionWithEndTime = session.copyWith(endTime: endTimeUtc);
 
-      final pdfService = PdfInvoiceService();
-      final pdfBytes = await pdfService.generateInvoicePdf(
+      final pdfService = ref.read(pdfInvoiceServiceProvider);
+      final pdfBytes = await pdfService.printInvoice(
         invoice: createdInvoice,
         session: sessionWithEndTime,
         orders: orders,
