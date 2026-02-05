@@ -72,20 +72,21 @@ class ProductSelectionGrid extends ConsumerWidget {
                     ),
                   ),
                   // Products Grid for this Category
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3, // Adjust for screen size if needed
-                          childAspectRatio: 1.5,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                    itemCount: items.length,
-                    itemBuilder: (context, i) {
-                      final product = items[i];
-                      return _buildProductCard(context, ref, product);
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final crossAxisCount = constraints.maxWidth < 600 ? 2 : 3;
+                      final itemWidth = (constraints.maxWidth - ((crossAxisCount - 1) * 10)) / crossAxisCount;
+
+                      return Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: items.map((product) {
+                          return SizedBox(
+                            width: itemWidth,
+                            child: _buildProductCard(context, ref, product),
+                          );
+                        }).toList(),
+                      );
                     },
                   ),
                   const SizedBox(height: 16), // Spacing between categories
@@ -137,26 +138,23 @@ class ProductSelectionGrid extends ConsumerWidget {
                     );
               },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                child: Center(
-                  child: Text(
-                    localizedName,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              Text(
+                localizedName,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
+                textAlign: TextAlign.center,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               isOutOfStock
                   ? const Text(
                       'Out of Stock',

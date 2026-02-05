@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
@@ -6,6 +8,7 @@ import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/settings/data/printer_repository.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -49,30 +52,43 @@ class PdfInvoiceService {
   }
 
   Future<void> _printPdf(Uint8List pdfBytes, String invoiceNumber) async {
-    final printerRepo = _ref.read(printerRepositoryProvider);
-    final defaultPrinterUrl = await printerRepo.loadDefaultPrinter();
-    Printer? targetPrinter;
+    // Check if platform supports direct printing
+    final isDesktop = !kIsWeb &&
+        (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
-    if (defaultPrinterUrl != null) {
-      final printers = await Printing.listPrinters();
-      try {
-        targetPrinter = printers.firstWhere((p) => p.url == defaultPrinterUrl);
-      } catch (_) {
-        // Printer not found in current list, fallback to dialog
-        targetPrinter = null;
+    if (isDesktop) {
+      // Desktop: Use printer settings and direct print
+      final printerRepo = _ref.read(printerRepositoryProvider);
+      final defaultPrinterUrl = await printerRepo.loadDefaultPrinter();
+      Printer? targetPrinter;
+
+      if (defaultPrinterUrl != null) {
+        final printers = await Printing.listPrinters();
+        try {
+          targetPrinter = printers.firstWhere((p) => p.url == defaultPrinterUrl);
+        } catch (_) {
+          // Printer not found in current list, fallback to dialog
+          targetPrinter = null;
+        }
       }
-    }
 
-    if (targetPrinter != null) {
-      await Printing.directPrintPdf(
-        printer: targetPrinter,
-        onLayout: (format) async => pdfBytes,
-        name: 'Invoice-$invoiceNumber',
-      );
+      if (targetPrinter != null) {
+        await Printing.directPrintPdf(
+          printer: targetPrinter,
+          onLayout: (format) async => pdfBytes,
+          name: 'Invoice-$invoiceNumber',
+        );
+      } else {
+        await Printing.layoutPdf(
+          onLayout: (format) async => pdfBytes,
+          name: 'Invoice-$invoiceNumber',
+        );
+      }
     } else {
-      await Printing.layoutPdf(
-        onLayout: (format) async => pdfBytes,
-        name: 'Invoice-$invoiceNumber',
+      // Mobile/Web: Share PDF for download or printing via system dialog
+      await Printing.sharePdf(
+        bytes: pdfBytes,
+        filename: 'Invoice-$invoiceNumber.pdf',
       );
     }
   }

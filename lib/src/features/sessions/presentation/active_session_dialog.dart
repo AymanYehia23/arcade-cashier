@@ -121,15 +121,19 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               });
             }
 
-            return AlertDialog(
-              title: Text(loc.completeSession),
-              content: SizedBox(
-                width: 600, // Wider dialog for better layout
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final isMobile = constraints.maxWidth < 600;
+
+                return AlertDialog(
+                  title: Text(loc.completeSession),
+                  content: SizedBox(
+                    width: isMobile ? constraints.maxWidth * 0.9 : 600,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                       // Section 1: Customer Selection
                       Text(
                         loc.customer,
@@ -259,6 +263,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                 ),
               ],
             );
+                },
+              );
           },
         );
       },
@@ -320,106 +326,137 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
           });
         },
       },
-      child: AlertDialog(
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-        title: Text(
-          '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? loc.quickOrder : widget.room?.name ?? loc.unknown}',
-        ),
-        content: SizedBox(
-          width: 1000,
-          height: 600,
-          child: sessionAsync.when(
-            data: (session) {
-              if (session == null) {
-                return Center(child: Text(loc.noActiveSessionFound));
-              }
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 600;
 
-              // Orders
-              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-              final ordersList = ordersAsync.valueOrNull ?? [];
+          return AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            title: Text(
+              '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? loc.quickOrder : widget.room?.name ?? loc.unknown}',
+            ),
+            content: SizedBox(
+              width: isMobile ? constraints.maxWidth * 0.9 : 1000,
+              height: isMobile ? constraints.maxHeight * 0.7 : 600,
+              child: sessionAsync.when(
+                data: (session) {
+                  if (session == null) {
+                    return Center(child: Text(loc.noActiveSessionFound));
+                  }
 
-              // Calculate Bill
-              final billingService = ref.watch(billingServiceProvider);
-              final bill = billingService.calculateSessionBill(
-                session,
-                ordersList,
-              );
+                  // Orders
+                  final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+                  final ordersList = ordersAsync.valueOrNull ?? [];
 
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // PRODUCT SELECTION (Left)
-                  Expanded(
-                    flex: 4,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          loc.products,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        const SizedBox(height: 8),
-                        Expanded(
-                          child: Card(
-                            child: ProductSelectionGrid(
-                              sessionId: session.id,
-                              focusNode: _productGridFocusNode,
-                            ),
+                  // Calculate Bill
+                  final billingService = ref.watch(billingServiceProvider);
+                  final bill = billingService.calculateSessionBill(
+                    session,
+                    ordersList,
+                  );
+
+                  final productSelection = Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        loc.products,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: Card(
+                          child: ProductSelectionGrid(
+                            sessionId: session.id,
+                            focusNode: _productGridFocusNode,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  const VerticalDivider(width: 1),
-                  const SizedBox(width: 16),
-                  // SESSION INFO & ORDERS (Right)
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        if (!session.isQuickOrder) ...[
-                          SessionTimerWidget(
-                            session: session,
-                            onExtend: () =>
-                                _showExtendDialog(context, session.id),
-                          ),
-                          const Divider(),
-                        ],
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Text(
-                                loc.orders,
-                                style: Theme.of(context).textTheme.titleSmall,
-                              ),
-                              Expanded(
-                                child: SessionOrderList(
-                                  ordersAsync: ordersAsync,
-                                ),
-                              ),
-                            ],
-                          ),
+                      ),
+                    ],
+                  );
+
+                  final sessionInfo = Column(
+                    children: [
+                      if (!session.isQuickOrder) ...[
+                        SessionTimerWidget(
+                          session: session,
+                          onExtend: () =>
+                              _showExtendDialog(context, session.id),
                         ),
                         const Divider(),
-                        _BillSection(
-                          timeCost: bill.timeCost,
-                          ordersTotal: bill.ordersTotal,
-                          grandTotal: bill.totalAmount,
-                          loc: loc,
+                      ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              loc.orders,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Expanded(
+                              child: SessionOrderList(
+                                ordersAsync: ordersAsync,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      _BillSection(
+                        timeCost: bill.timeCost,
+                        ordersTotal: bill.ordersTotal,
+                        grandTotal: bill.totalAmount,
+                        loc: loc,
+                      ),
+                    ],
+                  );
+
+                  if (isMobile) {
+                    // Mobile: Vertical layout
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(
+                            height: 300,
+                            child: productSelection,
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            height: 400,
+                            child: sessionInfo,
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    // Desktop: Horizontal layout
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // PRODUCT SELECTION (Left)
+                        Expanded(
+                          flex: 4,
+                          child: productSelection,
+                        ),
+                        const SizedBox(width: 16),
+                        const VerticalDivider(width: 1),
+                        const SizedBox(width: 16),
+                        // SESSION INFO & ORDERS (Right)
+                        Expanded(
+                          flex: 3,
+                          child: sessionInfo,
                         ),
                       ],
-                    ),
-                  ),
-                ],
-              );
-            },
-            error: (e, st) =>
-                Center(child: Text(getUserFriendlyErrorMessage(e, context))),
-            loading: () => const Center(child: CircularProgressIndicator()),
-          ),
-        ),
+                    );
+                  }
+                },
+                error: (e, st) =>
+                    Center(child: Text(getUserFriendlyErrorMessage(e, context))),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              ),
+            ),
         actions: [
           sessionAsync.maybeWhen(
             data: (session) {
@@ -460,6 +497,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             ),
           ),
         ],
+          );
+        },
       ),
     );
   }

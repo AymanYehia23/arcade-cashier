@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
@@ -21,10 +24,23 @@ class _PrinterSettingsSectionState
   List<Printer> _printers = [];
   bool _isLoading = true;
 
+  // Check if the current platform supports direct printing
+  bool get _isDesktopPlatform {
+    if (kIsWeb) return false;
+    return Platform.isWindows || Platform.isMacOS || Platform.isLinux;
+  }
+
   @override
   void initState() {
     super.initState();
-    _loadPrinters();
+    // Only load printers on desktop platforms
+    if (_isDesktopPlatform) {
+      _loadPrinters();
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadPrinters() async {
@@ -80,50 +96,64 @@ class _PrinterSettingsSectionState
 
   @override
   Widget build(BuildContext context) {
+    // Hide printer settings on non-desktop platforms
+    if (!_isDesktopPlatform) {
+      return const SizedBox.shrink();
+    }
+
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator());
     }
 
     final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            l10n.printerSettings,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 16),
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: DropdownButtonFormField<Printer>(
-                  decoration: InputDecoration(
-                    labelText: l10n.selectDefaultPrinter,
-                    border: const OutlineInputBorder(),
-                  ),
-                  initialValue: _selectedPrinter,
-                  items: _printers.map((printer) {
-                    return DropdownMenuItem(
-                      value: printer,
-                      child: Text(printer.name),
-                    );
-                  }).toList(),
-                  onChanged: _savePrinter,
+              Text(
+                l10n.printerSettings,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 16),
-              ElevatedButton.icon(
-                onPressed: _selectedPrinter == null ? null : _testPrint,
-                icon: const Icon(Icons.print),
-                label: Text(l10n.testPrint),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<Printer>(
+                      decoration: InputDecoration(
+                        labelText: l10n.selectDefaultPrinter,
+                        border: const OutlineInputBorder(),
+                      ),
+                      initialValue: _selectedPrinter,
+                      items: _printers.map((printer) {
+                        return DropdownMenuItem(
+                          value: printer,
+                          child: Text(printer.name),
+                        );
+                      }).toList(),
+                      onChanged: _savePrinter,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: _selectedPrinter == null ? null : _testPrint,
+                    icon: const Icon(Icons.print),
+                    label: Text(l10n.testPrint),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
+        const Divider(),
+      ],
     );
   }
 }
