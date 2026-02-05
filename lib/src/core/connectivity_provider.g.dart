@@ -54,12 +54,13 @@ final hasInternetConnectionProvider = StreamProvider<bool>.internal(
 // ignore: unused_element
 typedef HasInternetConnectionRef = StreamProviderRef<bool>;
 String _$hasInternetConnectionV2Hash() =>
-    r'50c767ac1db09186f0f4490201b6108368f4ccf8';
+    r'798d32c04b0d8d72a82a6f18e428d4329e785da2';
 
 /// Improved implementation using StreamController for better control.
 ///
 /// This version properly emits updates when internet status changes,
-/// even when WiFi connection remains stable.
+/// even when WiFi connection remains stable. Includes debouncing to prevent
+/// brief offline flashes during app startup or network transitions.
 ///
 /// Copied from [hasInternetConnectionV2].
 @ProviderFor(hasInternetConnectionV2)
