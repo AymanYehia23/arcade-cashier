@@ -185,7 +185,7 @@ class PdfInvoiceService {
     return pw.Column(
       children: [
         pw.Text(
-          invoice.shopName,
+          loc.brandName,
           style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
           textAlign: pw.TextAlign.center,
         ),
