@@ -385,6 +385,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportsTitle => 'Reports & Analytics';
 
   @override
+  String get dataRefreshed => 'Data refreshed';
+
+  @override
   String get period => 'Period';
 
   @override

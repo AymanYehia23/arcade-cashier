@@ -8,11 +8,61 @@ import 'tabs/products_tab.dart';
 import 'tabs/rooms_tab.dart';
 import 'tabs/financial_breakdown_tab.dart';
 
-class ReportsScreen extends ConsumerWidget {
+class ReportsScreen extends ConsumerStatefulWidget {
   const ReportsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReportsScreen> createState() => _ReportsScreenState();
+}
+
+class _ReportsScreenState extends ConsumerState<ReportsScreen> {
+  bool _isRefreshing = false;
+
+  Future<void> _handleRefresh() async {
+    if (_isRefreshing) return;
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    try {
+      // Refresh all providers to force immediate refetch
+      await Future.wait([
+        ref.refresh(dailyRevenueProvider.future),
+        ref.refresh(topProductsProvider.future),
+        ref.refresh(roomUsageProvider.future),
+        ref.refresh(roomFinancialsProvider.future),
+      ]);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.dataRefreshed),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      // Handle errors silently - individual tabs will show their own errors
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorGeneric),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRefreshing = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final dateRange = ref.watch(reportsDateRangeProvider);
 
     final loc = AppLocalizations.of(context)!;
@@ -37,13 +87,14 @@ class ReportsScreen extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
-                    icon: const Icon(Icons.refresh),
-                    onPressed: () {
-                      ref.invalidate(dailyRevenueProvider);
-                      ref.invalidate(topProductsProvider);
-                      ref.invalidate(roomUsageProvider);
-                      ref.invalidate(roomFinancialsProvider);
-                    },
+                    icon: _isRefreshing
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.refresh),
+                    onPressed: _isRefreshing ? null : _handleRefresh,
                   ),
                   IconButton(
                     icon: const Icon(Icons.calendar_month),
@@ -80,9 +131,9 @@ class ReportsScreen extends ConsumerWidget {
                 Tab(text: loc.tabRoomUsage, icon: const Icon(Icons.pie_chart)),
               ],
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
-                children: [
+                children: const [
                   RevenueTab(),
                   FinancialBreakdownTab(),
                   ProductsTab(),

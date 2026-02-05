@@ -163,6 +163,7 @@
   "egp": "EGP",
   "egpPerHour": "EGP/hr",
   "reportsTitle": "Reports & Analytics",
+  "dataRefreshed": "Data refreshed",
   "period": "Period",
   "tabRevenue": "Revenue",
   "tabFinancials": "Financials",
