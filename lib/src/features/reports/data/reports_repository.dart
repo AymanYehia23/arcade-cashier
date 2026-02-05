@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../domain/daily_revenue_report.dart';
@@ -9,7 +10,7 @@ import '../domain/shift_report.dart';
 part 'reports_repository.g.dart';
 
 @Riverpod(keepAlive: true)
-ReportsRepository reportsRepository(ReportsRepositoryRef ref) {
+ReportsRepository reportsRepository(Ref ref) {
   return ReportsRepository(Supabase.instance.client);
 }
 

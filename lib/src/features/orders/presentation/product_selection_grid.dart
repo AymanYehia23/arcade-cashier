@@ -120,7 +120,7 @@ class ProductSelectionGrid extends ConsumerWidget {
       ),
       // Use red color for out of stock, otherwise keeping the original
       color: isOutOfStock
-          ? const Color(0xFFB00020).withOpacity(0.5)
+          ? const Color(0xFFB00020).withValues(alpha: 0.5)
           : const Color(0xFF2A2A35),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

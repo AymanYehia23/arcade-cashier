@@ -36,7 +36,7 @@ class ProductDashboardCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -53,7 +53,9 @@ class ProductDashboardCard extends ConsumerWidget {
               child: Icon(
                 bgIcon,
                 size: 90,
-                color: Colors.white.withOpacity(0.05), // Very faint watermark
+                color: Colors.white.withValues(
+                  alpha: 0.05,
+                ), // Very faint watermark
               ),
             ),
 
@@ -155,7 +157,7 @@ class ProductDashboardCard extends ConsumerWidget {
                   onTap: () => _showEditDialog(context, product),
                   onLongPress: () => _confirmDelete(context, ref),
                   overlayColor: WidgetStateProperty.all(
-                    Colors.white.withOpacity(0.1),
+                    Colors.white.withValues(alpha: 0.1),
                   ),
                 ),
               ),

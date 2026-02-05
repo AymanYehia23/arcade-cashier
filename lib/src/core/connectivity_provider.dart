@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'connectivity_provider.g.dart';
@@ -11,7 +12,7 @@ part 'connectivity_provider.g.dart';
 /// Returns a [List<ConnectivityResult>] that indicates the current
 /// connectivity state (WiFi, Mobile, Ethernet, None, etc.).
 @Riverpod(keepAlive: true)
-Stream<List<ConnectivityResult>> connectivity(ConnectivityRef ref) {
+Stream<List<ConnectivityResult>> connectivity(Ref ref) {
   return Connectivity().onConnectivityChanged;
 }
 
@@ -39,7 +40,7 @@ Future<bool> _hasInternetConnection() async {
 ///
 /// Returns `true` when internet is available, `false` otherwise.
 @Riverpod(keepAlive: true)
-Stream<bool> hasInternetConnection(HasInternetConnectionRef ref) async* {
+Stream<bool> hasInternetConnection(Ref ref) async* {
   final connectivity = Connectivity();
 
   await for (final connectivityResults in connectivity.onConnectivityChanged) {
@@ -75,7 +76,7 @@ Stream<bool> hasInternetConnection(HasInternetConnectionRef ref) async* {
 /// This version properly emits updates when internet status changes,
 /// even when WiFi connection remains stable.
 @Riverpod(keepAlive: true)
-Stream<bool> hasInternetConnectionV2(HasInternetConnectionV2Ref ref) {
+Stream<bool> hasInternetConnectionV2(Ref ref) {
   final controller = StreamController<bool>();
   final connectivity = Connectivity();
   Timer? periodicTimer;

@@ -24,14 +24,14 @@ class ReportsDateRange extends _$ReportsDateRange {
 }
 
 @riverpod
-Future<List<DailyRevenueReport>> dailyRevenue(DailyRevenueRef ref) async {
+Future<List<DailyRevenueReport>> dailyRevenue(Ref ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
   final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchRevenue(range.start, range.end);
 }
 
 @riverpod
-Future<List<ProductPerformanceReport>> topProducts(TopProductsRef ref) async {
+Future<List<ProductPerformanceReport>> topProducts(Ref ref) async {
   final repository = ref.watch(reportsRepositoryProvider);
   final range = ref.watch(reportsDateRangeProvider);
   return repository.fetchTopProducts(start: range.start, end: range.end);

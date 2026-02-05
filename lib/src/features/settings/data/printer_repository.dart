@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -18,6 +19,6 @@ class PrinterRepository {
 }
 
 @riverpod
-PrinterRepository printerRepository(PrinterRepositoryRef ref) {
+PrinterRepository printerRepository(Ref ref) {
   return PrinterRepository();
 }

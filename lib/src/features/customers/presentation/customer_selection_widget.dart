@@ -124,14 +124,16 @@ class _CustomerSelectionWidgetState
                         name: nameController.text,
                         phone: phoneController.text,
                       );
-                  if (mounted) {
+                  if (context.mounted) {
                     Navigator.pop(context);
                     _selectCustomer(newCustomer);
                   }
                 } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error creating customer: $e')),
-                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error creating customer: $e')),
+                    );
+                  }
                 }
               }
             },

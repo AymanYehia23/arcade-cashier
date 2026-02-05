@@ -1,4 +1,3 @@
-import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

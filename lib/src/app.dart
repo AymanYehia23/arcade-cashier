@@ -52,7 +52,7 @@ class MyApp extends ConsumerWidget {
                 return child ?? const SizedBox.shrink();
               },
               loading: () => child ?? const SizedBox.shrink(),
-              error: (_, __) => child ?? const SizedBox.shrink(),
+              error: (_, _) => child ?? const SizedBox.shrink(),
             );
           },
         );

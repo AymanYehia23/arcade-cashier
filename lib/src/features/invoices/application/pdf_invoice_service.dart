@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
@@ -19,13 +17,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'pdf_invoice_service.g.dart';
 
 @riverpod
-PdfInvoiceService pdfInvoiceService(PdfInvoiceServiceRef ref) {
+PdfInvoiceService pdfInvoiceService(Ref ref) {
   return PdfInvoiceService(ref);
 }
 
 /// Service for generating invoice PDFs optimized for thermal printers.
 class PdfInvoiceService {
-  final PdfInvoiceServiceRef _ref;
+  final Ref _ref;
 
   PdfInvoiceService(this._ref);
 
