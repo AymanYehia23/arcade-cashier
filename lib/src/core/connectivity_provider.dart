@@ -74,22 +74,53 @@ Stream<bool> hasInternetConnection(Ref ref) async* {
 /// Improved implementation using StreamController for better control.
 ///
 /// This version properly emits updates when internet status changes,
-/// even when WiFi connection remains stable.
+/// even when WiFi connection remains stable. Includes debouncing to prevent
+/// brief offline flashes during app startup or network transitions.
 @Riverpod(keepAlive: true)
 Stream<bool> hasInternetConnectionV2(Ref ref) {
   final controller = StreamController<bool>();
   final connectivity = Connectivity();
   Timer? periodicTimer;
+  Timer? debounceTimer;
   bool? lastKnownStatus;
+  bool? pendingStatus;
+
+  // Emit initial optimistic value (assume connected on startup)
+  controller.add(true);
+  lastKnownStatus = true;
+
+  void emitStatusWithDebounce(bool hasInternet) {
+    // Cancel any pending debounce timer
+    debounceTimer?.cancel();
+
+    // If transitioning to online, emit immediately (no delay)
+    if (hasInternet) {
+      if (lastKnownStatus != hasInternet) {
+        lastKnownStatus = hasInternet;
+        if (!controller.isClosed) {
+          controller.add(hasInternet);
+        }
+      }
+      pendingStatus = null;
+      return;
+    }
+
+    // If transitioning to offline, debounce to prevent brief flashes
+    pendingStatus = hasInternet;
+    debounceTimer = Timer(const Duration(seconds: 2), () {
+      if (pendingStatus == hasInternet && lastKnownStatus != hasInternet) {
+        lastKnownStatus = hasInternet;
+        if (!controller.isClosed) {
+          controller.add(hasInternet);
+        }
+      }
+      pendingStatus = null;
+    });
+  }
 
   void checkAndEmitInternetStatus() async {
     final hasInternet = await _hasInternetConnection();
-    if (hasInternet != lastKnownStatus) {
-      lastKnownStatus = hasInternet;
-      if (!controller.isClosed) {
-        controller.add(hasInternet);
-      }
-    }
+    emitStatusWithDebounce(hasInternet);
   }
 
   // Listen to connectivity changes
@@ -101,10 +132,7 @@ Stream<bool> hasInternetConnectionV2(Ref ref) {
 
     // If no connectivity at all, definitely offline
     if (connectivityResults.contains(ConnectivityResult.none)) {
-      lastKnownStatus = false;
-      if (!controller.isClosed) {
-        controller.add(false);
-      }
+      emitStatusWithDebounce(false);
       return;
     }
 
@@ -121,6 +149,7 @@ Stream<bool> hasInternetConnectionV2(Ref ref) {
   // Cleanup
   ref.onDispose(() {
     periodicTimer?.cancel();
+    debounceTimer?.cancel();
     subscription.cancel();
     controller.close();
   });
