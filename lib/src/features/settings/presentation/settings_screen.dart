@@ -48,7 +48,6 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
             ],
             const PrinterSettingsSection(),
-            const Divider(),
             _SectionHeader(title: loc.account),
             ListTile(
               leading: Icon(

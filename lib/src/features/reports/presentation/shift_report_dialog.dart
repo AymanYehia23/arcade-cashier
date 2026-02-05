@@ -1,7 +1,10 @@
+import 'dart:io' show Platform;
+
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/reports/data/reports_repository.dart';
 import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
@@ -201,15 +204,28 @@ class ShiftReportDialog extends ConsumerWidget {
     try {
       final pdfBytes = await pdfService.generateShiftReportPdf(report, loc);
 
-      // Close the dialog BEFORE opening the print dialog.
+      // Close the dialog BEFORE opening the print/share dialog.
       if (context.mounted) {
         Navigator.of(context).pop();
       }
 
-      await Printing.layoutPdf(
-        onLayout: (format) async => pdfBytes,
-        name: 'Z-Report-${DateTime.now().toIso8601String()}',
-      );
+      // Check if platform supports direct printing
+      final isDesktop = !kIsWeb &&
+          (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+
+      if (isDesktop) {
+        // Desktop: Show print dialog
+        await Printing.layoutPdf(
+          onLayout: (format) async => pdfBytes,
+          name: 'Z-Report-${DateTime.now().toIso8601String()}',
+        );
+      } else {
+        // Mobile/Web: Share PDF for download
+        await Printing.sharePdf(
+          bytes: pdfBytes,
+          filename: 'Z-Report-${DateTime.now().toIso8601String()}.pdf',
+        );
+      }
     } catch (e) {
       scaffoldMessenger.showSnackBar(
         SnackBar(
