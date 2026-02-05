@@ -20,14 +20,17 @@ class ProductFormDialog extends ConsumerStatefulWidget {
 class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
+  late final TextEditingController _nameArController;
   late final TextEditingController _priceController;
   late final TextEditingController _stockController;
   String _category = 'Drinks';
+  String _categoryAr = 'المشروبات';
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.product?.name);
+    _nameArController = TextEditingController(text: widget.product?.nameAr);
     _priceController = TextEditingController(
       text: widget.product?.sellingPrice.toString() ?? '',
     );
@@ -35,11 +38,13 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
       text: widget.product?.stockQuantity.toString(),
     );
     _category = widget.product?.category ?? 'Drinks';
+    _categoryAr = widget.product?.categoryAr ?? 'المشروبات';
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _nameArController.dispose();
     _priceController.dispose();
     _stockController.dispose();
     super.dispose();
@@ -48,6 +53,7 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
   void _submit() async {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text.trim();
+      final nameAr = _nameArController.text.trim();
       final price = double.parse(_priceController.text.trim());
       final stock = int.parse(_stockController.text.trim());
 
@@ -57,7 +63,9 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
         await controller.updateProduct(
           widget.product!.copyWith(
             name: name,
+            nameAr: nameAr,
             category: _category,
+            categoryAr: _categoryAr,
             sellingPrice: price,
             stockQuantity: stock,
           ),
@@ -68,7 +76,9 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
           Product(
             id: 0,
             name: name,
+            nameAr: nameAr,
             category: _category,
+            categoryAr: _categoryAr,
             sellingPrice: price,
             stockQuantity: stock,
             isActive: true,
@@ -115,7 +125,17 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: loc.productName,
+                    labelText: '${loc.productName} (English)',
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                      value == null || value.isEmpty ? loc.fieldRequired : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _nameArController,
+                  decoration: InputDecoration(
+                    labelText: '${loc.productName} (العربية)',
                     border: const OutlineInputBorder(),
                   ),
                   validator: (value) =>
@@ -140,7 +160,17 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
                   }).toList(),
                   onChanged: (value) {
                     if (value != null) {
-                      _category = value;
+                      setState(() {
+                        _category = value;
+                        // Automatically set Arabic category translation
+                        _categoryAr = switch (value) {
+                          'Drinks' => 'المشروبات',
+                          'Snacks' => 'سناكس',
+                          'Food' => 'الطعام',
+                          'Other' => 'أخرى',
+                          _ => value,
+                        };
+                      });
                     }
                   },
                 ),

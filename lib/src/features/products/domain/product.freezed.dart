@@ -22,8 +22,14 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Product {
   int get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
-  String get category => throw _privateConstructorUsedError;
+  String get name =>
+      throw _privateConstructorUsedError; // English name (base field)
+  @JsonKey(name: 'name_ar')
+  String get nameAr => throw _privateConstructorUsedError; // Arabic name
+  String get category =>
+      throw _privateConstructorUsedError; // English category (base field)
+  @JsonKey(name: 'category_ar')
+  String get categoryAr => throw _privateConstructorUsedError; // Arabic category
   @JsonKey(name: 'selling_price')
   double get sellingPrice => throw _privateConstructorUsedError;
   @JsonKey(name: 'stock_quantity')
@@ -48,7 +54,9 @@ abstract class $ProductCopyWith<$Res> {
   $Res call({
     int id,
     String name,
+    @JsonKey(name: 'name_ar') String nameAr,
     String category,
+    @JsonKey(name: 'category_ar') String categoryAr,
     @JsonKey(name: 'selling_price') double sellingPrice,
     @JsonKey(name: 'stock_quantity') int stockQuantity,
     @JsonKey(name: 'is_active') bool isActive,
@@ -72,7 +80,9 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? nameAr = null,
     Object? category = null,
+    Object? categoryAr = null,
     Object? sellingPrice = null,
     Object? stockQuantity = null,
     Object? isActive = null,
@@ -87,9 +97,17 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
                 ? _value.name
                 : name // ignore: cast_nullable_to_non_nullable
                       as String,
+            nameAr: null == nameAr
+                ? _value.nameAr
+                : nameAr // ignore: cast_nullable_to_non_nullable
+                      as String,
             category: null == category
                 ? _value.category
                 : category // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryAr: null == categoryAr
+                ? _value.categoryAr
+                : categoryAr // ignore: cast_nullable_to_non_nullable
                       as String,
             sellingPrice: null == sellingPrice
                 ? _value.sellingPrice
@@ -120,7 +138,9 @@ abstract class _$$ProductImplCopyWith<$Res> implements $ProductCopyWith<$Res> {
   $Res call({
     int id,
     String name,
+    @JsonKey(name: 'name_ar') String nameAr,
     String category,
+    @JsonKey(name: 'category_ar') String categoryAr,
     @JsonKey(name: 'selling_price') double sellingPrice,
     @JsonKey(name: 'stock_quantity') int stockQuantity,
     @JsonKey(name: 'is_active') bool isActive,
@@ -143,7 +163,9 @@ class __$$ProductImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
+    Object? nameAr = null,
     Object? category = null,
+    Object? categoryAr = null,
     Object? sellingPrice = null,
     Object? stockQuantity = null,
     Object? isActive = null,
@@ -158,9 +180,17 @@ class __$$ProductImplCopyWithImpl<$Res>
             ? _value.name
             : name // ignore: cast_nullable_to_non_nullable
                   as String,
+        nameAr: null == nameAr
+            ? _value.nameAr
+            : nameAr // ignore: cast_nullable_to_non_nullable
+                  as String,
         category: null == category
             ? _value.category
             : category // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryAr: null == categoryAr
+            ? _value.categoryAr
+            : categoryAr // ignore: cast_nullable_to_non_nullable
                   as String,
         sellingPrice: null == sellingPrice
             ? _value.sellingPrice
@@ -181,15 +211,17 @@ class __$$ProductImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProductImpl implements _Product {
+class _$ProductImpl extends _Product {
   const _$ProductImpl({
     required this.id,
     required this.name,
+    @JsonKey(name: 'name_ar') required this.nameAr,
     required this.category,
+    @JsonKey(name: 'category_ar') required this.categoryAr,
     @JsonKey(name: 'selling_price') required this.sellingPrice,
     @JsonKey(name: 'stock_quantity') required this.stockQuantity,
     @JsonKey(name: 'is_active') this.isActive = true,
-  });
+  }) : super._();
 
   factory _$ProductImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductImplFromJson(json);
@@ -198,8 +230,18 @@ class _$ProductImpl implements _Product {
   final int id;
   @override
   final String name;
+  // English name (base field)
+  @override
+  @JsonKey(name: 'name_ar')
+  final String nameAr;
+  // Arabic name
   @override
   final String category;
+  // English category (base field)
+  @override
+  @JsonKey(name: 'category_ar')
+  final String categoryAr;
+  // Arabic category
   @override
   @JsonKey(name: 'selling_price')
   final double sellingPrice;
@@ -212,7 +254,7 @@ class _$ProductImpl implements _Product {
 
   @override
   String toString() {
-    return 'Product(id: $id, name: $name, category: $category, sellingPrice: $sellingPrice, stockQuantity: $stockQuantity, isActive: $isActive)';
+    return 'Product(id: $id, name: $name, nameAr: $nameAr, category: $category, categoryAr: $categoryAr, sellingPrice: $sellingPrice, stockQuantity: $stockQuantity, isActive: $isActive)';
   }
 
   @override
@@ -222,8 +264,11 @@ class _$ProductImpl implements _Product {
             other is _$ProductImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.nameAr, nameAr) || other.nameAr == nameAr) &&
             (identical(other.category, category) ||
                 other.category == category) &&
+            (identical(other.categoryAr, categoryAr) ||
+                other.categoryAr == categoryAr) &&
             (identical(other.sellingPrice, sellingPrice) ||
                 other.sellingPrice == sellingPrice) &&
             (identical(other.stockQuantity, stockQuantity) ||
@@ -238,7 +283,9 @@ class _$ProductImpl implements _Product {
     runtimeType,
     id,
     name,
+    nameAr,
     category,
+    categoryAr,
     sellingPrice,
     stockQuantity,
     isActive,
@@ -258,24 +305,33 @@ class _$ProductImpl implements _Product {
   }
 }
 
-abstract class _Product implements Product {
+abstract class _Product extends Product {
   const factory _Product({
     required final int id,
     required final String name,
+    @JsonKey(name: 'name_ar') required final String nameAr,
     required final String category,
+    @JsonKey(name: 'category_ar') required final String categoryAr,
     @JsonKey(name: 'selling_price') required final double sellingPrice,
     @JsonKey(name: 'stock_quantity') required final int stockQuantity,
     @JsonKey(name: 'is_active') final bool isActive,
   }) = _$ProductImpl;
+  const _Product._() : super._();
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$ProductImpl.fromJson;
 
   @override
   int get id;
   @override
-  String get name;
+  String get name; // English name (base field)
   @override
-  String get category;
+  @JsonKey(name: 'name_ar')
+  String get nameAr; // Arabic name
+  @override
+  String get category; // English category (base field)
+  @override
+  @JsonKey(name: 'category_ar')
+  String get categoryAr; // Arabic category
   @override
   @JsonKey(name: 'selling_price')
   double get sellingPrice;

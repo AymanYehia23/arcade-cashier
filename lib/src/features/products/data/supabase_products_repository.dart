@@ -23,7 +23,9 @@ class SupabaseProductsRepository implements ProductsRepository {
   Future<void> createProduct(Product product) async {
     await _supabase.from(DbTables.products).insert({
       'name': product.name,
+      'name_ar': product.nameAr,
       'category': product.category,
+      'category_ar': product.categoryAr,
       'selling_price': product.sellingPrice,
       'stock_quantity': product.stockQuantity,
       'is_active': true,
@@ -36,7 +38,9 @@ class SupabaseProductsRepository implements ProductsRepository {
         .from(DbTables.products)
         .update({
           'name': product.name,
+          'name_ar': product.nameAr,
           'category': product.category,
+          'category_ar': product.categoryAr,
           'selling_price': product.sellingPrice,
           'stock_quantity': product.stockQuantity,
         })
