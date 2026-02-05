@@ -1261,6 +1261,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'#'**
   String get rankSymbol;
+
+  /// No description provided for @printerSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Printer Settings'**
+  String get printerSettings;
+
+  /// No description provided for @selectDefaultPrinter.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Default Printer'**
+  String get selectDefaultPrinter;
+
+  /// No description provided for @testPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Print'**
+  String get testPrint;
+
+  /// No description provided for @testPrintMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Print from Arcade Cashier'**
+  String get testPrintMessage;
 }
 
 class _AppLocalizationsDelegate

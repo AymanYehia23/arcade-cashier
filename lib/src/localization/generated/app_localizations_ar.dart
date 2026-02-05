@@ -636,4 +636,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get rankSymbol => '#';
+
+  @override
+  String get printerSettings => 'إعدادات الطابعة';
+
+  @override
+  String get selectDefaultPrinter => 'اختيار الطابعة الافتراضية';
+
+  @override
+  String get testPrint => 'طباعة تجريبية';
+
+  @override
+  String get testPrintMessage => 'طباعة تجريبية من أركيد كاشير';
 }

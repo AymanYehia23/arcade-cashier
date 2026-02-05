@@ -318,5 +318,9 @@
   "hoursAbbr": "hrs",
   "noProductData": "No product data available.",
   "qtySold": "Qty Sold",
-  "rankSymbol": "#"
+  "rankSymbol": "#",
+  "printerSettings": "Printer Settings",
+  "selectDefaultPrinter": "Select Default Printer",
+  "testPrint": "Test Print",
+  "testPrintMessage": "Test Print from Arcade Cashier"
 }

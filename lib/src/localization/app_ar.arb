@@ -192,5 +192,9 @@
   "hoursAbbr": "س",
   "noProductData": "لا توجد بيانات للمنتجات.",
   "qtySold": "الكمية المباعة",
-  "rankSymbol": "#"
+  "rankSymbol": "#",
+  "printerSettings": "إعدادات الطابعة",
+  "selectDefaultPrinter": "اختيار الطابعة الافتراضية",
+  "testPrint": "طباعة تجريبية",
+  "testPrintMessage": "طباعة تجريبية من أركيد كاشير"
 }

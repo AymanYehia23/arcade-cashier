@@ -636,4 +636,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get rankSymbol => '#';
+
+  @override
+  String get printerSettings => 'Printer Settings';
+
+  @override
+  String get selectDefaultPrinter => 'Select Default Printer';
+
+  @override
+  String get testPrint => 'Test Print';
+
+  @override
+  String get testPrintMessage => 'Test Print from Arcade Cashier';
 }

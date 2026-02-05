@@ -4,6 +4,7 @@ import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../../localization/generated/app_localizations.dart';
 import '../data/printer_repository.dart';
 
 class PrinterSettingsSection extends ConsumerStatefulWidget {
@@ -61,11 +62,12 @@ class _PrinterSettingsSectionState
   Future<void> _testPrint() async {
     if (_selectedPrinter == null) return;
 
+    final l10n = AppLocalizations.of(context)!;
     final doc = pw.Document();
     doc.addPage(
       pw.Page(
         build: (pw.Context context) {
-          return pw.Center(child: pw.Text('Test Print from Arcade Cashier'));
+          return pw.Center(child: pw.Text(l10n.testPrintMessage));
         },
       ),
     );
@@ -82,23 +84,25 @@ class _PrinterSettingsSectionState
       return const Center(child: CircularProgressIndicator());
     }
 
+    final l10n = AppLocalizations.of(context)!;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Printer Settings',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Text(
+            l10n.printerSettings,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
                 child: DropdownButtonFormField<Printer>(
-                  decoration: const InputDecoration(
-                    labelText: 'Select Default Printer',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: l10n.selectDefaultPrinter,
+                    border: const OutlineInputBorder(),
                   ),
                   initialValue: _selectedPrinter,
                   items: _printers.map((printer) {
@@ -114,7 +118,7 @@ class _PrinterSettingsSectionState
               ElevatedButton.icon(
                 onPressed: _selectedPrinter == null ? null : _testPrint,
                 icon: const Icon(Icons.print),
-                label: const Text('Test Print'),
+                label: Text(l10n.testPrint),
               ),
             ],
           ),
