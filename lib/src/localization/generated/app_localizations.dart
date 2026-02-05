@@ -800,6 +800,12 @@ abstract class AppLocalizations {
   /// **'Reports & Analytics'**
   String get reportsTitle;
 
+  /// No description provided for @dataRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Data refreshed'**
+  String get dataRefreshed;
+
   /// No description provided for @period.
   ///
   /// In en, this message translates to:

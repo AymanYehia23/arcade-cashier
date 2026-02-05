@@ -384,6 +384,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get reportsTitle => 'التقارير والتحليلات';
 
   @override
+  String get dataRefreshed => 'تم تحديث البيانات';
+
+  @override
   String get period => 'الفترة';
 
   @override

@@ -237,8 +237,6 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                 ),
                 FilledButton(
                   onPressed: () async {
-                    Navigator.pop(dialogContext); // Close dialog
-
                     // Proceed with completion using the FINAL currentBill
                     final result = await ref
                         .read(sessionCompletionControllerProvider.notifier)
@@ -252,11 +250,39 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                           shopName: loc.brandName,
                         );
 
-                    if (result != null && context.mounted) {
+                    if (!context.mounted) return;
+
+                    if (result != null) {
+                      Navigator.pop(dialogContext); // Close complete session dialog
                       Navigator.of(context).pop(); // Close ActiveSessionDialog
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text(loc.sessionCompleted)),
                       );
+                    } else {
+                      // Show error in dialog
+                      final completionState = ref.read(
+                        sessionCompletionControllerProvider,
+                      );
+                      if (completionState.hasError) {
+                        showDialog(
+                          context: dialogContext,
+                          builder: (errorContext) => AlertDialog(
+                            title: Text(loc.errorTitle),
+                            content: Text(
+                              getUserFriendlyErrorMessage(
+                                completionState.error!,
+                                errorContext,
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(errorContext),
+                                child: Text(loc.ok),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Text(loc.checkoutAndPrint),
