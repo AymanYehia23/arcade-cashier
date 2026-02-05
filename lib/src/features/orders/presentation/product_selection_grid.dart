@@ -19,6 +19,7 @@ class ProductSelectionGrid extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(productsProvider);
+    final languageCode = Localizations.localeOf(context).languageCode;
 
     return productsAsync.when(
       data: (products) {
@@ -26,18 +27,23 @@ class ProductSelectionGrid extends ConsumerWidget {
           return const Center(child: Text('No active products'));
         }
 
-        // 1. Group Data
+        // 1. Group Data by localized category
         final grouped = <String, List<Product>>{};
         for (var p in products) {
-          if (!grouped.containsKey(p.category)) grouped[p.category] = [];
-          grouped[p.category]!.add(p);
+          final localizedCategory = p.getLocalizedCategory(languageCode);
+          if (!grouped.containsKey(localizedCategory)) {
+            grouped[localizedCategory] = [];
+          }
+          grouped[localizedCategory]!.add(p);
         }
 
-        // Sort categories (optional: prioritize 'Drinks')
+        // Sort categories (optional: prioritize 'Drinks' or 'المشروبات')
+        final drinksKeyEn = 'Drinks';
+        final drinksKeyAr = 'المشروبات';
         final sortedKeys = grouped.keys.toList()
           ..sort((a, b) {
-            if (a == 'Drinks') return -1;
-            if (b == 'Drinks') return 1;
+            if (a == drinksKeyEn || a == drinksKeyAr) return -1;
+            if (b == drinksKeyEn || b == drinksKeyAr) return 1;
             return a.compareTo(b);
           });
 
@@ -103,6 +109,8 @@ class ProductSelectionGrid extends ConsumerWidget {
     Product product,
   ) {
     final isOutOfStock = product.stockQuantity <= 0;
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final localizedName = product.getLocalizedName(languageCode);
 
     return Card(
       elevation: 2,
@@ -137,7 +145,7 @@ class ProductSelectionGrid extends ConsumerWidget {
               Expanded(
                 child: Center(
                   child: Text(
-                    product.name,
+                    localizedName,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,

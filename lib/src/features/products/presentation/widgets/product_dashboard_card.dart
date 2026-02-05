@@ -12,6 +12,10 @@ class ProductDashboardCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final localizedProductName = product.getLocalizedName(languageCode);
+    final localizedCategory = product.getLocalizedCategory(languageCode);
+
     // 1. Determine Status Logic
     final isOutOfStock = product.stockQuantity == 0;
     final isLowStock = !isOutOfStock && product.stockQuantity <= 5;
@@ -23,7 +27,7 @@ class ProductDashboardCard extends ConsumerWidget {
         : const Color(0xFF00E676); // Neon Green
 
     // 2. Determine Category Icon
-    final IconData bgIcon = _getCategoryIcon(product.category);
+    final IconData bgIcon = _getCategoryIcon(localizedCategory);
 
     return Container(
       height: 110, // Fixed compact height
@@ -77,7 +81,7 @@ class ProductDashboardCard extends ConsumerWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                product.name,
+                                localizedProductName,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -164,13 +168,26 @@ class ProductDashboardCard extends ConsumerWidget {
 
   IconData _getCategoryIcon(String category) {
     final cat = category.toLowerCase();
+    // Check for drinks in English and Arabic
     if (cat.contains('drink') ||
         cat.contains('coffee') ||
-        cat.contains('tea')) {
+        cat.contains('tea') ||
+        cat.contains('مشروب') ||
+        cat.contains('قهوة') ||
+        cat.contains('شاي')) {
       return Icons.local_cafe;
-    } else if (cat.contains('snack') || cat.contains('food')) {
+    }
+    // Check for snacks/food in English and Arabic
+    else if (cat.contains('snack') ||
+        cat.contains('food') ||
+        cat.contains('وجبة') ||
+        cat.contains('طعام')) {
       return Icons.fastfood;
-    } else if (cat.contains('device') || cat.contains('pad')) {
+    }
+    // Check for devices in English and Arabic
+    else if (cat.contains('device') ||
+        cat.contains('pad') ||
+        cat.contains('جهاز')) {
       return Icons.gamepad;
     }
     return Icons.inventory_2; // Default box icon
@@ -184,6 +201,9 @@ class ProductDashboardCard extends ConsumerWidget {
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref) {
+    final languageCode = Localizations.localeOf(context).languageCode;
+    final localizedName = product.getLocalizedName(languageCode);
+
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -193,7 +213,7 @@ class ProductDashboardCard extends ConsumerWidget {
           style: TextStyle(color: Colors.white),
         ),
         content: Text(
-          AppLocalizations.of(context)!.deleteProductMessage(product.name),
+          AppLocalizations.of(context)!.deleteProductMessage(localizedName),
           style: const TextStyle(color: Colors.white70),
         ),
         actions: [
