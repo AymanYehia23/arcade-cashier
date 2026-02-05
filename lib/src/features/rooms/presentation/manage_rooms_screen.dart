@@ -68,7 +68,7 @@ class ManageRoomsScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '${room.deviceType.displayTitle} \n${loc.singleRate}: ${room.singleMatchHourlyRate} | ${loc.multiRate}: ${room.multiMatchHourlyRate}',
+                          '${room.deviceType.displayTitle(context)} \n${loc.singleRate}: ${room.singleMatchHourlyRate} | ${loc.multiRate}: ${room.multiMatchHourlyRate}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         const SizedBox(height: 16),

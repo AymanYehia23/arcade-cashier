@@ -6,7 +6,7 @@ part of 'connectivity_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$connectivityHash() => r'2b45f46f28b989bcf776392819952488633323fc';
+String _$connectivityHash() => r'bf12454d78bf3189236d0c99e4f0d5afc772458f';
 
 /// Provides a stream of connectivity status changes.
 ///
@@ -29,7 +29,7 @@ final connectivityProvider = StreamProvider<List<ConnectivityResult>>.internal(
 // ignore: unused_element
 typedef ConnectivityRef = StreamProviderRef<List<ConnectivityResult>>;
 String _$hasInternetConnectionHash() =>
-    r'080c64aaefebdec12399d7a1d86d56d9c74b9174';
+    r'847c9c6e2df165b333b3501d17c5be99bce6136d';
 
 /// Provides a stream indicating whether the app has actual internet access.
 ///
@@ -54,7 +54,7 @@ final hasInternetConnectionProvider = StreamProvider<bool>.internal(
 // ignore: unused_element
 typedef HasInternetConnectionRef = StreamProviderRef<bool>;
 String _$hasInternetConnectionV2Hash() =>
-    r'c94634fc5612cf88c08048eecf8b32197ce7746f';
+    r'50c767ac1db09186f0f4490201b6108368f4ccf8';
 
 /// Improved implementation using StreamController for better control.
 ///

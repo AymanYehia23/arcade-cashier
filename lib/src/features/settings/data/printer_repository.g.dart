@@ -6,7 +6,7 @@ part of 'printer_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$printerRepositoryHash() => r'cb5784a7850508bba53781b9db6b98b16a28ff0e';
+String _$printerRepositoryHash() => r'303dffb390da5e9f4a66654eb3728663ac84a369';
 
 /// See also [printerRepository].
 @ProviderFor(printerRepository)

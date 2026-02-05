@@ -196,5 +196,8 @@
   "printerSettings": "إعدادات الطابعة",
   "selectDefaultPrinter": "اختيار الطابعة الافتراضية",
   "testPrint": "طباعة تجريبية",
-  "testPrintMessage": "طباعة تجريبية من أركيد كاشير"
+  "testPrintMessage": "طباعة تجريبية من أركيد كاشير",
+  "playstation4": "بلايستيشن 4",
+  "playstation5": "بلايستيشن 5",
+  "walkIn": "طلب سريع"
 }

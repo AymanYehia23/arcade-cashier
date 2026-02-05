@@ -648,4 +648,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get testPrintMessage => 'Test Print from Arcade Cashier';
+
+  @override
+  String get playstation4 => 'PlayStation 4';
+
+  @override
+  String get playstation5 => 'PlayStation 5';
+
+  @override
+  String get walkIn => 'Walk-in';
 }

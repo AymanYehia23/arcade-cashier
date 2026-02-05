@@ -25,6 +25,8 @@ ProductPerformanceReport _$ProductPerformanceReportFromJson(
 mixin _$ProductPerformanceReport {
   @JsonKey(name: 'product_name')
   String get productName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'product_name_ar')
+  String? get productNameAr => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_sold')
   int get totalSold => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_revenue')
@@ -49,6 +51,7 @@ abstract class $ProductPerformanceReportCopyWith<$Res> {
   @useResult
   $Res call({
     @JsonKey(name: 'product_name') String productName,
+    @JsonKey(name: 'product_name_ar') String? productNameAr,
     @JsonKey(name: 'total_sold') int totalSold,
     @JsonKey(name: 'total_revenue') double revenue,
   });
@@ -73,6 +76,7 @@ class _$ProductPerformanceReportCopyWithImpl<
   @override
   $Res call({
     Object? productName = null,
+    Object? productNameAr = freezed,
     Object? totalSold = null,
     Object? revenue = null,
   }) {
@@ -82,6 +86,10 @@ class _$ProductPerformanceReportCopyWithImpl<
                 ? _value.productName
                 : productName // ignore: cast_nullable_to_non_nullable
                       as String,
+            productNameAr: freezed == productNameAr
+                ? _value.productNameAr
+                : productNameAr // ignore: cast_nullable_to_non_nullable
+                      as String?,
             totalSold: null == totalSold
                 ? _value.totalSold
                 : totalSold // ignore: cast_nullable_to_non_nullable
@@ -107,6 +115,7 @@ abstract class _$$ProductPerformanceReportImplCopyWith<$Res>
   @useResult
   $Res call({
     @JsonKey(name: 'product_name') String productName,
+    @JsonKey(name: 'product_name_ar') String? productNameAr,
     @JsonKey(name: 'total_sold') int totalSold,
     @JsonKey(name: 'total_revenue') double revenue,
   });
@@ -131,6 +140,7 @@ class __$$ProductPerformanceReportImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? productName = null,
+    Object? productNameAr = freezed,
     Object? totalSold = null,
     Object? revenue = null,
   }) {
@@ -140,6 +150,10 @@ class __$$ProductPerformanceReportImplCopyWithImpl<$Res>
             ? _value.productName
             : productName // ignore: cast_nullable_to_non_nullable
                   as String,
+        productNameAr: freezed == productNameAr
+            ? _value.productNameAr
+            : productNameAr // ignore: cast_nullable_to_non_nullable
+                  as String?,
         totalSold: null == totalSold
             ? _value.totalSold
             : totalSold // ignore: cast_nullable_to_non_nullable
@@ -155,12 +169,13 @@ class __$$ProductPerformanceReportImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
+class _$ProductPerformanceReportImpl extends _ProductPerformanceReport {
   const _$ProductPerformanceReportImpl({
     @JsonKey(name: 'product_name') required this.productName,
+    @JsonKey(name: 'product_name_ar') this.productNameAr,
     @JsonKey(name: 'total_sold') required this.totalSold,
     @JsonKey(name: 'total_revenue') required this.revenue,
-  });
+  }) : super._();
 
   factory _$ProductPerformanceReportImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductPerformanceReportImplFromJson(json);
@@ -168,6 +183,9 @@ class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
   @override
   @JsonKey(name: 'product_name')
   final String productName;
+  @override
+  @JsonKey(name: 'product_name_ar')
+  final String? productNameAr;
   @override
   @JsonKey(name: 'total_sold')
   final int totalSold;
@@ -177,7 +195,7 @@ class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
 
   @override
   String toString() {
-    return 'ProductPerformanceReport(productName: $productName, totalSold: $totalSold, revenue: $revenue)';
+    return 'ProductPerformanceReport(productName: $productName, productNameAr: $productNameAr, totalSold: $totalSold, revenue: $revenue)';
   }
 
   @override
@@ -187,6 +205,8 @@ class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
             other is _$ProductPerformanceReportImpl &&
             (identical(other.productName, productName) ||
                 other.productName == productName) &&
+            (identical(other.productNameAr, productNameAr) ||
+                other.productNameAr == productNameAr) &&
             (identical(other.totalSold, totalSold) ||
                 other.totalSold == totalSold) &&
             (identical(other.revenue, revenue) || other.revenue == revenue));
@@ -194,7 +214,8 @@ class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, productName, totalSold, revenue);
+  int get hashCode =>
+      Object.hash(runtimeType, productName, productNameAr, totalSold, revenue);
 
   /// Create a copy of ProductPerformanceReport
   /// with the given fields replaced by the non-null parameter values.
@@ -213,12 +234,14 @@ class _$ProductPerformanceReportImpl implements _ProductPerformanceReport {
   }
 }
 
-abstract class _ProductPerformanceReport implements ProductPerformanceReport {
+abstract class _ProductPerformanceReport extends ProductPerformanceReport {
   const factory _ProductPerformanceReport({
     @JsonKey(name: 'product_name') required final String productName,
+    @JsonKey(name: 'product_name_ar') final String? productNameAr,
     @JsonKey(name: 'total_sold') required final int totalSold,
     @JsonKey(name: 'total_revenue') required final double revenue,
   }) = _$ProductPerformanceReportImpl;
+  const _ProductPerformanceReport._() : super._();
 
   factory _ProductPerformanceReport.fromJson(Map<String, dynamic> json) =
       _$ProductPerformanceReportImpl.fromJson;
@@ -226,6 +249,9 @@ abstract class _ProductPerformanceReport implements ProductPerformanceReport {
   @override
   @JsonKey(name: 'product_name')
   String get productName;
+  @override
+  @JsonKey(name: 'product_name_ar')
+  String? get productNameAr;
   @override
   @JsonKey(name: 'total_sold')
   int get totalSold;

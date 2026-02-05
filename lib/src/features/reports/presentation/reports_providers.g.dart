@@ -6,7 +6,7 @@ part of 'reports_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dailyRevenueHash() => r'4b62be0eb19d2e5ca324ba912057d9a629f80f32';
+String _$dailyRevenueHash() => r'f8b6533bd11792a0b9682d5b58088cae2932b464';
 
 /// See also [dailyRevenue].
 @ProviderFor(dailyRevenue)
@@ -25,7 +25,7 @@ final dailyRevenueProvider =
 // ignore: unused_element
 typedef DailyRevenueRef =
     AutoDisposeFutureProviderRef<List<DailyRevenueReport>>;
-String _$topProductsHash() => r'9978a7cef151da69fbbd527e05eed3531649a4b2';
+String _$topProductsHash() => r'6049b38d32acbe8543095feb4d060e818eb66022';
 
 /// See also [topProducts].
 @ProviderFor(topProducts)

@@ -1285,6 +1285,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Test Print from Arcade Cashier'**
   String get testPrintMessage;
+
+  /// No description provided for @playstation4.
+  ///
+  /// In en, this message translates to:
+  /// **'PlayStation 4'**
+  String get playstation4;
+
+  /// No description provided for @playstation5.
+  ///
+  /// In en, this message translates to:
+  /// **'PlayStation 5'**
+  String get playstation5;
+
+  /// No description provided for @walkIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk-in'**
+  String get walkIn;
 }
 
 class _AppLocalizationsDelegate

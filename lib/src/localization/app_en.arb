@@ -322,5 +322,8 @@
   "printerSettings": "Printer Settings",
   "selectDefaultPrinter": "Select Default Printer",
   "testPrint": "Test Print",
-  "testPrintMessage": "Test Print from Arcade Cashier"
+  "testPrintMessage": "Test Print from Arcade Cashier",
+  "playstation4": "PlayStation 4",
+  "playstation5": "PlayStation 5",
+  "walkIn": "Walk-in"
 }

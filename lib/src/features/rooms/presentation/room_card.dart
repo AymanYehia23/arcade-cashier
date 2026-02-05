@@ -201,7 +201,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
                                 children: [
                                   Chip(
                                     label: Text(
-                                      widget.room.deviceType.displayTitle,
+                                      widget.room.deviceType.displayTitle(context),
                                       style: TextStyle(
                                         color: textColor,
                                         fontWeight: FontWeight.bold,

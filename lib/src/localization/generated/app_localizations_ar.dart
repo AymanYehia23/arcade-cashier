@@ -648,4 +648,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get testPrintMessage => 'طباعة تجريبية من أركيد كاشير';
+
+  @override
+  String get playstation4 => 'بلايستيشن 4';
+
+  @override
+  String get playstation5 => 'بلايستيشن 5';
+
+  @override
+  String get walkIn => 'طلب سريع';
 }

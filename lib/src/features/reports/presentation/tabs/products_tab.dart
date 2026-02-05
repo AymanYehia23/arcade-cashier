@@ -12,6 +12,7 @@ class ProductsTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loc = AppLocalizations.of(context)!;
+    final locale = Localizations.localeOf(context);
     final productsAsync = ref.watch(topProductsProvider);
 
     return productsAsync.when(
@@ -47,7 +48,7 @@ class ProductsTab extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  DataCell(Text(item.productName)),
+                  DataCell(Text(item.getLocalizedName(locale))),
                   DataCell(Text('${item.totalSold}')),
                   DataCell(
                     Text(

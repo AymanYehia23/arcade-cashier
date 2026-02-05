@@ -6,6 +6,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../reports_providers.dart';
 
+String _translateSourceName(String sourceName, AppLocalizations l10n) {
+  // Normalize the source name for comparison
+  final normalized = sourceName.toLowerCase().trim();
+
+  // Check for device types
+  if (sourceName == 'PlayStation 4') return l10n.playstation4;
+  if (sourceName == 'PlayStation 5') return l10n.playstation5;
+
+  // Check for walk-in variations
+  if (normalized.contains('walk') && normalized.contains('in')) {
+    return l10n.walkIn;
+  }
+
+  // Check for quick order variations
+  if (normalized.contains('quick') && normalized.contains('order')) {
+    return l10n.quickOrder;
+  }
+
+  // Check for unknown
+  if (normalized == 'unknown') return l10n.unknown;
+
+  // Return original if no match found
+  return sourceName;
+}
+
 class FinancialBreakdownTab extends ConsumerWidget {
   const FinancialBreakdownTab({super.key});
 
@@ -71,7 +96,7 @@ class FinancialBreakdownTab extends ConsumerWidget {
                               cells: [
                                 DataCell(
                                   Text(
-                                    item.sourceName,
+                                    _translateSourceName(item.sourceName, loc),
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),

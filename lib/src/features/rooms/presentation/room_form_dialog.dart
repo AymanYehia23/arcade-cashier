@@ -132,7 +132,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
                       .map(
                         (type) => DropdownMenuItem(
                           value: type,
-                          child: Text(type.displayTitle),
+                          child: Text(type.displayTitle(context)),
                         ),
                       )
                       .toList(),
