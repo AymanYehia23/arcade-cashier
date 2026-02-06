@@ -39,9 +39,13 @@ class ReportsRepository {
     DateTime? start,
     DateTime? end,
   }) async {
+    late final DateTime endOfDay;
+    if (end != null) {
+      endOfDay = DateTime(end.year, end.month, end.day, 23, 59, 59, 999);
+    }
     final params = {
       if (start != null) 'start_date': start.toIso8601String(),
-      if (end != null) 'end_date': end.toIso8601String(),
+      if (end != null) 'end_date': endOfDay.toIso8601String(),
     };
 
     final response = await _supabase.rpc(
@@ -58,9 +62,13 @@ class ReportsRepository {
     DateTime? start,
     DateTime? end,
   }) async {
+    late final DateTime endOfDay;
+    if (end != null) {
+      endOfDay = DateTime(end.year, end.month, end.day, 23, 59, 59, 999);
+    }
     final params = {
       if (start != null) 'start_date': start.toIso8601String(),
-      if (end != null) 'end_date': end.toIso8601String(),
+      if (end != null) 'end_date': endOfDay.toIso8601String(),
     };
 
     final response = await _supabase.rpc('get_room_usage', params: params);
@@ -72,9 +80,13 @@ class ReportsRepository {
     DateTime? start,
     DateTime? end,
   }) async {
+    late final DateTime endOfDay;
+    if (end != null) {
+      endOfDay = DateTime(end.year, end.month, end.day, 23, 59, 59, 999);
+    }
     final params = {
       if (start != null) 'start_date': start.toIso8601String(),
-      if (end != null) 'end_date': end.toIso8601String(),
+      if (end != null) 'end_date': endOfDay.toIso8601String(),
     };
 
     final response = await _supabase.rpc('get_room_financials', params: params);
