@@ -29,6 +29,13 @@ class RoomsRepository {
         .map((data) => data.map((json) => Room.fromJson(json)).toList());
   }
 
+  Future<void> updateRoomStatus(int roomId, RoomStatus status) async {
+    await _supabase
+        .from(DbTables.rooms)
+        .update({'current_status': status.name})
+        .match({'id': roomId});
+  }
+
   Future<void> createRoom({
     required String name,
     required DeviceType deviceType,
@@ -78,5 +85,5 @@ RoomsRepository roomsRepository(Ref ref) {
 @riverpod
 Stream<List<Room>> roomsValues(Ref ref) {
   final repository = ref.watch(roomsRepositoryProvider);
-  return repository.watchRooms();
+  return Stream.fromFuture(repository.fetchRooms());
 }

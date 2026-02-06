@@ -1,6 +1,6 @@
 {
   "appTitle": "Arcade Shop ERP",
-
+  "brandName": "Arcade",
   "@appTitle": {
     "description": "The title of the application"
   },
@@ -326,16 +326,5 @@
   "testPrintMessage": "Test Print from Arcade Cashier",
   "playstation4": "PlayStation 4",
   "playstation5": "PlayStation 5",
-  "walkIn": "Walk-in",
-  "timeUpAlertTitle": "Time's Up! - {roomName}",
-  "@timeUpAlertTitle": {
-    "placeholders": {
-      "roomName": {
-        "type": "String"
-      }
-    }
-  },
-  "timeUpAlertContent": "The fixed time for this session has ended.",
-  "checkout": "Checkout",
-  "dismiss": "Dismiss"
+  "walkIn": "Walk-in"
 }

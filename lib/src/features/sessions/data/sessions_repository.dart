@@ -18,7 +18,7 @@ abstract class SessionsRepository {
     required SessionType sessionType,
     int? plannedDurationMinutes,
   });
-  Future<void> stopSession({required int sessionId});
+  Future<void> stopSession({required int sessionId, int? roomId});
   Future<void> pauseSession(int sessionId);
   Future<void> resumeSession(int sessionId);
   Future<void> extendSession({
@@ -53,7 +53,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
     required SessionType sessionType,
     int? plannedDurationMinutes,
   }) async {
-    // Insert session - DB trigger handles room status update automatically
+    // 1. Insert session
     final sessionData = await _supabase
         .from(DbTables.sessions)
         .insert({
@@ -70,6 +70,14 @@ class SupabaseSessionsRepository implements SessionsRepository {
         })
         .select()
         .single();
+
+    // 2. Update room status (ONLY if room assigned)
+    if (roomId != null) {
+      await _supabase
+          .from(DbTables.rooms)
+          .update({'current_status': RoomConstants.occupied})
+          .match({'id': roomId});
+    }
 
     return domain.Session.fromJson(sessionData);
   }
@@ -146,8 +154,8 @@ class SupabaseSessionsRepository implements SessionsRepository {
   }
 
   @override
-  Future<void> stopSession({required int sessionId}) async {
-    // Update session - DB trigger handles room status update automatically
+  Future<void> stopSession({required int sessionId, int? roomId}) async {
+    // 1. Update session
     await _supabase
         .from(DbTables.sessions)
         .update({
@@ -155,6 +163,14 @@ class SupabaseSessionsRepository implements SessionsRepository {
           'status': SessionConstants.completed,
         })
         .match({'id': sessionId});
+
+    // 2. Update room status (ONLY if room assigned)
+    if (roomId != null) {
+      await _supabase
+          .from(DbTables.rooms)
+          .update({'current_status': RoomConstants.available})
+          .match({'id': roomId});
+    }
   }
 
   @override

@@ -94,10 +94,10 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
           name: widget.invoice.invoiceNumber,
         );
       } else {
-        // Fallback to system print dialog
-        await Printing.layoutPdf(
-          onLayout: (_) async => widget.pdfBytes,
-          name: widget.invoice.invoiceNumber,
+        // Use share dialog which is more reliable on macOS
+        await Printing.sharePdf(
+          bytes: widget.pdfBytes,
+          filename: '${widget.invoice.invoiceNumber}.pdf',
         );
       }
     } catch (e) {
