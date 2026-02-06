@@ -20,6 +20,9 @@ import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
+import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 
 class ActiveSessionDialog extends ConsumerStatefulWidget {
   const ActiveSessionDialog({super.key, this.room, this.session})
@@ -232,49 +235,87 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   ),
                   actions: [
                     TextButton(
-                      onPressed: () =>
-                          Navigator.pop(dialogContext), // Just close
+                      onPressed: () => Navigator.pop(dialogContext),
                       child: Text(loc.cancel),
                     ),
                     FilledButton(
                       onPressed: () async {
-                        // Proceed with completion using the FINAL currentBill
-                        final result = await ref
-                            .read(sessionCompletionControllerProvider.notifier)
-                            .completeSession(
-                              session: session,
-                              orders: orders,
-                              bill: currentBill,
-                              customer: selectedCustomer,
-                              loc: loc,
+                        final invoiceId = await ref
+                            .read(sessionsControllerProvider.notifier)
+                            .checkoutSession(
+                              sessionId: session.id,
+                              totalAmount: currentBill.totalAmount,
+                              discountAmount: currentBill.discountAmount,
+                              discountPercentage:
+                                  currentBill.discountPercentage,
+                              paymentMethod: 'cash',
+                              customerId: selectedCustomer?.id,
+                              customerName: selectedCustomer?.name,
                               shopName: loc.brandName,
                             );
 
                         if (!context.mounted) return;
 
-                        if (result != null) {
-                          Navigator.pop(
-                            dialogContext,
-                          ); // Close complete session dialog
-                          Navigator.of(
-                            context,
-                          ).pop(); // Close ActiveSessionDialog
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(loc.sessionCompleted)),
-                          );
+                        if (invoiceId != null) {
+                          try {
+                            final invoice = await ref
+                                .read(invoicesRepositoryProvider)
+                                .fetchInvoiceById(invoiceId);
+
+                            if (!context.mounted) return;
+
+                            // Generate PDF for preview
+                            final endTimeUtc = DateTime.now().toUtc();
+                            final sessionWithEndTime = session.copyWith(
+                              endTime: endTimeUtc,
+                            );
+
+                            final pdfBytes = await ref
+                                .read(pdfInvoiceServiceProvider)
+                                .generateInvoicePdf(
+                                  invoice: invoice,
+                                  session: sessionWithEndTime,
+                                  orders: orders,
+                                  bill: currentBill,
+                                  loc: loc,
+                                );
+
+                            // Close dialogs
+                            Navigator.pop(
+                              dialogContext,
+                            ); // Close complete session dialog
+                            Navigator.of(
+                              context,
+                            ).pop(); // Close ActiveSessionDialog
+
+                            // Show Preview
+                            showDialog(
+                              context: context,
+                              builder: (context) => InvoicePreviewDialog(
+                                invoice: invoice,
+                                pdfBytes: pdfBytes,
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error generating preview: $e'),
+                              ),
+                            );
+                          }
                         } else {
                           // Show error in dialog
-                          final completionState = ref.read(
-                            sessionCompletionControllerProvider,
+                          final sessionState = ref.read(
+                            sessionsControllerProvider,
                           );
-                          if (completionState.hasError) {
+                          if (sessionState.hasError) {
                             showDialog(
                               context: dialogContext,
                               builder: (errorContext) => AlertDialog(
                                 title: Text(loc.errorTitle),
                                 content: Text(
                                   getUserFriendlyErrorMessage(
-                                    completionState.error!,
+                                    sessionState.error!,
                                     errorContext,
                                   ),
                                 ),

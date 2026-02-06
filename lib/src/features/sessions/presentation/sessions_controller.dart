@@ -80,6 +80,38 @@ class SessionsController extends _$SessionsController {
       // Stream handles UI update automatically
     });
   }
+
+  Future<int?> checkoutSession({
+    required int sessionId,
+    required double totalAmount,
+    required double discountAmount,
+    required double discountPercentage,
+    required String paymentMethod,
+    int? customerId,
+    String? customerName,
+    String shopName = 'Arcade',
+  }) async {
+    state = const AsyncLoading();
+    try {
+      final invoiceId = await ref
+          .read(sessionsRepositoryProvider)
+          .checkoutSession(
+            sessionId: sessionId,
+            totalAmount: totalAmount,
+            discountAmount: discountAmount,
+            discountPercentage: discountPercentage,
+            paymentMethod: paymentMethod,
+            customerId: customerId,
+            customerName: customerName,
+            shopName: shopName,
+          );
+      state = const AsyncData(null);
+      return invoiceId;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
+    }
+  }
 }
 
 @riverpod

@@ -19,6 +19,7 @@ abstract class InvoicesRepository {
   Future<Invoice?> getInvoiceById(int id);
   Future<String> generateInvoiceNumber();
   Future<void> cancelInvoice(int invoiceId);
+  Future<Invoice> fetchInvoiceById(int id);
 }
 
 class SupabaseInvoicesRepository implements InvoicesRepository {
@@ -110,6 +111,15 @@ class SupabaseInvoicesRepository implements InvoicesRepository {
           'cancelled_at': DateTime.now().toIso8601String(),
         })
         .eq('id', invoiceId);
+  }
+
+  @override
+  Future<Invoice> fetchInvoiceById(int id) async {
+    final invoice = await getInvoiceById(id);
+    if (invoice == null) {
+      throw Exception('Invoice not found: $id');
+    }
+    return invoice;
   }
 }
 
