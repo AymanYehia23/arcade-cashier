@@ -17,6 +17,7 @@ class RoomFormController extends _$RoomFormController {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    required double otherHourlyRate,
     required RoomStatus status,
   }) async {
     state = const AsyncLoading();
@@ -28,6 +29,7 @@ class RoomFormController extends _$RoomFormController {
             deviceType: deviceType,
             singleMatchHourlyRate: singleMatchHourlyRate,
             multiMatchHourlyRate: multiMatchHourlyRate,
+            otherHourlyRate: otherHourlyRate,
             status: status,
           ),
     );
@@ -43,6 +45,7 @@ class RoomFormController extends _$RoomFormController {
     required DeviceType deviceType,
     required double singleMatchHourlyRate,
     required double multiMatchHourlyRate,
+    required double otherHourlyRate,
     required RoomStatus status,
   }) async {
     state = const AsyncLoading();
@@ -55,6 +58,7 @@ class RoomFormController extends _$RoomFormController {
             deviceType: deviceType,
             singleMatchHourlyRate: singleMatchHourlyRate,
             multiMatchHourlyRate: multiMatchHourlyRate,
+            otherHourlyRate: otherHourlyRate,
             status: status,
           ),
     );

@@ -1,6 +1,7 @@
 import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
 
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart'
     as domain;
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
@@ -14,7 +15,7 @@ abstract class SessionsRepository {
   Future<domain.Session> startSession({
     int? roomId,
     required double rate,
-    required bool isMultiMatch,
+    required MatchType matchType,
     required SessionType sessionType,
     int? plannedDurationMinutes,
   });
@@ -49,7 +50,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
   Future<domain.Session> startSession({
     int? roomId,
     required double rate,
-    required bool isMultiMatch,
+    required MatchType matchType,
     required SessionType sessionType,
     int? plannedDurationMinutes,
   }) async {
@@ -60,7 +61,8 @@ class SupabaseSessionsRepository implements SessionsRepository {
           'room_id': roomId,
           'start_time': DateTime.now().toUtc().toIso8601String(),
           'applied_hourly_rate': rate,
-          'is_multi_match': isMultiMatch,
+          'is_multi_match': matchType == MatchType.multi,
+          'match_type': matchType.name,
           // Force 'open' if room_id is null (Quick Order), otherwise use provided type
           'session_type': roomId == null
               ? SessionConstants.open

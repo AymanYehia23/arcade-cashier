@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -117,10 +118,15 @@ class _SessionTimerWidgetState extends State<SessionTimerWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (widget.session.isMultiMatch)
-              Chip(label: Text(loc.multiMatch))
-            else
-              Chip(label: Text(loc.singleMatch)),
+            Chip(
+              label: Text(
+                widget.session.matchType == MatchType.single
+                    ? loc.singleMatch
+                    : widget.session.matchType == MatchType.multi
+                        ? loc.multiMatch
+                        : loc.other,
+              ),
+            ),
             const SizedBox(width: 8),
             Chip(
               label: Text(

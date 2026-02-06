@@ -99,6 +99,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get multiRate => 'Multi Rate';
 
   @override
+  String get otherRate => 'Other Rate';
+
+  @override
   String get twoPlayers => '2 Players';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get other => 'Other';
+
+  @override
+  String get otherSession => 'Other Session';
 
   @override
   String get lowStock => 'Low Stock';

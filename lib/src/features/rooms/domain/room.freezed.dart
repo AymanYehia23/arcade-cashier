@@ -29,6 +29,8 @@ mixin _$Room {
   double get singleMatchHourlyRate => throw _privateConstructorUsedError;
   @JsonKey(name: 'multi_player_hourly_rate')
   double get multiMatchHourlyRate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'other_hourly_rate')
+  double get otherHourlyRate => throw _privateConstructorUsedError;
   @JsonKey(name: 'current_status')
   RoomStatus get currentStatus => throw _privateConstructorUsedError;
 
@@ -52,6 +54,7 @@ abstract class $RoomCopyWith<$Res> {
     @JsonKey(name: 'device_type') DeviceType deviceType,
     @JsonKey(name: 'hourly_rate') double singleMatchHourlyRate,
     @JsonKey(name: 'multi_player_hourly_rate') double multiMatchHourlyRate,
+    @JsonKey(name: 'other_hourly_rate') double otherHourlyRate,
     @JsonKey(name: 'current_status') RoomStatus currentStatus,
   });
 }
@@ -76,6 +79,7 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
     Object? deviceType = null,
     Object? singleMatchHourlyRate = null,
     Object? multiMatchHourlyRate = null,
+    Object? otherHourlyRate = null,
     Object? currentStatus = null,
   }) {
     return _then(
@@ -99,6 +103,10 @@ class _$RoomCopyWithImpl<$Res, $Val extends Room>
             multiMatchHourlyRate: null == multiMatchHourlyRate
                 ? _value.multiMatchHourlyRate
                 : multiMatchHourlyRate // ignore: cast_nullable_to_non_nullable
+                      as double,
+            otherHourlyRate: null == otherHourlyRate
+                ? _value.otherHourlyRate
+                : otherHourlyRate // ignore: cast_nullable_to_non_nullable
                       as double,
             currentStatus: null == currentStatus
                 ? _value.currentStatus
@@ -124,6 +132,7 @@ abstract class _$$RoomImplCopyWith<$Res> implements $RoomCopyWith<$Res> {
     @JsonKey(name: 'device_type') DeviceType deviceType,
     @JsonKey(name: 'hourly_rate') double singleMatchHourlyRate,
     @JsonKey(name: 'multi_player_hourly_rate') double multiMatchHourlyRate,
+    @JsonKey(name: 'other_hourly_rate') double otherHourlyRate,
     @JsonKey(name: 'current_status') RoomStatus currentStatus,
   });
 }
@@ -145,6 +154,7 @@ class __$$RoomImplCopyWithImpl<$Res>
     Object? deviceType = null,
     Object? singleMatchHourlyRate = null,
     Object? multiMatchHourlyRate = null,
+    Object? otherHourlyRate = null,
     Object? currentStatus = null,
   }) {
     return _then(
@@ -169,6 +179,10 @@ class __$$RoomImplCopyWithImpl<$Res>
             ? _value.multiMatchHourlyRate
             : multiMatchHourlyRate // ignore: cast_nullable_to_non_nullable
                   as double,
+        otherHourlyRate: null == otherHourlyRate
+            ? _value.otherHourlyRate
+            : otherHourlyRate // ignore: cast_nullable_to_non_nullable
+                  as double,
         currentStatus: null == currentStatus
             ? _value.currentStatus
             : currentStatus // ignore: cast_nullable_to_non_nullable
@@ -188,6 +202,7 @@ class _$RoomImpl implements _Room {
     @JsonKey(name: 'hourly_rate') required this.singleMatchHourlyRate,
     @JsonKey(name: 'multi_player_hourly_rate')
     required this.multiMatchHourlyRate,
+    @JsonKey(name: 'other_hourly_rate') required this.otherHourlyRate,
     @JsonKey(name: 'current_status') required this.currentStatus,
   });
 
@@ -208,12 +223,15 @@ class _$RoomImpl implements _Room {
   @JsonKey(name: 'multi_player_hourly_rate')
   final double multiMatchHourlyRate;
   @override
+  @JsonKey(name: 'other_hourly_rate')
+  final double otherHourlyRate;
+  @override
   @JsonKey(name: 'current_status')
   final RoomStatus currentStatus;
 
   @override
   String toString() {
-    return 'Room(id: $id, name: $name, deviceType: $deviceType, singleMatchHourlyRate: $singleMatchHourlyRate, multiMatchHourlyRate: $multiMatchHourlyRate, currentStatus: $currentStatus)';
+    return 'Room(id: $id, name: $name, deviceType: $deviceType, singleMatchHourlyRate: $singleMatchHourlyRate, multiMatchHourlyRate: $multiMatchHourlyRate, otherHourlyRate: $otherHourlyRate, currentStatus: $currentStatus)';
   }
 
   @override
@@ -229,6 +247,8 @@ class _$RoomImpl implements _Room {
                 other.singleMatchHourlyRate == singleMatchHourlyRate) &&
             (identical(other.multiMatchHourlyRate, multiMatchHourlyRate) ||
                 other.multiMatchHourlyRate == multiMatchHourlyRate) &&
+            (identical(other.otherHourlyRate, otherHourlyRate) ||
+                other.otherHourlyRate == otherHourlyRate) &&
             (identical(other.currentStatus, currentStatus) ||
                 other.currentStatus == currentStatus));
   }
@@ -242,6 +262,7 @@ class _$RoomImpl implements _Room {
     deviceType,
     singleMatchHourlyRate,
     multiMatchHourlyRate,
+    otherHourlyRate,
     currentStatus,
   );
 
@@ -267,6 +288,7 @@ abstract class _Room implements Room {
     @JsonKey(name: 'hourly_rate') required final double singleMatchHourlyRate,
     @JsonKey(name: 'multi_player_hourly_rate')
     required final double multiMatchHourlyRate,
+    @JsonKey(name: 'other_hourly_rate') required final double otherHourlyRate,
     @JsonKey(name: 'current_status') required final RoomStatus currentStatus,
   }) = _$RoomImpl;
 
@@ -285,6 +307,9 @@ abstract class _Room implements Room {
   @override
   @JsonKey(name: 'multi_player_hourly_rate')
   double get multiMatchHourlyRate;
+  @override
+  @JsonKey(name: 'other_hourly_rate')
+  double get otherHourlyRate;
   @override
   @JsonKey(name: 'current_status')
   RoomStatus get currentStatus;

@@ -7,7 +7,7 @@ part of 'room_form_controller.dart';
 // **************************************************************************
 
 String _$roomFormControllerHash() =>
-    r'b526aff9dafb8e8810f7f4bfe0b8ead47bba696f';
+    r'e4a570fc8327afe45f421931047f21f029ebec5c';
 
 /// See also [RoomFormController].
 @ProviderFor(RoomFormController)

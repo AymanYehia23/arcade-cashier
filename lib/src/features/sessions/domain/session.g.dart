@@ -16,6 +16,9 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['end_time'] as String),
       appliedHourlyRate: (json['applied_hourly_rate'] as num).toDouble(),
       isMultiMatch: json['is_multi_match'] as bool,
+      matchType:
+          $enumDecodeNullable(_$MatchTypeEnumMap, json['match_type']) ??
+          MatchType.single,
       sessionType:
           $enumDecodeNullable(_$SessionTypeEnumMap, json['session_type']) ??
           SessionType.open,
@@ -40,6 +43,7 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
       'end_time': instance.endTime?.toIso8601String(),
       'applied_hourly_rate': instance.appliedHourlyRate,
       'is_multi_match': instance.isMultiMatch,
+      'match_type': _$MatchTypeEnumMap[instance.matchType]!,
       'session_type': _$SessionTypeEnumMap[instance.sessionType]!,
       'planned_duration_minutes': instance.plannedDurationMinutes,
       'source': instance.source,
@@ -47,6 +51,12 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
       'paused_at': instance.pausedAt?.toIso8601String(),
       'total_paused_duration_seconds': instance.totalPausedDurationSeconds,
     };
+
+const _$MatchTypeEnumMap = {
+  MatchType.single: 'single',
+  MatchType.multi: 'multi',
+  MatchType.other: 'other',
+};
 
 const _$SessionTypeEnumMap = {
   SessionType.open: 'open',
