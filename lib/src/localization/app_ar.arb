@@ -200,5 +200,9 @@
   "testPrintMessage": "طباعة تجريبية من أركيد كاشير",
   "playstation4": "بلايستيشن 4",
   "playstation5": "بلايستيشن 5",
-  "walkIn": "طلب سريع"
+  "walkIn": "طلب سريع",
+  "timeUpAlertTitle": "انتهى الوقت! - {roomName}",
+  "timeUpAlertContent": "انتهى الوقت المحدد لهذه الجلسة.",
+  "checkout": "محاسبة",
+  "dismiss": "تجاهل"
 }

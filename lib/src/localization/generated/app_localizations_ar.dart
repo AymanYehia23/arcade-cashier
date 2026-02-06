@@ -657,4 +657,18 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get walkIn => 'طلب سريع';
+
+  @override
+  String timeUpAlertTitle(String roomName) {
+    return 'انتهى الوقت! - $roomName';
+  }
+
+  @override
+  String get timeUpAlertContent => 'انتهى الوقت المحدد لهذه الجلسة.';
+
+  @override
+  String get checkout => 'محاسبة';
+
+  @override
+  String get dismiss => 'تجاهل';
 }
