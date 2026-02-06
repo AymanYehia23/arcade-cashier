@@ -104,6 +104,12 @@ abstract class AppLocalizations {
   /// **'Arcade Shop ERP'**
   String get appTitle;
 
+  /// No description provided for @brandName.
+  ///
+  /// In en, this message translates to:
+  /// **'Arcade'**
+  String get brandName;
+
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:
@@ -1303,30 +1309,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Walk-in'**
   String get walkIn;
-
-  /// No description provided for @timeUpAlertTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Time\'s Up! - {roomName}'**
-  String timeUpAlertTitle(String roomName);
-
-  /// No description provided for @timeUpAlertContent.
-  ///
-  /// In en, this message translates to:
-  /// **'The fixed time for this session has ended.'**
-  String get timeUpAlertContent;
-
-  /// No description provided for @checkout.
-  ///
-  /// In en, this message translates to:
-  /// **'Checkout'**
-  String get checkout;
-
-  /// No description provided for @dismiss.
-  ///
-  /// In en, this message translates to:
-  /// **'Dismiss'**
-  String get dismiss;
 }
 
 class _AppLocalizationsDelegate

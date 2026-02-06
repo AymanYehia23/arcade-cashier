@@ -53,8 +53,8 @@ class PdfInvoiceService {
 
   Future<void> _printPdf(Uint8List pdfBytes, String invoiceNumber) async {
     // Check if platform supports direct printing
-    final isDesktop =
-        !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
+    final isDesktop = !kIsWeb &&
+        (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
     if (isDesktop) {
       // Desktop: Use printer settings and direct print
@@ -65,9 +65,7 @@ class PdfInvoiceService {
       if (defaultPrinterUrl != null) {
         final printers = await Printing.listPrinters();
         try {
-          targetPrinter = printers.firstWhere(
-            (p) => p.url == defaultPrinterUrl,
-          );
+          targetPrinter = printers.firstWhere((p) => p.url == defaultPrinterUrl);
         } catch (_) {
           // Printer not found in current list, fallback to dialog
           targetPrinter = null;
@@ -201,7 +199,7 @@ class PdfInvoiceService {
     return pw.Column(
       children: [
         pw.Text(
-          'Arcade',
+          loc.brandName,
           style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
           textAlign: pw.TextAlign.center,
         ),
@@ -403,7 +401,7 @@ class PdfInvoiceService {
             ),
             pw.SizedBox(height: 4),
             pw.Text(
-              'Arcade',
+              loc.brandName,
               style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold),
               textAlign: pw.TextAlign.center,
             ),

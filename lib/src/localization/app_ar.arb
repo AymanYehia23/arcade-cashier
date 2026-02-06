@@ -1,6 +1,6 @@
 {
   "appTitle": "إدارة متجر الألعاب",
-
+  "brandName": "أركيد",
   "loginTitle": "تسجيل الدخول",
   "emailLabel": "البريد الإلكتروني",
   "passwordLabel": "كلمة المرور",
@@ -200,9 +200,5 @@
   "testPrintMessage": "طباعة تجريبية من أركيد كاشير",
   "playstation4": "بلايستيشن 4",
   "playstation5": "بلايستيشن 5",
-  "walkIn": "طلب سريع",
-  "timeUpAlertTitle": "انتهى الوقت! - {roomName}",
-  "timeUpAlertContent": "انتهى الوقت المحدد لهذه الجلسة.",
-  "checkout": "محاسبة",
-  "dismiss": "تجاهل"
+  "walkIn": "طلب سريع"
 }

@@ -266,26 +266,8 @@ class _SessionByIdProviderElement
   int get sessionId => (origin as SessionByIdProvider).sessionId;
 }
 
-String _$activeSessionsHash() => r'5b455621493d045dcf3c5564dc0c5ff9c7c657ca';
-
-/// See also [activeSessions].
-@ProviderFor(activeSessions)
-final activeSessionsProvider =
-    AutoDisposeStreamProvider<List<Session>>.internal(
-      activeSessions,
-      name: r'activeSessionsProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$activeSessionsHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef ActiveSessionsRef = AutoDisposeStreamProviderRef<List<Session>>;
 String _$sessionsControllerHash() =>
-    r'fac953cab2fbad330263f0c753ca3f4c51afe475';
+    r'6b0d7410fbbcee63c5bb3502de88e9fb0397c218';
 
 /// See also [SessionsController].
 @ProviderFor(SessionsController)

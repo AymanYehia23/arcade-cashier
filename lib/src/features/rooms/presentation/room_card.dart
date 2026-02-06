@@ -1,21 +1,15 @@
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
-import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RoomCard extends ConsumerStatefulWidget {
-  const RoomCard({
-    super.key,
-    required this.room,
-    required this.onTap,
-    this.activeSession,
-  });
+  const RoomCard({super.key, required this.room, required this.onTap});
 
   final Room room;
   final VoidCallback onTap;
-  final Session? activeSession;
 
   @override
   ConsumerState<RoomCard> createState() => _RoomCardState();
@@ -85,31 +79,43 @@ class _RoomCardState extends ConsumerState<RoomCard>
     ).animate(_pulseController!);
 
     // Check for expiration if occupied
-    final session = widget.activeSession;
-    bool isExpired = false;
+    final activeSessionAsync = widget.room.currentStatus == RoomStatus.occupied
+        ? ref.watch(activeSessionProvider(widget.room.id))
+        : null;
+    return activeSessionAsync?.when(
+          data: (session) {
+            bool isExpired = false;
+            if (session != null && session.sessionType == SessionType.fixed) {
+              final startTimeLocal = session.startTime.toLocal();
+              final planned = Duration(
+                minutes: session.plannedDurationMinutes ?? 0,
+              );
+              final end = startTimeLocal.add(planned);
+              if (DateTime.now().isAfter(end)) {
+                isExpired = true;
+              }
+            }
 
-    if (session != null && session.sessionType == SessionType.fixed) {
-      final startTimeLocal = session.startTime.toLocal();
-      final planned = Duration(minutes: session.plannedDurationMinutes ?? 0);
-      final end = startTimeLocal.add(planned);
-      if (DateTime.now().isAfter(end)) {
-        isExpired = true;
-      }
-    }
+            if (isExpired && !_pulseController!.isAnimating) {
+              _pulseController!.repeat(reverse: true);
+            } else if (!isExpired && _pulseController!.isAnimating) {
+              _pulseController!.stop();
+              _pulseController!.reset();
+            }
 
-    if (isExpired && !_pulseController!.isAnimating) {
-      _pulseController!.repeat(reverse: true);
-    } else if (!isExpired && _pulseController!.isAnimating) {
-      _pulseController!.stop();
-      _pulseController!.reset();
-    }
-
-    return _buildCard(
-      context,
-      isExpired ? (pulseColorAnimation.value ?? Colors.red) : statusColor,
-      textColor,
-      isExpired,
-    );
+            return _buildCard(
+              context,
+              isExpired
+                  ? (pulseColorAnimation.value ?? Colors.red)
+                  : statusColor,
+              textColor,
+              isExpired,
+            );
+          },
+          error: (_, _) => _buildCard(context, statusColor, textColor, false),
+          loading: () => _buildCard(context, statusColor, textColor, false),
+        ) ??
+        _buildCard(context, statusColor, textColor, false);
   }
 
   Widget _buildCard(
@@ -195,9 +201,7 @@ class _RoomCardState extends ConsumerState<RoomCard>
                                 children: [
                                   Chip(
                                     label: Text(
-                                      widget.room.deviceType.displayTitle(
-                                        context,
-                                      ),
+                                      widget.room.deviceType.displayTitle(context),
                                       style: TextStyle(
                                         color: textColor,
                                         fontWeight: FontWeight.bold,

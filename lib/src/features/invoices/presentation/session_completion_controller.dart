@@ -8,6 +8,7 @@ import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -32,6 +33,7 @@ class SessionCompletionController extends _$SessionCompletionController {
   /// Completes a session, creates an invoice, and generates the PDF.
   Future<SessionCompletionResult?> completeSession({
     required Session session,
+    int? roomId,
     required List<Order> orders,
     required SessionBill bill,
     Customer? customer,
@@ -41,11 +43,15 @@ class SessionCompletionController extends _$SessionCompletionController {
     state = const AsyncLoading();
 
     try {
-      // 1. Stop the session in DB - DB trigger handles room status update
+      // 1. Stop the session in DB
       await ref
           .read(sessionsRepositoryProvider)
-          .stopSession(sessionId: session.id);
-      // Stream handles UI update automatically
+          .stopSession(sessionId: session.id, roomId: roomId);
+
+      // Invalidate rooms to refresh UI (only if room was involved)
+      if (roomId != null) {
+        ref.invalidate(roomsValuesProvider);
+      }
 
       // 2. Generate invoice number
       final invoiceNumber = await ref
