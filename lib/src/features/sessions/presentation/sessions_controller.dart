@@ -1,4 +1,3 @@
-import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
@@ -32,8 +31,7 @@ class SessionsController extends _$SessionsController {
             sessionType: sessionType,
             plannedDurationMinutes: plannedDurationMinutes,
           );
-      // Invalidate rooms to refresh UI
-      ref.invalidate(roomsValuesProvider);
+      // Stream + DB trigger handle UI update automatically
       state = const AsyncData(null);
       return session;
     } catch (e, st) {
@@ -57,14 +55,13 @@ class SessionsController extends _$SessionsController {
     });
   }
 
-  Future<void> stopSession({required int sessionId, int? roomId}) async {
+  Future<void> stopSession({required int sessionId}) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref
           .read(sessionsRepositoryProvider)
-          .stopSession(sessionId: sessionId, roomId: roomId);
-      // Invalidate rooms to refresh UI
-      ref.invalidate(roomsValuesProvider);
+          .stopSession(sessionId: sessionId);
+      // Stream + DB trigger handle UI update automatically
     });
   }
 
@@ -72,10 +69,7 @@ class SessionsController extends _$SessionsController {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref.read(sessionsRepositoryProvider).pauseSession(sessionId);
-      ref.invalidate(sessionByIdProvider(sessionId));
-      if (roomId != null) {
-        ref.invalidate(activeSessionProvider(roomId));
-      }
+      // Stream handles UI update automatically
     });
   }
 
@@ -83,10 +77,7 @@ class SessionsController extends _$SessionsController {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref.read(sessionsRepositoryProvider).resumeSession(sessionId);
-      ref.invalidate(sessionByIdProvider(sessionId));
-      if (roomId != null) {
-        ref.invalidate(activeSessionProvider(roomId));
-      }
+      // Stream handles UI update automatically
     });
   }
 }
@@ -99,4 +90,9 @@ Future<Session?> activeSession(Ref ref, int roomId) {
 @riverpod
 Future<Session?> sessionById(Ref ref, int sessionId) {
   return ref.read(sessionsRepositoryProvider).getSessionById(sessionId);
+}
+
+@riverpod
+Stream<List<Session>> activeSessions(Ref ref) {
+  return ref.watch(sessionsRepositoryProvider).watchActiveSessions();
 }
