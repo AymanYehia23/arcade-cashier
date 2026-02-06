@@ -104,12 +104,6 @@ abstract class AppLocalizations {
   /// **'Arcade Shop ERP'**
   String get appTitle;
 
-  /// No description provided for @brandName.
-  ///
-  /// In en, this message translates to:
-  /// **'Arcade'**
-  String get brandName;
-
   /// No description provided for @loginTitle.
   ///
   /// In en, this message translates to:

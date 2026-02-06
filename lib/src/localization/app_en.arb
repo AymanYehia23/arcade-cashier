@@ -1,6 +1,6 @@
 {
   "appTitle": "Arcade Shop ERP",
-  "brandName": "Arcade",
+
   "@appTitle": {
     "description": "The title of the application"
   },

@@ -251,7 +251,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               paymentMethod: 'cash',
                               customerId: selectedCustomer?.id,
                               customerName: selectedCustomer?.name,
-                              shopName: loc.brandName,
+                              shopName: 'Arcade',
                             );
 
                         if (!context.mounted) return;
@@ -281,6 +281,8 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                                 );
 
                             // Close dialogs
+                            if (!context.mounted) return;
+
                             Navigator.pop(
                               dialogContext,
                             ); // Close complete session dialog

@@ -12,9 +12,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Arcade Shop ERP';
 
   @override
-  String get brandName => 'Arcade';
-
-  @override
   String get loginTitle => 'Login to Arcade Shop';
 
   @override

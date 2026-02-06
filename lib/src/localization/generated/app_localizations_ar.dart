@@ -12,9 +12,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appTitle => 'إدارة متجر الألعاب';
 
   @override
-  String get brandName => 'أركيد';
-
-  @override
   String get loginTitle => 'تسجيل الدخول';
 
   @override
