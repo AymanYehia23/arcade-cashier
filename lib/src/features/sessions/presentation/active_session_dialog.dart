@@ -20,6 +20,9 @@ import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
+import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 
 class ActiveSessionDialog extends ConsumerStatefulWidget {
   const ActiveSessionDialog({super.key, this.room, this.session})
@@ -134,163 +137,208 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                      // Section 1: Customer Selection
-                      Text(
-                        loc.customer,
-                        style: Theme.of(sbContext).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      CustomerSelectionWidget(
-                        onCustomerSelected: (customer) {
-                          setState(() {
-                            selectedCustomer = customer;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      const Divider(),
-                      const SizedBox(height: 16),
-
-                      // Section 2: Financials
-                      Text(
-                        loc.paymentDetails,
-                        style: Theme.of(sbContext).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 12),
-                      // Summary Rows
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(loc.subtotalWithColon),
+                          // Section 1: Customer Selection
                           Text(
-                            '${currentBill.subtotal.toStringAsFixed(2)} ${loc.egp}',
+                            loc.customer,
+                            style: Theme.of(sbContext).textTheme.titleMedium,
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Discount Input
-                      TextField(
-                        controller: discountController,
-                        decoration: InputDecoration(
-                          labelText: loc.discountLabel,
-                          border: const OutlineInputBorder(),
-                          prefixText: loc.percentSymbol,
-                          suffixText: '',
-                          isDense: true,
-                        ),
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d+\.?\d{0,2}'),
+                          const SizedBox(height: 8),
+                          CustomerSelectionWidget(
+                            onCustomerSelected: (customer) {
+                              setState(() {
+                                selectedCustomer = customer;
+                              });
+                            },
                           ),
-                        ],
-                        onChanged: (_) => updateBill(),
-                      ),
-                      if (currentBill.discountAmount > 0)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            loc.discountValue(
-                              currentBill.discountAmount.toStringAsFixed(2),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.end,
-                          ),
-                        ),
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
 
-                      const SizedBox(height: 12),
-                      const Divider(),
-                      const SizedBox(height: 12),
-
-                      // Final Total
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                          // Section 2: Financials
                           Text(
-                            loc.total,
-                            style: Theme.of(sbContext).textTheme.titleLarge,
+                            loc.paymentDetails,
+                            style: Theme.of(sbContext).textTheme.titleMedium,
                           ),
-                          Text(
-                            '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
-                            style: Theme.of(sbContext).textTheme.titleLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(sbContext).primaryColor,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(dialogContext), // Just close
-                  child: Text(loc.cancel),
-                ),
-                FilledButton(
-                  onPressed: () async {
-                    // Proceed with completion using the FINAL currentBill
-                    final result = await ref
-                        .read(sessionCompletionControllerProvider.notifier)
-                        .completeSession(
-                          session: session,
-                          roomId: widget.room?.id,
-                          orders: orders,
-                          bill: currentBill,
-                          customer: selectedCustomer,
-                          loc: loc,
-                          shopName: loc.brandName,
-                        );
-
-                    if (!context.mounted) return;
-
-                    if (result != null) {
-                      Navigator.pop(dialogContext); // Close complete session dialog
-                      Navigator.of(context).pop(); // Close ActiveSessionDialog
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(loc.sessionCompleted)),
-                      );
-                    } else {
-                      // Show error in dialog
-                      final completionState = ref.read(
-                        sessionCompletionControllerProvider,
-                      );
-                      if (completionState.hasError) {
-                        showDialog(
-                          context: dialogContext,
-                          builder: (errorContext) => AlertDialog(
-                            title: Text(loc.errorTitle),
-                            content: Text(
-                              getUserFriendlyErrorMessage(
-                                completionState.error!,
-                                errorContext,
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(errorContext),
-                                child: Text(loc.ok),
+                          const SizedBox(height: 12),
+                          // Summary Rows
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(loc.subtotalWithColon),
+                              Text(
+                                '${currentBill.subtotal.toStringAsFixed(2)} ${loc.egp}',
                               ),
                             ],
                           ),
-                        );
-                      }
-                    }
-                  },
-                  child: Text(loc.checkoutAndPrint),
-                ),
-              ],
+                          const SizedBox(height: 12),
+
+                          // Discount Input
+                          TextField(
+                            controller: discountController,
+                            decoration: InputDecoration(
+                              labelText: loc.discountLabel,
+                              border: const OutlineInputBorder(),
+                              prefixText: loc.percentSymbol,
+                              suffixText: '',
+                              isDense: true,
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                            onChanged: (_) => updateBill(),
+                          ),
+                          if (currentBill.discountAmount > 0)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                loc.discountValue(
+                                  currentBill.discountAmount.toStringAsFixed(2),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+
+                          const SizedBox(height: 12),
+                          const Divider(),
+                          const SizedBox(height: 12),
+
+                          // Final Total
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                loc.total,
+                                style: Theme.of(sbContext).textTheme.titleLarge,
+                              ),
+                              Text(
+                                '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
+                                style: Theme.of(sbContext).textTheme.titleLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(sbContext).primaryColor,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: Text(loc.cancel),
+                    ),
+                    FilledButton(
+                      onPressed: () async {
+                        final invoiceId = await ref
+                            .read(sessionsControllerProvider.notifier)
+                            .checkoutSession(
+                              sessionId: session.id,
+                              totalAmount: currentBill.totalAmount,
+                              discountAmount: currentBill.discountAmount,
+                              discountPercentage:
+                                  currentBill.discountPercentage,
+                              paymentMethod: 'cash',
+                              customerId: selectedCustomer?.id,
+                              customerName: selectedCustomer?.name,
+                              shopName: 'Arcade',
+                            );
+
+                        if (!context.mounted) return;
+
+                        if (invoiceId != null) {
+                          try {
+                            final invoice = await ref
+                                .read(invoicesRepositoryProvider)
+                                .fetchInvoiceById(invoiceId);
+
+                            if (!context.mounted) return;
+
+                            // Generate PDF for preview
+                            final endTimeUtc = DateTime.now().toUtc();
+                            final sessionWithEndTime = session.copyWith(
+                              endTime: endTimeUtc,
+                            );
+
+                            final pdfBytes = await ref
+                                .read(pdfInvoiceServiceProvider)
+                                .generateInvoicePdf(
+                                  invoice: invoice,
+                                  session: sessionWithEndTime,
+                                  orders: orders,
+                                  bill: currentBill,
+                                  loc: loc,
+                                );
+
+                            // Close dialogs
+                            if (!context.mounted) return;
+
+                            Navigator.pop(
+                              dialogContext,
+                            ); // Close complete session dialog
+                            Navigator.of(
+                              context,
+                            ).pop(); // Close ActiveSessionDialog
+
+                            // Show Preview
+                            showDialog(
+                              context: context,
+                              builder: (context) => InvoicePreviewDialog(
+                                invoice: invoice,
+                                pdfBytes: pdfBytes,
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error generating preview: $e'),
+                              ),
+                            );
+                          }
+                        } else {
+                          // Show error in dialog
+                          final sessionState = ref.read(
+                            sessionsControllerProvider,
+                          );
+                          if (sessionState.hasError) {
+                            showDialog(
+                              context: dialogContext,
+                              builder: (errorContext) => AlertDialog(
+                                title: Text(loc.errorTitle),
+                                content: Text(
+                                  getUserFriendlyErrorMessage(
+                                    sessionState.error!,
+                                    errorContext,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(errorContext),
+                                    child: Text(loc.ok),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text(loc.checkoutAndPrint),
+                    ),
+                  ],
+                );
+              },
             );
-                },
-              );
           },
         );
       },
@@ -357,7 +405,10 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
           final isMobile = constraints.maxWidth < 600;
 
           return AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 24,
+            ),
             title: Text(
               '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? loc.quickOrder : widget.room?.name ?? loc.unknown}',
             ),
@@ -371,7 +422,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   }
 
                   // Orders
-                  final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
+                  final ordersAsync = ref.watch(
+                    sessionOrdersProvider(session.id),
+                  );
                   final ordersList = ordersAsync.valueOrNull ?? [];
 
                   // Calculate Bill
@@ -419,9 +472,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                             Expanded(
-                              child: SessionOrderList(
-                                ordersAsync: ordersAsync,
-                              ),
+                              child: SessionOrderList(ordersAsync: ordersAsync),
                             ),
                           ],
                         ),
@@ -442,17 +493,11 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SizedBox(
-                            height: 300,
-                            child: productSelection,
-                          ),
+                          SizedBox(height: 300, child: productSelection),
                           const SizedBox(height: 16),
                           const Divider(),
                           const SizedBox(height: 16),
-                          SizedBox(
-                            height: 400,
-                            child: sessionInfo,
-                          ),
+                          SizedBox(height: 400, child: sessionInfo),
                         ],
                       ),
                     );
@@ -462,67 +507,67 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // PRODUCT SELECTION (Left)
-                        Expanded(
-                          flex: 4,
-                          child: productSelection,
-                        ),
+                        Expanded(flex: 4, child: productSelection),
                         const SizedBox(width: 16),
                         const VerticalDivider(width: 1),
                         const SizedBox(width: 16),
                         // SESSION INFO & ORDERS (Right)
-                        Expanded(
-                          flex: 3,
-                          child: sessionInfo,
-                        ),
+                        Expanded(flex: 3, child: sessionInfo),
                       ],
                     );
                   }
                 },
-                error: (e, st) =>
-                    Center(child: Text(getUserFriendlyErrorMessage(e, context))),
+                error: (e, st) => Center(
+                  child: Text(getUserFriendlyErrorMessage(e, context)),
+                ),
                 loading: () => const Center(child: CircularProgressIndicator()),
               ),
             ),
-        actions: [
-          sessionAsync.maybeWhen(
-            data: (session) {
-              if (session == null) return const SizedBox.shrink();
+            actions: [
+              sessionAsync.maybeWhen(
+                data: (session) {
+                  if (session == null) return const SizedBox.shrink();
 
-              final ordersAsync = ref.watch(sessionOrdersProvider(session.id));
-              final orders = ordersAsync.valueOrNull ?? [];
-              final billingService = ref.watch(billingServiceProvider);
-              final bill = billingService.calculateSessionBill(session, orders);
+                  final ordersAsync = ref.watch(
+                    sessionOrdersProvider(session.id),
+                  );
+                  final orders = ordersAsync.valueOrNull ?? [];
+                  final billingService = ref.watch(billingServiceProvider);
+                  final bill = billingService.calculateSessionBill(
+                    session,
+                    orders,
+                  );
 
-              return SessionActionButtons(
-                onCancel: () => Navigator.of(context).pop(),
-                onCheckout: () => _showCompleteSessionDialog(
-                  context: context,
-                  session: session,
-                  orders: orders,
-                  initialBill: bill,
-                ),
-                isCheckoutLoading: completionState.isLoading,
-                isQuickOrder: session.isQuickOrder,
-                isPaused: session.status == SessionStatus.paused,
-                onTogglePause: () {
-                  if (session.status == SessionStatus.paused) {
-                    ref
-                        .read(sessionsControllerProvider.notifier)
-                        .resumeSession(session.id, session.roomId);
-                  } else {
-                    ref
-                        .read(sessionsControllerProvider.notifier)
-                        .pauseSession(session.id, session.roomId);
-                  }
+                  return SessionActionButtons(
+                    onCancel: () => Navigator.of(context).pop(),
+                    onCheckout: () => _showCompleteSessionDialog(
+                      context: context,
+                      session: session,
+                      orders: orders,
+                      initialBill: bill,
+                    ),
+                    isCheckoutLoading: completionState.isLoading,
+                    isQuickOrder: session.isQuickOrder,
+                    isPaused: session.status == SessionStatus.paused,
+                    onTogglePause: () {
+                      if (session.status == SessionStatus.paused) {
+                        ref
+                            .read(sessionsControllerProvider.notifier)
+                            .resumeSession(session.id, session.roomId);
+                      } else {
+                        ref
+                            .read(sessionsControllerProvider.notifier)
+                            .pauseSession(session.id, session.roomId);
+                      }
+                    },
+                  );
                 },
-              );
-            },
-            orElse: () => TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(loc.cancel),
-            ),
-          ),
-        ],
+                orElse: () => TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(loc.cancel),
+                ),
+              ),
+            ],
           );
         },
       ),

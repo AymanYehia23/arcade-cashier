@@ -6,7 +6,26 @@ part of 'rooms_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$roomsControllerHash() => r'6bd96eb48b727712707b2da89b6000600ff58fe9';
+String _$roomsWithSessionsHash() => r'bc073226d0d2feb4d1c46bd426393baf82f11519';
+
+/// See also [roomsWithSessions].
+@ProviderFor(roomsWithSessions)
+final roomsWithSessionsProvider =
+    AutoDisposeStreamProvider<List<RoomWithSession>>.internal(
+      roomsWithSessions,
+      name: r'roomsWithSessionsProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$roomsWithSessionsHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RoomsWithSessionsRef =
+    AutoDisposeStreamProviderRef<List<RoomWithSession>>;
+String _$roomsControllerHash() => r'f65a16853b3da03b646ddb8ece5a0aabc3166172';
 
 /// See also [RoomsController].
 @ProviderFor(RoomsController)

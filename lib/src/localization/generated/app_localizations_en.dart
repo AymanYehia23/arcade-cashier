@@ -12,9 +12,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Arcade Shop ERP';
 
   @override
-  String get brandName => 'Arcade';
-
-  @override
   String get loginTitle => 'Login to Arcade Shop';
 
   @override
@@ -660,4 +657,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get walkIn => 'Walk-in';
+
+  @override
+  String timeUpAlertTitle(String roomName) {
+    return 'Time\'s Up! - $roomName';
+  }
+
+  @override
+  String get timeUpAlertContent => 'The fixed time for this session has ended.';
+
+  @override
+  String get checkout => 'Checkout';
+
+  @override
+  String get dismiss => 'Dismiss';
 }
