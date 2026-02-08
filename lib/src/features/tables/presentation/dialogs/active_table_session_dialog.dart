@@ -1,0 +1,637 @@
+import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
+import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
+import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
+import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
+import 'package:arcade_cashier/src/features/orders/domain/order.dart';
+import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
+import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
+import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
+import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_order_list.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
+import 'package:arcade_cashier/src/utils/error_messages.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
+import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
+
+class ActiveTableSessionDialog extends ConsumerStatefulWidget {
+  const ActiveTableSessionDialog({
+    super.key,
+    required this.table,
+    required this.session,
+  });
+
+  final CafeTable table;
+  final Session session;
+
+  @override
+  ConsumerState<ActiveTableSessionDialog> createState() =>
+      _ActiveTableSessionDialogState();
+}
+
+class _ActiveTableSessionDialogState
+    extends ConsumerState<ActiveTableSessionDialog> {
+  final FocusNode _productGridFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _productGridFocusNode.dispose();
+    super.dispose();
+  }
+
+  Future<void> _showCompleteSessionDialog({
+    required BuildContext context,
+    required Session session,
+    required List<Order> orders,
+    required SessionBill initialBill,
+  }) async {
+    final loc = AppLocalizations.of(context)!;
+    final discountController = TextEditingController();
+
+    // Variable to hold the bill as it gets recalculated
+    SessionBill currentBill = initialBill;
+    Customer? selectedCustomer;
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (sbContext, setState) {
+            void updateBill() {
+              final discountInput =
+                  double.tryParse(discountController.text) ?? 0.0;
+
+              // Recalculate bill using the service logic
+              final billingService = ref.read(billingServiceProvider);
+              final newBill = billingService.calculateSessionBill(
+                session,
+                orders,
+                discountPercentage: discountInput.clamp(0.0, 100.0),
+              );
+
+              setState(() {
+                currentBill = newBill;
+              });
+            }
+
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final isMobile = constraints.maxWidth < 600;
+
+                return AlertDialog(
+                  title: Text(loc.completeSession),
+                  content: SizedBox(
+                    width: isMobile ? constraints.maxWidth * 0.9 : 600,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Section 1: Customer Selection
+                          Text(
+                            loc.customer,
+                            style: Theme.of(sbContext).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 8),
+                          CustomerSelectionWidget(
+                            onCustomerSelected: (customer) {
+                              setState(() {
+                                selectedCustomer = customer;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+
+                          // Section 2: Financials
+                          Text(
+                            loc.paymentDetails,
+                            style: Theme.of(sbContext).textTheme.titleMedium,
+                          ),
+                          const SizedBox(height: 12),
+                          // Summary Rows (only orders for tables, no time cost)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(loc.subtotalWithColon),
+                              Text(
+                                '${currentBill.ordersTotal.toStringAsFixed(2)} ${loc.egp}',
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+
+                          // Discount Input
+                          TextField(
+                            controller: discountController,
+                            decoration: InputDecoration(
+                              labelText: loc.discountLabel,
+                              border: const OutlineInputBorder(),
+                              prefixText: loc.percentSymbol,
+                              suffixText: '',
+                              isDense: true,
+                            ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                            ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d+\.?\d{0,2}'),
+                              ),
+                            ],
+                            onChanged: (_) => updateBill(),
+                          ),
+                          if (currentBill.discountAmount > 0)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                loc.discountValue(
+                                  currentBill.discountAmount.toStringAsFixed(2),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.end,
+                              ),
+                            ),
+
+                          const SizedBox(height: 12),
+                          const Divider(),
+                          const SizedBox(height: 12),
+
+                          // Final Total
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                loc.total,
+                                style: Theme.of(sbContext).textTheme.titleLarge,
+                              ),
+                              Text(
+                                '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
+                                style: Theme.of(sbContext)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(sbContext).primaryColor,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(dialogContext),
+                      child: Text(loc.cancel),
+                    ),
+                    FilledButton(
+                      onPressed: () async {
+                        final invoiceId = await ref
+                            .read(sessionsControllerProvider.notifier)
+                            .checkoutSession(
+                              sessionId: session.id,
+                              totalAmount: currentBill.totalAmount,
+                              discountAmount: currentBill.discountAmount,
+                              discountPercentage:
+                                  currentBill.discountPercentage,
+                              paymentMethod: 'cash',
+                              customerId: selectedCustomer?.id,
+                              customerName: selectedCustomer?.name,
+                              shopName: 'Arcade',
+                            );
+
+                        if (!context.mounted) return;
+
+                        if (invoiceId != null) {
+                          try {
+                            final invoice = await ref
+                                .read(invoicesRepositoryProvider)
+                                .fetchInvoiceById(invoiceId);
+
+                            if (!context.mounted) return;
+
+                            // Generate PDF for preview
+                            final endTimeUtc = DateTime.now().toUtc();
+                            final sessionWithEndTime = session.copyWith(
+                              endTime: endTimeUtc,
+                            );
+
+                            final pdfBytes = await ref
+                                .read(pdfInvoiceServiceProvider)
+                                .generateInvoicePdf(
+                                  invoice: invoice,
+                                  session: sessionWithEndTime,
+                                  orders: orders,
+                                  bill: currentBill,
+                                  loc: loc,
+                                );
+
+                            // Close dialogs
+                            if (!context.mounted) return;
+
+                            Navigator.pop(
+                              dialogContext,
+                            ); // Close complete session dialog
+                            Navigator.of(
+                              context,
+                            ).pop(); // Close ActiveTableSessionDialog
+
+                            // Refresh providers to update table status and invoices list
+                            ref.invalidate(tablesWithSessionsProvider);
+                            ref.invalidate(activeSessionsProvider);
+                            ref.invalidate(invoicesPaginationProvider);
+
+                            // Show Preview
+                            showDialog(
+                              context: context,
+                              builder: (context) => InvoicePreviewDialog(
+                                invoice: invoice,
+                                pdfBytes: pdfBytes,
+                              ),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error generating preview: $e'),
+                              ),
+                            );
+                          }
+                        } else {
+                          // Show error in dialog
+                          final sessionState = ref.read(
+                            sessionsControllerProvider,
+                          );
+                          if (sessionState.hasError) {
+                            showDialog(
+                              context: dialogContext,
+                              builder: (errorContext) => AlertDialog(
+                                title: Text(loc.errorTitle),
+                                content: Text(
+                                  getUserFriendlyErrorMessage(
+                                    sessionState.error!,
+                                    errorContext,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.pop(errorContext),
+                                    child: Text(loc.ok),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Text(loc.checkoutAndPrint),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
+    ref.listen<AsyncValue>(sessionCompletionControllerProvider, (_, state) {
+      if (state.hasError && !state.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(getUserFriendlyErrorMessage(state.error!, context)),
+          ),
+        );
+      }
+    });
+
+    ref.listen<AsyncValue>(sessionOrdersControllerProvider, (_, state) {
+      if (state.hasError && !state.isLoading) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(getUserFriendlyErrorMessage(state.error!, context)),
+          ),
+        );
+      }
+    });
+
+    final sessionAsync = ref.watch(sessionByIdProvider(widget.session.id));
+    final completionState = ref.watch(sessionCompletionControllerProvider);
+
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          Navigator.of(context).pop();
+        },
+        const SingleActivator(LogicalKeyboardKey.enter): () {
+          _productGridFocusNode.requestFocus();
+        },
+        const SingleActivator(LogicalKeyboardKey.keyS, control: true): () {
+          if (completionState.isLoading) return;
+          sessionAsync.whenData((session) {
+            if (session == null) return;
+            final ordersAsync = ref.read(sessionOrdersProvider(session.id));
+            final orders = ordersAsync.valueOrNull ?? [];
+            final billingService = ref.read(billingServiceProvider);
+            final bill = billingService.calculateSessionBill(session, orders);
+            _showCompleteSessionDialog(
+              context: context,
+              session: session,
+              orders: orders,
+              initialBill: bill,
+            );
+          });
+        },
+      },
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final isMobile = constraints.maxWidth < 600;
+
+          return AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 24,
+            ),
+            title: Text(
+              '${loc.activeSession} - ${widget.table.name}',
+            ),
+            content: SizedBox(
+              width: isMobile ? constraints.maxWidth * 0.9 : 1000,
+              height: isMobile ? constraints.maxHeight * 0.7 : 600,
+              child: sessionAsync.when(
+                data: (session) {
+                  if (session == null) {
+                    return Center(child: Text(loc.noActiveSessionFound));
+                  }
+
+                  // Orders
+                  final ordersAsync = ref.watch(
+                    sessionOrdersProvider(session.id),
+                  );
+                  final ordersList = ordersAsync.valueOrNull ?? [];
+
+                  // Calculate Bill (for tables, timeCost is always 0)
+                  final billingService = ref.watch(billingServiceProvider);
+                  final bill = billingService.calculateSessionBill(
+                    session,
+                    ordersList,
+                  );
+
+                  final productSelection = Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        loc.products,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: Card(
+                          child: ProductSelectionGrid(
+                            sessionId: session.id,
+                            focusNode: _productGridFocusNode,
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+
+                  final sessionInfo = Column(
+                    children: [
+                      // No timer widget for tables
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Text(
+                              loc.orders,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            Expanded(
+                              child: SessionOrderList(ordersAsync: ordersAsync),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      _TableBillSection(
+                        ordersTotal: bill.ordersTotal,
+                        grandTotal: bill.totalAmount,
+                        loc: loc,
+                      ),
+                    ],
+                  );
+
+                  if (isMobile) {
+                    // Mobile: Vertical layout
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          SizedBox(height: 300, child: productSelection),
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+                          SizedBox(height: 400, child: sessionInfo),
+                        ],
+                      ),
+                    );
+                  } else {
+                    // Desktop: Horizontal layout
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // PRODUCT SELECTION (Left)
+                        Expanded(flex: 4, child: productSelection),
+                        const SizedBox(width: 16),
+                        const VerticalDivider(width: 1),
+                        const SizedBox(width: 16),
+                        // SESSION INFO & ORDERS (Right)
+                        Expanded(flex: 3, child: sessionInfo),
+                      ],
+                    );
+                  }
+                },
+                error: (e, st) => Center(
+                  child: Text(getUserFriendlyErrorMessage(e, context)),
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+              ),
+            ),
+            actions: [
+              sessionAsync.maybeWhen(
+                data: (session) {
+                  if (session == null) return const SizedBox.shrink();
+
+                  final ordersAsync = ref.watch(
+                    sessionOrdersProvider(session.id),
+                  );
+                  final orders = ordersAsync.valueOrNull ?? [];
+                  final billingService = ref.watch(billingServiceProvider);
+                  final bill = billingService.calculateSessionBill(
+                    session,
+                    orders,
+                  );
+
+                  final hasOrders = bill.ordersTotal > 0;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Cancel Session button (only show if no orders)
+                      if (!hasOrders)
+                        TextButton.icon(
+                          onPressed: completionState.isLoading
+                              ? null
+                              : () async {
+                                  // Confirm cancellation
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (dialogContext) => AlertDialog(
+                                      title: Text(loc.cancelSession),
+                                      content: Text(
+                                        loc.cancelSessionConfirmation,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(dialogContext, false),
+                                          child: Text(loc.no),
+                                        ),
+                                        FilledButton(
+                                          onPressed: () =>
+                                              Navigator.pop(dialogContext, true),
+                                          child: Text(loc.yes),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirmed == true && context.mounted) {
+                                    await ref
+                                        .read(sessionsControllerProvider.notifier)
+                                        .stopSession(sessionId: session.id);
+
+                                    if (context.mounted) {
+                                      // Refresh providers
+                                      ref.invalidate(tablesWithSessionsProvider);
+                                      ref.invalidate(activeSessionsProvider);
+
+                                      // Close dialog
+                                      Navigator.of(context).pop();
+                                    }
+                                  }
+                                },
+                          icon: const Icon(Icons.close),
+                          label: Text(loc.cancelSession),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+
+                      const Spacer(),
+
+                      // Close button
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.close),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // Checkout button (disabled if no orders)
+                      FilledButton(
+                        onPressed: hasOrders && !completionState.isLoading
+                            ? () => _showCompleteSessionDialog(
+                                  context: context,
+                                  session: session,
+                                  orders: orders,
+                                  initialBill: bill,
+                                )
+                            : null,
+                        child: completionState.isLoading
+                            ? const SizedBox(
+                                height: 16,
+                                width: 16,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : Text(loc.checkout),
+                      ),
+                    ],
+                  );
+                },
+                orElse: () => TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(loc.cancel),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _TableBillSection extends StatelessWidget {
+  final double ordersTotal;
+  final double grandTotal;
+  final AppLocalizations loc;
+
+  const _TableBillSection({
+    required this.ordersTotal,
+    required this.grandTotal,
+    required this.loc,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          // No time cost for tables
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(loc.orders),
+              Text('${ordersTotal.toStringAsFixed(2)} ${loc.egp}'),
+            ],
+          ),
+          const Divider(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(loc.total, style: Theme.of(context).textTheme.titleLarge),
+              Text(
+                '${grandTotal.toStringAsFixed(2)} ${loc.egp}',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
