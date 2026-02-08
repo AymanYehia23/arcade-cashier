@@ -19,6 +19,7 @@
   "statusMaintenance": "Maintenance",
   "statusHeld": "Held",
   "settingsTitle": "Settings",
+  "management": "Management",
   "manageRooms": "Manage Rooms",
   "addRoom": "Add Room",
   "editRoom": "Edit Room",
@@ -28,6 +29,10 @@
   "hourlyRate": "Hourly Rate",
   "save": "Save",
   "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
+  "cancelSession": "Cancel Session",
+  "cancelSessionConfirmation": "Are you sure you want to cancel this session? The table will be freed without any charges.",
   "confirmDelete": "Are you sure you want to delete this room?",
   "roomSaved": "Room saved successfully",
   "roomDeleted": "Room deleted successfully",
@@ -339,5 +344,40 @@
   },
   "timeUpAlertContent": "The fixed time for this session has ended.",
   "checkout": "Checkout",
-  "dismiss": "Dismiss"
+  "dismiss": "Dismiss",
+  "rooms": "Rooms",
+  "room": "Room",
+  "tables": "Tables",
+  "table": "Table",
+  "tableNumber": "Table Number",
+  "tableName": "Table Name",
+  "manageTables": "Manage Tables",
+  "status": "Status",
+  "noTablesAvailable": "No tables available",
+  "addTablesFromSettings": "Add tables from the settings menu",
+  "errorLoadingTables": "Error loading tables: {error}",
+  "@errorLoadingTables": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "addTable": "Add Table",
+  "editTable": "Edit Table",
+  "deleteTable": "Delete Table",
+  "deleteTableConfirmation": "Are you sure you want to delete {tableName}?",
+  "@deleteTableConfirmation": {
+    "placeholders": {
+      "tableName": {
+        "type": "String"
+      }
+    }
+  },
+  "manageTablesTitle": "Manage Tables",
+  "createTableSuccess": "Table created successfully",
+  "updateTableSuccess": "Table updated successfully",
+  "deleteTableSuccess": "Table deleted successfully",
+  "ordersOnly": "Orders Only",
+  "noTimerForTables": "Tables are billed by orders only"
 }

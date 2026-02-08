@@ -194,6 +194,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settingsTitle;
 
+  /// No description provided for @management.
+  ///
+  /// In en, this message translates to:
+  /// **'Management'**
+  String get management;
+
   /// No description provided for @manageRooms.
   ///
   /// In en, this message translates to:
@@ -247,6 +253,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @cancelSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Session'**
+  String get cancelSession;
+
+  /// No description provided for @cancelSessionConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this session? The table will be freed without any charges.'**
+  String get cancelSessionConfirmation;
 
   /// No description provided for @confirmDelete.
   ///
@@ -1339,6 +1369,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dismiss'**
   String get dismiss;
+
+  /// No description provided for @rooms.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get rooms;
+
+  /// No description provided for @room.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get room;
+
+  /// No description provided for @tables.
+  ///
+  /// In en, this message translates to:
+  /// **'Tables'**
+  String get tables;
+
+  /// No description provided for @table.
+  ///
+  /// In en, this message translates to:
+  /// **'Table'**
+  String get table;
+
+  /// No description provided for @tableNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Table Number'**
+  String get tableNumber;
+
+  /// No description provided for @tableName.
+  ///
+  /// In en, this message translates to:
+  /// **'Table Name'**
+  String get tableName;
+
+  /// No description provided for @manageTables.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Tables'**
+  String get manageTables;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @noTablesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No tables available'**
+  String get noTablesAvailable;
+
+  /// No description provided for @addTablesFromSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Add tables from the settings menu'**
+  String get addTablesFromSettings;
+
+  /// No description provided for @errorLoadingTables.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading tables: {error}'**
+  String errorLoadingTables(String error);
+
+  /// No description provided for @addTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Table'**
+  String get addTable;
+
+  /// No description provided for @editTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Table'**
+  String get editTable;
+
+  /// No description provided for @deleteTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Table'**
+  String get deleteTable;
+
+  /// No description provided for @deleteTableConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {tableName}?'**
+  String deleteTableConfirmation(String tableName);
+
+  /// No description provided for @manageTablesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Tables'**
+  String get manageTablesTitle;
+
+  /// No description provided for @createTableSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Table created successfully'**
+  String get createTableSuccess;
+
+  /// No description provided for @updateTableSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Table updated successfully'**
+  String get updateTableSuccess;
+
+  /// No description provided for @deleteTableSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Table deleted successfully'**
+  String get deleteTableSuccess;
+
+  /// No description provided for @ordersOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders Only'**
+  String get ordersOnly;
+
+  /// No description provided for @noTimerForTables.
+  ///
+  /// In en, this message translates to:
+  /// **'Tables are billed by orders only'**
+  String get noTimerForTables;
 }
 
 class _AppLocalizationsDelegate

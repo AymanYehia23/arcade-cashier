@@ -57,6 +57,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTitle => 'Settings';
 
   @override
+  String get management => 'Management';
+
+  @override
   String get manageRooms => 'Manage Rooms';
 
   @override
@@ -82,6 +85,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cancel => 'Cancel';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get cancelSession => 'Cancel Session';
+
+  @override
+  String get cancelSessionConfirmation =>
+      'Are you sure you want to cancel this session? The table will be freed without any charges.';
 
   @override
   String get confirmDelete => 'Are you sure you want to delete this room?';
@@ -677,4 +693,71 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dismiss => 'Dismiss';
+
+  @override
+  String get rooms => 'Rooms';
+
+  @override
+  String get room => 'Room';
+
+  @override
+  String get tables => 'Tables';
+
+  @override
+  String get table => 'Table';
+
+  @override
+  String get tableNumber => 'Table Number';
+
+  @override
+  String get tableName => 'Table Name';
+
+  @override
+  String get manageTables => 'Manage Tables';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get noTablesAvailable => 'No tables available';
+
+  @override
+  String get addTablesFromSettings => 'Add tables from the settings menu';
+
+  @override
+  String errorLoadingTables(String error) {
+    return 'Error loading tables: $error';
+  }
+
+  @override
+  String get addTable => 'Add Table';
+
+  @override
+  String get editTable => 'Edit Table';
+
+  @override
+  String get deleteTable => 'Delete Table';
+
+  @override
+  String deleteTableConfirmation(String tableName) {
+    return 'Are you sure you want to delete $tableName?';
+  }
+
+  @override
+  String get manageTablesTitle => 'Manage Tables';
+
+  @override
+  String get createTableSuccess => 'Table created successfully';
+
+  @override
+  String get updateTableSuccess => 'Table updated successfully';
+
+  @override
+  String get deleteTableSuccess => 'Table deleted successfully';
+
+  @override
+  String get ordersOnly => 'Orders Only';
+
+  @override
+  String get noTimerForTables => 'Tables are billed by orders only';
 }

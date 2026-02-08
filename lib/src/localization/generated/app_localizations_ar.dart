@@ -57,6 +57,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settingsTitle => 'الإعدادات';
 
   @override
+  String get management => 'الإدارة';
+
+  @override
   String get manageRooms => 'إدارة الغرف';
 
   @override
@@ -82,6 +85,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get cancel => 'إلغاء';
+
+  @override
+  String get yes => 'نعم';
+
+  @override
+  String get no => 'لا';
+
+  @override
+  String get cancelSession => 'إلغاء الجلسة';
+
+  @override
+  String get cancelSessionConfirmation =>
+      'هل أنت متأكد من إلغاء هذه الجلسة؟ سيتم تحرير الطاولة بدون أي رسوم.';
 
   @override
   String get confirmDelete => 'هل أنت متأكد أنك تريد حذف هذه الغرفة؟';
@@ -677,4 +693,71 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dismiss => 'تجاهل';
+
+  @override
+  String get rooms => 'الغرف';
+
+  @override
+  String get room => 'غرفة';
+
+  @override
+  String get tables => 'الطاولات';
+
+  @override
+  String get table => 'طاولة';
+
+  @override
+  String get tableNumber => 'رقم الطاولة';
+
+  @override
+  String get tableName => 'اسم الطاولة';
+
+  @override
+  String get manageTables => 'إدارة الطاولات';
+
+  @override
+  String get status => 'الحالة';
+
+  @override
+  String get noTablesAvailable => 'لا توجد طاولات متاحة';
+
+  @override
+  String get addTablesFromSettings => 'أضف طاولات من قائمة الإعدادات';
+
+  @override
+  String errorLoadingTables(String error) {
+    return 'خطأ في تحميل الطاولات: $error';
+  }
+
+  @override
+  String get addTable => 'إضافة طاولة';
+
+  @override
+  String get editTable => 'تعديل طاولة';
+
+  @override
+  String get deleteTable => 'حذف طاولة';
+
+  @override
+  String deleteTableConfirmation(String tableName) {
+    return 'هل أنت متأكد من حذف $tableName؟';
+  }
+
+  @override
+  String get manageTablesTitle => 'إدارة الطاولات';
+
+  @override
+  String get createTableSuccess => 'تم إنشاء الطاولة بنجاح';
+
+  @override
+  String get updateTableSuccess => 'تم تحديث الطاولة بنجاح';
+
+  @override
+  String get deleteTableSuccess => 'تم حذف الطاولة بنجاح';
+
+  @override
+  String get ordersOnly => 'طلبات فقط';
+
+  @override
+  String get noTimerForTables => 'الطاولات تُحسب بالطلبات فقط';
 }
