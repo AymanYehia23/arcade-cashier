@@ -75,15 +75,20 @@ class PdfInvoiceService {
       }
 
       if (targetPrinter != null) {
+        // Use bitmap/raster mode for thermal printers to preserve Arabic text
+        // This ensures the PDF is properly rendered before being sent to printer
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
+          format: PdfPageFormat.roll80,
+          usePrinterSettings: false,
         );
       } else {
         await Printing.layoutPdf(
           onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
+          format: PdfPageFormat.roll80,
         );
       }
     } else {
