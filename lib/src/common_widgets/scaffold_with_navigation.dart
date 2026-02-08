@@ -11,14 +11,14 @@ class ScaffoldWithNavigation extends ConsumerWidget {
   final StatefulNavigationShell navigationShell;
 
   // Map navigation index to actual branch index
-  // Branch indices: 0=Dashboard, 1=Products, 2=Invoices, 3=Analytics, 4=Settings
+  // Branch indices: 0=Rooms, 1=Tables, 2=Products, 3=Invoices, 4=Analytics, 5=Settings
   int _mapToBranchIndex(int navIndex, bool isAdmin) {
     if (isAdmin) {
       return navIndex; // Direct mapping for admins
     } else {
-      // For non-admins: 0=Dashboard, 1=Products, 2=Invoices, 3=Settings
-      // Map: 0->0, 1->1, 2->2, 3->4 (skip Analytics branch at index 3)
-      return navIndex >= 3 ? navIndex + 1 : navIndex;
+      // For non-admins: 0=Rooms, 1=Tables, 2=Products, 3=Invoices, 4=Settings
+      // Map: 0->0, 1->1, 2->2, 3->3, 4->5 (skip Analytics branch at index 4)
+      return navIndex >= 4 ? navIndex + 1 : navIndex;
     }
   }
 
@@ -27,8 +27,8 @@ class ScaffoldWithNavigation extends ConsumerWidget {
     if (isAdmin) {
       return branchIndex;
     } else {
-      // Reverse mapping: branch 4 (Settings) -> nav index 3
-      return branchIndex >= 4 ? branchIndex - 1 : branchIndex;
+      // Reverse mapping: branch 5 (Settings) -> nav index 4
+      return branchIndex >= 5 ? branchIndex - 1 : branchIndex;
     }
   }
 
@@ -45,8 +45,12 @@ class ScaffoldWithNavigation extends ConsumerWidget {
     // Build navigation items based on role
     final destinations = <NavigationDestination>[
       NavigationDestination(
-        icon: const Icon(Icons.dashboard),
-        label: loc.dashboardTitle,
+        icon: const Icon(Icons.gamepad),
+        label: loc.rooms,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.table_restaurant),
+        label: loc.tables,
       ),
       NavigationDestination(
         icon: const Icon(Icons.inventory_2),
@@ -69,8 +73,12 @@ class ScaffoldWithNavigation extends ConsumerWidget {
 
     final railDestinations = <NavigationRailDestination>[
       NavigationRailDestination(
-        icon: const Icon(Icons.dashboard),
-        label: Text(loc.dashboardTitle),
+        icon: const Icon(Icons.gamepad),
+        label: Text(loc.rooms),
+      ),
+      NavigationRailDestination(
+        icon: const Icon(Icons.table_restaurant),
+        label: Text(loc.tables),
       ),
       NavigationRailDestination(
         icon: const Icon(Icons.inventory_2),
