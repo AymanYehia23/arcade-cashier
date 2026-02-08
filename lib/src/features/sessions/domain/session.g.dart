@@ -10,6 +10,7 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
     _$SessionImpl(
       id: (json['id'] as num).toInt(),
       roomId: (json['room_id'] as num?)?.toInt(),
+      tableId: (json['table_id'] as num?)?.toInt(),
       startTime: DateTime.parse(json['start_time'] as String),
       endTime: json['end_time'] == null
           ? null
@@ -39,6 +40,7 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'room_id': instance.roomId,
+      'table_id': instance.tableId,
       'start_time': instance.startTime.toIso8601String(),
       'end_time': instance.endTime?.toIso8601String(),
       'applied_hourly_rate': instance.appliedHourlyRate,
