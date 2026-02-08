@@ -147,6 +147,127 @@ class _ActiveSessionProviderElement
   int get roomId => (origin as ActiveSessionProvider).roomId;
 }
 
+String _$activeTableSessionHash() =>
+    r'1a70c747bf7113e2da3d50f7cc4634dd996cd71d';
+
+/// See also [activeTableSession].
+@ProviderFor(activeTableSession)
+const activeTableSessionProvider = ActiveTableSessionFamily();
+
+/// See also [activeTableSession].
+class ActiveTableSessionFamily extends Family<AsyncValue<Session?>> {
+  /// See also [activeTableSession].
+  const ActiveTableSessionFamily();
+
+  /// See also [activeTableSession].
+  ActiveTableSessionProvider call(int tableId) {
+    return ActiveTableSessionProvider(tableId);
+  }
+
+  @override
+  ActiveTableSessionProvider getProviderOverride(
+    covariant ActiveTableSessionProvider provider,
+  ) {
+    return call(provider.tableId);
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'activeTableSessionProvider';
+}
+
+/// See also [activeTableSession].
+class ActiveTableSessionProvider extends AutoDisposeFutureProvider<Session?> {
+  /// See also [activeTableSession].
+  ActiveTableSessionProvider(int tableId)
+    : this._internal(
+        (ref) => activeTableSession(ref as ActiveTableSessionRef, tableId),
+        from: activeTableSessionProvider,
+        name: r'activeTableSessionProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$activeTableSessionHash,
+        dependencies: ActiveTableSessionFamily._dependencies,
+        allTransitiveDependencies:
+            ActiveTableSessionFamily._allTransitiveDependencies,
+        tableId: tableId,
+      );
+
+  ActiveTableSessionProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.tableId,
+  }) : super.internal();
+
+  final int tableId;
+
+  @override
+  Override overrideWith(
+    FutureOr<Session?> Function(ActiveTableSessionRef provider) create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: ActiveTableSessionProvider._internal(
+        (ref) => create(ref as ActiveTableSessionRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        tableId: tableId,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<Session?> createElement() {
+    return _ActiveTableSessionProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ActiveTableSessionProvider && other.tableId == tableId;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, tableId.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+mixin ActiveTableSessionRef on AutoDisposeFutureProviderRef<Session?> {
+  /// The parameter `tableId` of this provider.
+  int get tableId;
+}
+
+class _ActiveTableSessionProviderElement
+    extends AutoDisposeFutureProviderElement<Session?>
+    with ActiveTableSessionRef {
+  _ActiveTableSessionProviderElement(super.provider);
+
+  @override
+  int get tableId => (origin as ActiveTableSessionProvider).tableId;
+}
+
 String _$sessionByIdHash() => r'b76e1ae4c3a5a17172bf5a57f9d7706eed3006b9';
 
 /// See also [sessionById].
@@ -285,7 +406,7 @@ final activeSessionsProvider =
 // ignore: unused_element
 typedef ActiveSessionsRef = AutoDisposeStreamProviderRef<List<Session>>;
 String _$sessionsControllerHash() =>
-    r'bcaa182a2999818839536441be5ce40bbf5d237e';
+    r'd0d159272eebb46be15e4cc984a29ea5be0c6a7f';
 
 /// See also [SessionsController].
 @ProviderFor(SessionsController)
