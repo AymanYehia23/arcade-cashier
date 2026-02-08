@@ -26,6 +26,12 @@ class TablesDashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(loc.tables),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.invalidate(tablesWithSessionsProvider),
+          ),
+        ],
       ),
       body: tablesWithSessionsValue.when(
         data: (tablesWithSessions) {
