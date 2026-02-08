@@ -12,6 +12,7 @@ _$RoomImpl _$$RoomImplFromJson(Map<String, dynamic> json) => _$RoomImpl(
   deviceType: $enumDecode(_$DeviceTypeEnumMap, json['device_type']),
   singleMatchHourlyRate: (json['hourly_rate'] as num).toDouble(),
   multiMatchHourlyRate: (json['multi_player_hourly_rate'] as num).toDouble(),
+  otherHourlyRate: (json['other_hourly_rate'] as num).toDouble(),
   currentStatus: $enumDecode(_$RoomStatusEnumMap, json['current_status']),
 );
 
@@ -22,6 +23,7 @@ Map<String, dynamic> _$$RoomImplToJson(_$RoomImpl instance) =>
       'device_type': _$DeviceTypeEnumMap[instance.deviceType]!,
       'hourly_rate': instance.singleMatchHourlyRate,
       'multi_player_hourly_rate': instance.multiMatchHourlyRate,
+      'other_hourly_rate': instance.otherHourlyRate,
       'current_status': _$RoomStatusEnumMap[instance.currentStatus]!,
     };
 

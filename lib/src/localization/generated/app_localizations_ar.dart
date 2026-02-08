@@ -99,6 +99,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get multiRate => 'سعر الزوجي';
 
   @override
+  String get otherRate => 'سعر الجلسات الآخرى';
+
+  @override
   String get twoPlayers => '2 لاعبين';
 
   @override
@@ -208,6 +211,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get other => 'أخرى';
+
+  @override
+  String get otherSession => 'جلسة أخرى';
 
   @override
   String get lowStock => 'مخزون منخفض';

@@ -32,6 +32,8 @@ mixin _$Session {
   double get appliedHourlyRate => throw _privateConstructorUsedError;
   @JsonKey(name: 'is_multi_match')
   bool get isMultiMatch => throw _privateConstructorUsedError;
+  @JsonKey(name: 'match_type')
+  MatchType get matchType => throw _privateConstructorUsedError;
   @JsonKey(name: 'session_type')
   SessionType get sessionType => throw _privateConstructorUsedError;
   @JsonKey(name: 'planned_duration_minutes')
@@ -64,6 +66,7 @@ abstract class $SessionCopyWith<$Res> {
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
     @JsonKey(name: 'is_multi_match') bool isMultiMatch,
+    @JsonKey(name: 'match_type') MatchType matchType,
     @JsonKey(name: 'session_type') SessionType sessionType,
     @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
@@ -95,6 +98,7 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
     Object? isMultiMatch = null,
+    Object? matchType = null,
     Object? sessionType = null,
     Object? plannedDurationMinutes = freezed,
     Object? source = null,
@@ -128,6 +132,10 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
                 ? _value.isMultiMatch
                 : isMultiMatch // ignore: cast_nullable_to_non_nullable
                       as bool,
+            matchType: null == matchType
+                ? _value.matchType
+                : matchType // ignore: cast_nullable_to_non_nullable
+                      as MatchType,
             sessionType: null == sessionType
                 ? _value.sessionType
                 : sessionType // ignore: cast_nullable_to_non_nullable
@@ -173,6 +181,7 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
     @JsonKey(name: 'is_multi_match') bool isMultiMatch,
+    @JsonKey(name: 'match_type') MatchType matchType,
     @JsonKey(name: 'session_type') SessionType sessionType,
     @JsonKey(name: 'planned_duration_minutes') int? plannedDurationMinutes,
     String source,
@@ -203,6 +212,7 @@ class __$$SessionImplCopyWithImpl<$Res>
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
     Object? isMultiMatch = null,
+    Object? matchType = null,
     Object? sessionType = null,
     Object? plannedDurationMinutes = freezed,
     Object? source = null,
@@ -236,6 +246,10 @@ class __$$SessionImplCopyWithImpl<$Res>
             ? _value.isMultiMatch
             : isMultiMatch // ignore: cast_nullable_to_non_nullable
                   as bool,
+        matchType: null == matchType
+            ? _value.matchType
+            : matchType // ignore: cast_nullable_to_non_nullable
+                  as MatchType,
         sessionType: null == sessionType
             ? _value.sessionType
             : sessionType // ignore: cast_nullable_to_non_nullable
@@ -275,6 +289,7 @@ class _$SessionImpl extends _Session {
     @JsonKey(name: 'end_time') this.endTime,
     @JsonKey(name: 'applied_hourly_rate') required this.appliedHourlyRate,
     @JsonKey(name: 'is_multi_match') required this.isMultiMatch,
+    @JsonKey(name: 'match_type') this.matchType = MatchType.single,
     @JsonKey(name: 'session_type') this.sessionType = SessionType.open,
     @JsonKey(name: 'planned_duration_minutes') this.plannedDurationMinutes,
     this.source = 'walk_in',
@@ -305,6 +320,9 @@ class _$SessionImpl extends _Session {
   @JsonKey(name: 'is_multi_match')
   final bool isMultiMatch;
   @override
+  @JsonKey(name: 'match_type')
+  final MatchType matchType;
+  @override
   @JsonKey(name: 'session_type')
   final SessionType sessionType;
   @override
@@ -325,7 +343,7 @@ class _$SessionImpl extends _Session {
 
   @override
   String toString() {
-    return 'Session(id: $id, roomId: $roomId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
+    return 'Session(id: $id, roomId: $roomId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, matchType: $matchType, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
   }
 
   @override
@@ -342,6 +360,8 @@ class _$SessionImpl extends _Session {
                 other.appliedHourlyRate == appliedHourlyRate) &&
             (identical(other.isMultiMatch, isMultiMatch) ||
                 other.isMultiMatch == isMultiMatch) &&
+            (identical(other.matchType, matchType) ||
+                other.matchType == matchType) &&
             (identical(other.sessionType, sessionType) ||
                 other.sessionType == sessionType) &&
             (identical(other.plannedDurationMinutes, plannedDurationMinutes) ||
@@ -368,6 +388,7 @@ class _$SessionImpl extends _Session {
     endTime,
     appliedHourlyRate,
     isMultiMatch,
+    matchType,
     sessionType,
     plannedDurationMinutes,
     source,
@@ -399,6 +420,7 @@ abstract class _Session extends Session {
     @JsonKey(name: 'applied_hourly_rate')
     required final double appliedHourlyRate,
     @JsonKey(name: 'is_multi_match') required final bool isMultiMatch,
+    @JsonKey(name: 'match_type') final MatchType matchType,
     @JsonKey(name: 'session_type') final SessionType sessionType,
     @JsonKey(name: 'planned_duration_minutes')
     final int? plannedDurationMinutes,
@@ -429,6 +451,9 @@ abstract class _Session extends Session {
   @override
   @JsonKey(name: 'is_multi_match')
   bool get isMultiMatch;
+  @override
+  @JsonKey(name: 'match_type')
+  MatchType get matchType;
   @override
   @JsonKey(name: 'session_type')
   SessionType get sessionType;

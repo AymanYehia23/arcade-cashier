@@ -1,4 +1,5 @@
 // ignore_for_file: invalid_annotation_target
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -18,6 +19,9 @@ class Session with _$Session {
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') required double appliedHourlyRate,
     @JsonKey(name: 'is_multi_match') required bool isMultiMatch,
+    @JsonKey(name: 'match_type')
+    @Default(MatchType.single)
+    MatchType matchType,
     @JsonKey(name: 'session_type')
     @Default(SessionType.open)
     SessionType sessionType,

@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -104,7 +105,7 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
                               .startSession(
                                 roomId: widget.room.id,
                                 rate: widget.room.singleMatchHourlyRate,
-                                isMultiMatch: false,
+                                matchType: MatchType.single,
                                 sessionType: _selectedType,
                                 plannedDurationMinutes:
                                     _selectedType == SessionType.fixed
@@ -127,7 +128,7 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
                               .startSession(
                                 roomId: widget.room.id,
                                 rate: widget.room.multiMatchHourlyRate,
-                                isMultiMatch: true,
+                                matchType: MatchType.multi,
                                 sessionType: _selectedType,
                                 plannedDurationMinutes:
                                     _selectedType == SessionType.fixed
@@ -137,6 +138,38 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
                         },
                         child: Text(
                           '${loc.multiMatch} (${loc.fourPlayers}) - ${widget.room.multiMatchHourlyRate} ${loc.egpPerHour}',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 50,
+                      child: FilledButton(
+                        onPressed: () {
+                          ref
+                              .read(sessionsControllerProvider.notifier)
+                              .startSession(
+                                roomId: widget.room.id,
+                                rate: widget.room.otherHourlyRate,
+                                matchType: MatchType.other,
+                                sessionType: _selectedType,
+                                plannedDurationMinutes:
+                                    _selectedType == SessionType.fixed
+                                    ? _selectedDuration
+                                    : null,
+                              );
+                        },
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.inversePrimary,
+                          foregroundColor: Theme.of(
+                            context,
+                          ).colorScheme.onPrimaryContainer,
+                        ),
+                        child: Text(
+                          '${loc.other} - ${widget.room.otherHourlyRate} ${loc.egpPerHour}',
+                          style: TextStyle(color: Colors.black),
                         ),
                       ),
                     ),

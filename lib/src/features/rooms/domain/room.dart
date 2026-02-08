@@ -16,6 +16,7 @@ class Room with _$Room {
     @JsonKey(name: 'hourly_rate') required double singleMatchHourlyRate,
     @JsonKey(name: 'multi_player_hourly_rate')
     required double multiMatchHourlyRate,
+    @JsonKey(name: 'other_hourly_rate') required double otherHourlyRate,
     @JsonKey(name: 'current_status') required RoomStatus currentStatus,
   }) = _Room;
 

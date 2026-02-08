@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/features/sessions/data/sessions_repository.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +17,7 @@ class SessionsController extends _$SessionsController {
   Future<Session?> startSession({
     int? roomId,
     required double rate,
-    required bool isMultiMatch,
+    required MatchType matchType,
     required SessionType sessionType,
     int? plannedDurationMinutes,
   }) async {
@@ -27,7 +28,7 @@ class SessionsController extends _$SessionsController {
           .startSession(
             roomId: roomId,
             rate: rate,
-            isMultiMatch: isMultiMatch,
+            matchType: matchType,
             sessionType: sessionType,
             plannedDurationMinutes: plannedDurationMinutes,
           );

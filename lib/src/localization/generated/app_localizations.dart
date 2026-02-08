@@ -278,6 +278,12 @@ abstract class AppLocalizations {
   /// **'Multi Rate'**
   String get multiRate;
 
+  /// No description provided for @otherRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Rate'**
+  String get otherRate;
+
   /// No description provided for @twoPlayers.
   ///
   /// In en, this message translates to:
@@ -493,6 +499,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get other;
+
+  /// No description provided for @otherSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Other Session'**
+  String get otherSession;
 
   /// No description provided for @lowStock.
   ///

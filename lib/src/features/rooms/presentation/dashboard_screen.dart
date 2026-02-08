@@ -8,6 +8,7 @@ import 'package:arcade_cashier/src/features/sessions/presentation/session_expira
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/active_session_dialog.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/start_session_dialog.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
@@ -114,7 +115,7 @@ class DashboardScreen extends ConsumerWidget {
                   roomId: null,
                   rate:
                       0.0, // Free for walk-ins? Or standard rate? User said "time is free/irrelevant".
-                  isMultiMatch: false,
+                  matchType: MatchType.single,
                   sessionType: SessionType.open,
                 );
 

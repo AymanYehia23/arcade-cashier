@@ -20,6 +20,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
   final _nameController = TextEditingController();
   final _singleRateController = TextEditingController();
   final _multiRateController = TextEditingController();
+  final _otherRateController = TextEditingController();
   DeviceType? _selectedDeviceType;
   RoomStatus _selectedStatus = RoomStatus.available;
 
@@ -33,6 +34,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
       _singleRateController.text = widget.room!.singleMatchHourlyRate
           .toString();
       _multiRateController.text = widget.room!.multiMatchHourlyRate.toString();
+      _otherRateController.text = widget.room!.otherHourlyRate.toString();
     }
   }
 
@@ -41,6 +43,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
     _nameController.dispose();
     _singleRateController.dispose();
     _multiRateController.dispose();
+    _otherRateController.dispose();
     super.dispose();
   }
 
@@ -50,6 +53,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
       final deviceType = _selectedDeviceType!;
       final singleRate = double.parse(_singleRateController.text.trim());
       final multiRate = double.parse(_multiRateController.text.trim());
+      final otherRate = double.parse(_otherRateController.text.trim());
 
       final controller = ref.read(roomFormControllerProvider.notifier);
       final success = widget.room == null
@@ -58,6 +62,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
               deviceType: deviceType,
               singleMatchHourlyRate: singleRate,
               multiMatchHourlyRate: multiRate,
+              otherHourlyRate: otherRate,
               status: _selectedStatus,
             )
           : await controller.updateRoom(
@@ -66,6 +71,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
               deviceType: deviceType,
               singleMatchHourlyRate: singleRate,
               multiMatchHourlyRate: multiRate,
+              otherHourlyRate: otherRate,
               status: _selectedStatus,
             );
 
@@ -172,8 +178,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
                     Expanded(
                       child: TextFormField(
                         controller: _multiRateController,
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => _submit(),
+                        textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                           labelText: loc.multiRate,
                           hintText: loc.fourPlayers,
@@ -193,6 +198,27 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _otherRateController,
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _submit(),
+                  decoration: InputDecoration(
+                    labelText: loc.otherRate,
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return loc.otherRate;
+                    }
+                    if (double.tryParse(value) == null) {
+                      return loc.otherRate;
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
