@@ -250,9 +250,8 @@ class _ActiveTableSessionDialogState
                               context,
                             ).pop(); // Close ActiveTableSessionDialog
 
-                            // Refresh providers to update table status and invoices list
+                            // Refresh providers (stream auto-updates)
                             ref.invalidate(tablesWithSessionsProvider);
-                            ref.invalidate(activeSessionsProvider);
                             ref.invalidate(invoicesPaginationProvider);
 
                             // Show Preview
@@ -532,9 +531,8 @@ class _ActiveTableSessionDialogState
                                         .stopSession(sessionId: session.id);
 
                                     if (context.mounted) {
-                                      // Refresh providers
+                                      // Refresh tables (stream auto-updates)
                                       ref.invalidate(tablesWithSessionsProvider);
-                                      ref.invalidate(activeSessionsProvider);
 
                                       // Close dialog
                                       Navigator.of(context).pop();

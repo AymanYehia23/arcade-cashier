@@ -73,9 +73,8 @@ class StartTableSessionDialog extends ConsumerWidget {
                       .startTableSession(tableId: table.id);
 
                   if (context.mounted) {
-                    // Refresh providers to update table status
+                    // Refresh tables provider (stream auto-updates)
                     ref.invalidate(tablesWithSessionsProvider);
-                    ref.invalidate(activeSessionsProvider);
 
                     // Pop once with the session result (null if failed)
                     Navigator.of(context).pop(session);

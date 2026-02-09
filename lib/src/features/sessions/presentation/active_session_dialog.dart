@@ -24,7 +24,6 @@ import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.da
 import 'package:arcade_cashier/src/features/invoices/presentation/invoice_preview_dialog.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
-import 'package:arcade_cashier/src/features/rooms/presentation/rooms_controller.dart';
 
 class ActiveSessionDialog extends ConsumerStatefulWidget {
   const ActiveSessionDialog({super.key, this.room, this.session})
@@ -292,9 +291,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               context,
                             ).pop(); // Close ActiveSessionDialog
 
-                            // Refresh providers to update room status and invoices list
-                            ref.invalidate(roomsWithSessionsProvider);
-                            ref.invalidate(activeSessionsProvider);
+                            // Refresh invoices list (streams auto-update)
                             ref.invalidate(invoicesPaginationProvider);
 
                             // Show Preview
