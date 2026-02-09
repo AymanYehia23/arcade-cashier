@@ -232,5 +232,7 @@
   "updateTableSuccess": "تم تحديث الطاولة بنجاح",
   "deleteTableSuccess": "تم حذف الطاولة بنجاح",
   "ordersOnly": "طلبات فقط",
-  "noTimerForTables": "الطاولات تُحسب بالطلبات فقط"
+  "noTimerForTables": "الطاولات تُحسب بالطلبات فقط",
+  "optional": "اختياري",
+  "unknown": "غير معروف"
 }

@@ -760,4 +760,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTimerForTables => 'Tables are billed by orders only';
+
+  @override
+  String get optional => 'optional';
 }

@@ -1495,6 +1495,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tables are billed by orders only'**
   String get noTimerForTables;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional;
 }
 
 class _AppLocalizationsDelegate

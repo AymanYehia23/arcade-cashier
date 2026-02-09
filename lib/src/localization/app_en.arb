@@ -379,5 +379,7 @@
   "updateTableSuccess": "Table updated successfully",
   "deleteTableSuccess": "Table deleted successfully",
   "ordersOnly": "Orders Only",
-  "noTimerForTables": "Tables are billed by orders only"
+  "noTimerForTables": "Tables are billed by orders only",
+  "optional": "optional",
+  "unknown": "Unknown"
 }

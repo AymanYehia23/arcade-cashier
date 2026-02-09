@@ -760,4 +760,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noTimerForTables => 'الطاولات تُحسب بالطلبات فقط';
+
+  @override
+  String get optional => 'اختياري';
 }
