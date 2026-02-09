@@ -1,6 +1,7 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:arcade_cashier/src/features/tables/data/tables_repository.dart';
+import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/dialogs/table_form_dialog.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -107,7 +108,9 @@ class ManageTablesScreen extends ConsumerWidget {
                                 context: context,
                                 builder: (context) => AlertDialog(
                                   title: Text(loc.deleteTable),
-                                  content: Text(loc.confirmDelete),
+                                  content: Text(
+                                    loc.deleteTableConfirmation(table.name),
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () =>
@@ -148,16 +151,14 @@ class ManageTablesScreen extends ConsumerWidget {
     );
   }
 
-  String _getStatusLabel(status, AppLocalizations loc) {
-    switch (status.toString().split('.').last) {
-      case 'available':
+  String _getStatusLabel(TableStatus status, AppLocalizations loc) {
+    switch (status) {
+      case TableStatus.available:
         return loc.statusAvailable;
-      case 'occupied':
+      case TableStatus.occupied:
         return loc.statusOccupied;
-      case 'maintenance':
+      case TableStatus.maintenance:
         return loc.statusMaintenance;
-      default:
-        return 'Unknown';
     }
   }
 }
