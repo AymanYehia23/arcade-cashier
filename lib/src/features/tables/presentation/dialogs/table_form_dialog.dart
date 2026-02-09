@@ -105,7 +105,7 @@ class _TableFormDialogState extends ConsumerState<TableFormDialog> {
                 controller: _tableNumberController,
                 textInputAction: TextInputAction.done,
                 decoration: InputDecoration(
-                  labelText: '${loc.tableNumber} (optional)',
+                  labelText: '${loc.tableNumber} (${loc.optional})',
                 ),
                 keyboardType: TextInputType.number,
                 inputFormatters: [
