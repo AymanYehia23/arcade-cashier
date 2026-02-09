@@ -6,7 +6,6 @@ import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:rxdart/rxdart.dart';
 
 part 'tables_controller.g.dart';
 
@@ -56,21 +55,17 @@ class TablesController extends _$TablesController {
 }
 
 @riverpod
-Stream<List<TableWithSession>> tablesWithSessions(Ref ref) {
+Future<List<TableWithSession>> tablesWithSessions(Ref ref) async {
   final tablesRepo = ref.watch(tablesRepositoryProvider);
   final sessionsRepo = ref.watch(sessionsRepositoryProvider);
 
-  return Rx.combineLatest2<List<CafeTable>, List<Session>,
-      List<TableWithSession>>(
-    tablesRepo.watchTables(),
-    sessionsRepo.watchActiveSessions(),
-    (tables, sessions) {
-      return tables.map((table) {
-        final activeSession = sessions.firstWhereOrNull(
-          (s) => s.tableId == table.id && s.status == SessionStatus.active,
-        );
-        return TableWithSession(table: table, activeSession: activeSession);
-      }).toList();
-    },
-  );
+  final tables = await tablesRepo.fetchTables();
+  final sessions = await sessionsRepo.watchActiveSessions().first;
+
+  return tables.map((table) {
+    final activeSession = sessions.firstWhereOrNull(
+      (s) => s.tableId == table.id && s.status == SessionStatus.active,
+    );
+    return TableWithSession(table: table, activeSession: activeSession);
+  }).toList();
 }

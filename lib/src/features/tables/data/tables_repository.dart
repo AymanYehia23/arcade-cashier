@@ -20,13 +20,6 @@ class TablesRepository {
     return data.map((json) => CafeTable.fromJson(json)).toList();
   }
 
-  Stream<List<CafeTable>> watchTables() {
-    return _supabase
-        .from(DbTables.tables)
-        .stream(primaryKey: ['id'])
-        .order('table_number', ascending: true)
-        .map((data) => data.map((json) => CafeTable.fromJson(json)).toList());
-  }
 
   Future<void> createTable({
     required String name,
@@ -76,7 +69,7 @@ TablesRepository tablesRepository(Ref ref) {
 }
 
 @riverpod
-Stream<List<CafeTable>> tablesValues(Ref ref) {
+Future<List<CafeTable>> tablesValues(Ref ref) async {
   final repository = ref.watch(tablesRepositoryProvider);
-  return repository.watchTables();
+  return repository.fetchTables();
 }

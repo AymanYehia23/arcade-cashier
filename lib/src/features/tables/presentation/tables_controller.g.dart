@@ -7,12 +7,12 @@ part of 'tables_controller.dart';
 // **************************************************************************
 
 String _$tablesWithSessionsHash() =>
-    r'4d3d066cfd20dc2c41a7822b04358ad7f1fd1cb3';
+    r'2e24f49af8c2c1a0e55117da3652e2af006620e2';
 
 /// See also [tablesWithSessions].
 @ProviderFor(tablesWithSessions)
 final tablesWithSessionsProvider =
-    AutoDisposeStreamProvider<List<TableWithSession>>.internal(
+    AutoDisposeFutureProvider<List<TableWithSession>>.internal(
       tablesWithSessions,
       name: r'tablesWithSessionsProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -25,7 +25,7 @@ final tablesWithSessionsProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TablesWithSessionsRef =
-    AutoDisposeStreamProviderRef<List<TableWithSession>>;
+    AutoDisposeFutureProviderRef<List<TableWithSession>>;
 String _$tablesControllerHash() => r'8d63c27fcbcf74a89d513cc437d130ca97efb149';
 
 /// See also [TablesController].
