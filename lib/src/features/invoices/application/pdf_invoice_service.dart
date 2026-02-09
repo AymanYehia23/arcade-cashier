@@ -75,8 +75,8 @@ class PdfInvoiceService {
       }
 
       if (targetPrinter != null) {
-        // Use bitmap/raster mode for thermal printers to preserve Arabic text
-        // This ensures the PDF is properly rendered before being sent to printer
+        // Use OS PDF rendering (not printer driver) to preserve Arabic text
+        // usePrinterSettings: false ensures proper text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (format) async => pdfBytes,

@@ -88,7 +88,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
       }
 
       if (targetPrinter != null) {
-        // Direct print to saved printer with bitmap rendering for Arabic support
+        // Use OS PDF rendering (not printer driver) to preserve Arabic text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (_) async => widget.pdfBytes,
