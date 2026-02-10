@@ -7,6 +7,7 @@ import 'package:arcade_cashier/src/features/settings/data/printer_repository.dar
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
 /// Dialog that displays a PDF preview with print and save functionality.
@@ -87,17 +88,20 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
       }
 
       if (targetPrinter != null) {
-        // Direct print to saved printer
+        // Use OS PDF rendering (not printer driver) to preserve Arabic text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
+          format: PdfPageFormat.roll80,
+          usePrinterSettings: false,
         );
       } else {
         // Fallback to system print dialog
         await Printing.layoutPdf(
           onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
+          format: PdfPageFormat.roll80,
         );
       }
     } catch (e) {

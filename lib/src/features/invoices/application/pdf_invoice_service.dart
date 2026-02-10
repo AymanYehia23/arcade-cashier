@@ -75,15 +75,20 @@ class PdfInvoiceService {
       }
 
       if (targetPrinter != null) {
+        // Use OS PDF rendering (not printer driver) to preserve Arabic text
+        // usePrinterSettings: false ensures proper text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
+          format: PdfPageFormat.roll80,
+          usePrinterSettings: false,
         );
       } else {
         await Printing.layoutPdf(
           onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
+          format: PdfPageFormat.roll80,
         );
       }
     } else {
