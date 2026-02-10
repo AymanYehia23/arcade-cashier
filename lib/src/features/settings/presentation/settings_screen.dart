@@ -37,13 +37,18 @@ class SettingsScreen extends ConsumerWidget {
             // Management section - Only visible to admins
             if (ref.watch(authStateChangesProvider).value?.isAdmin ??
                 false) ...[
-              _SectionHeader(title: loc.manageRooms),
-              // Let's stick to the plan: "Management" section
+              _SectionHeader(title: loc.management),
               ListTile(
                 leading: const Icon(Icons.meeting_room),
                 title: Text(loc.manageRooms),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(AppRoutes.manageRooms),
+              ),
+              ListTile(
+                leading: const Icon(Icons.table_restaurant),
+                title: Text(loc.manageTables),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(AppRoutes.manageTables),
               ),
               const Divider(),
             ],

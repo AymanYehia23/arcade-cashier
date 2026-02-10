@@ -24,6 +24,8 @@ mixin _$Session {
   int get id => throw _privateConstructorUsedError;
   @JsonKey(name: 'room_id')
   int? get roomId => throw _privateConstructorUsedError;
+  @JsonKey(name: 'table_id')
+  int? get tableId => throw _privateConstructorUsedError;
   @JsonKey(name: 'start_time')
   DateTime get startTime => throw _privateConstructorUsedError;
   @JsonKey(name: 'end_time')
@@ -62,6 +64,7 @@ abstract class $SessionCopyWith<$Res> {
   $Res call({
     int id,
     @JsonKey(name: 'room_id') int? roomId,
+    @JsonKey(name: 'table_id') int? tableId,
     @JsonKey(name: 'start_time') DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
@@ -94,6 +97,7 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
   $Res call({
     Object? id = null,
     Object? roomId = freezed,
+    Object? tableId = freezed,
     Object? startTime = null,
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
@@ -115,6 +119,10 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
             roomId: freezed == roomId
                 ? _value.roomId
                 : roomId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            tableId: freezed == tableId
+                ? _value.tableId
+                : tableId // ignore: cast_nullable_to_non_nullable
                       as int?,
             startTime: null == startTime
                 ? _value.startTime
@@ -177,6 +185,7 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
   $Res call({
     int id,
     @JsonKey(name: 'room_id') int? roomId,
+    @JsonKey(name: 'table_id') int? tableId,
     @JsonKey(name: 'start_time') DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') double appliedHourlyRate,
@@ -208,6 +217,7 @@ class __$$SessionImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? roomId = freezed,
+    Object? tableId = freezed,
     Object? startTime = null,
     Object? endTime = freezed,
     Object? appliedHourlyRate = null,
@@ -229,6 +239,10 @@ class __$$SessionImplCopyWithImpl<$Res>
         roomId: freezed == roomId
             ? _value.roomId
             : roomId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        tableId: freezed == tableId
+            ? _value.tableId
+            : tableId // ignore: cast_nullable_to_non_nullable
                   as int?,
         startTime: null == startTime
             ? _value.startTime
@@ -285,6 +299,7 @@ class _$SessionImpl extends _Session {
   const _$SessionImpl({
     required this.id,
     @JsonKey(name: 'room_id') this.roomId,
+    @JsonKey(name: 'table_id') this.tableId,
     @JsonKey(name: 'start_time') required this.startTime,
     @JsonKey(name: 'end_time') this.endTime,
     @JsonKey(name: 'applied_hourly_rate') required this.appliedHourlyRate,
@@ -307,6 +322,9 @@ class _$SessionImpl extends _Session {
   @override
   @JsonKey(name: 'room_id')
   final int? roomId;
+  @override
+  @JsonKey(name: 'table_id')
+  final int? tableId;
   @override
   @JsonKey(name: 'start_time')
   final DateTime startTime;
@@ -343,7 +361,7 @@ class _$SessionImpl extends _Session {
 
   @override
   String toString() {
-    return 'Session(id: $id, roomId: $roomId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, matchType: $matchType, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
+    return 'Session(id: $id, roomId: $roomId, tableId: $tableId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, matchType: $matchType, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
   }
 
   @override
@@ -353,6 +371,7 @@ class _$SessionImpl extends _Session {
             other is _$SessionImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.roomId, roomId) || other.roomId == roomId) &&
+            (identical(other.tableId, tableId) || other.tableId == tableId) &&
             (identical(other.startTime, startTime) ||
                 other.startTime == startTime) &&
             (identical(other.endTime, endTime) || other.endTime == endTime) &&
@@ -384,6 +403,7 @@ class _$SessionImpl extends _Session {
     runtimeType,
     id,
     roomId,
+    tableId,
     startTime,
     endTime,
     appliedHourlyRate,
@@ -415,6 +435,7 @@ abstract class _Session extends Session {
   const factory _Session({
     required final int id,
     @JsonKey(name: 'room_id') final int? roomId,
+    @JsonKey(name: 'table_id') final int? tableId,
     @JsonKey(name: 'start_time') required final DateTime startTime,
     @JsonKey(name: 'end_time') final DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate')
@@ -439,6 +460,9 @@ abstract class _Session extends Session {
   @override
   @JsonKey(name: 'room_id')
   int? get roomId;
+  @override
+  @JsonKey(name: 'table_id')
+  int? get tableId;
   @override
   @JsonKey(name: 'start_time')
   DateTime get startTime;

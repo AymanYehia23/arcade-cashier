@@ -19,6 +19,7 @@ abstract class SessionsRepository {
     required SessionType sessionType,
     int? plannedDurationMinutes,
   });
+  Future<domain.Session> startTableSession({required int tableId});
   Future<void> stopSession({required int sessionId});
   Future<void> pauseSession(int sessionId);
   Future<void> resumeSession(int sessionId);
@@ -27,6 +28,7 @@ abstract class SessionsRepository {
     required int additionalMinutes,
   });
   Future<domain.Session?> getActiveSession(int roomId);
+  Future<domain.Session?> getActiveTableSession(int tableId);
   Stream<List<domain.Session>> watchActiveSessions();
   Future<domain.Session?> getSessionById(int sessionId);
   Future<int> checkoutSession({
@@ -72,6 +74,17 @@ class SupabaseSessionsRepository implements SessionsRepository {
         })
         .select()
         .single();
+
+    return domain.Session.fromJson(sessionData);
+  }
+
+  @override
+  Future<domain.Session> startTableSession({required int tableId}) async {
+    // Call Supabase RPC function - DB trigger handles table status update automatically
+    final sessionData = await _supabase.rpc(
+      'start_table_session',
+      params: {'p_table_id': tableId},
+    );
 
     return domain.Session.fromJson(sessionData);
   }
@@ -166,6 +179,26 @@ class SupabaseSessionsRepository implements SessionsRepository {
           .from(DbTables.sessions)
           .select()
           .eq('room_id', roomId)
+          .filter('end_time', 'is', null) // Use filter for IS NULL
+          .maybeSingle(); // Use maybeSingle to return null if no row found
+
+      if (sessionData == null) {
+        return null;
+      }
+      return domain.Session.fromJson(sessionData);
+    } catch (e) {
+      // Log the error for debugging but return null as defensive programming
+      return null;
+    }
+  }
+
+  @override
+  Future<domain.Session?> getActiveTableSession(int tableId) async {
+    try {
+      final sessionData = await _supabase
+          .from(DbTables.sessions)
+          .select()
+          .eq('table_id', tableId)
           .filter('end_time', 'is', null) // Use filter for IS NULL
           .maybeSingle(); // Use maybeSingle to return null if no row found
 

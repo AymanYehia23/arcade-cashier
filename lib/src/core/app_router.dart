@@ -7,6 +7,8 @@ import 'package:arcade_cashier/src/features/authentication/data/auth_repository.
 import 'package:arcade_cashier/src/features/authentication/presentation/splash_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/dashboard_screen.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/manage_rooms_screen.dart';
+import 'package:arcade_cashier/src/features/tables/presentation/tables_dashboard_screen.dart';
+import 'package:arcade_cashier/src/features/tables/presentation/manage_tables_screen.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_dashboard_screen.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_history_screen.dart';
 import 'package:arcade_cashier/src/features/reports/presentation/reports_screen.dart';
@@ -29,7 +31,7 @@ GoRouter goRouter(Ref ref) {
       final isSplash = state.uri.path == '/splash';
 
       if (isSplash) {
-        return isLoggedIn ? AppRoutes.dashboard : AppRoutes.login;
+        return isLoggedIn ? AppRoutes.rooms : AppRoutes.login;
       }
 
       if (!isLoggedIn) {
@@ -37,7 +39,7 @@ GoRouter goRouter(Ref ref) {
       }
 
       if (isLoggingIn) {
-        return AppRoutes.dashboard;
+        return AppRoutes.rooms;
       }
 
       // Route guard for admin-only routes
@@ -47,8 +49,9 @@ GoRouter goRouter(Ref ref) {
 
       if (!isAdmin &&
           (path.startsWith(AppRoutes.analytics) ||
-              path == AppRoutes.manageRooms)) {
-        return AppRoutes.dashboard;
+              path == AppRoutes.manageRooms ||
+              path == AppRoutes.manageTables)) {
+        return AppRoutes.rooms;
       }
 
       return null;
@@ -67,14 +70,30 @@ GoRouter goRouter(Ref ref) {
           return ScaffoldWithNavigation(navigationShell: navigationShell);
         },
         branches: [
+          // Branch 0: Rooms (was Dashboard)
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.dashboard,
+                path: AppRoutes.rooms,
                 builder: (context, state) => const DashboardScreen(),
+              ),
+              // Alias for backward compatibility
+              GoRoute(
+                path: AppRoutes.dashboard,
+                redirect: (context, state) => AppRoutes.rooms,
               ),
             ],
           ),
+          // Branch 1: Tables (NEW)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.tables,
+                builder: (context, state) => const TablesDashboardScreen(),
+              ),
+            ],
+          ),
+          // Branch 2: Products (was Branch 1)
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -99,6 +118,7 @@ GoRouter goRouter(Ref ref) {
               ),
             ],
           ),
+          // Branch 5: Settings (was Branch 4)
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -108,6 +128,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'rooms',
                     builder: (context, state) => const ManageRoomsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'tables',
+                    builder: (context, state) => const ManageTablesScreen(),
                   ),
                 ],
               ),

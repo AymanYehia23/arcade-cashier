@@ -41,6 +41,23 @@ class SessionsController extends _$SessionsController {
     }
   }
 
+  Future<Session?> startTableSession({
+    required int tableId,
+  }) async {
+    state = const AsyncLoading();
+    try {
+      final session = await ref
+          .read(sessionsRepositoryProvider)
+          .startTableSession(tableId: tableId);
+      // Stream + DB trigger handle UI update automatically
+      state = const AsyncData(null);
+      return session;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      return null;
+    }
+  }
+
   Future<void> extendSession({
     required int sessionId,
     required int additionalMinutes,
@@ -118,6 +135,11 @@ class SessionsController extends _$SessionsController {
 @riverpod
 Future<Session?> activeSession(Ref ref, int roomId) {
   return ref.read(sessionsRepositoryProvider).getActiveSession(roomId);
+}
+
+@riverpod
+Future<Session?> activeTableSession(Ref ref, int tableId) {
+  return ref.read(sessionsRepositoryProvider).getActiveTableSession(tableId);
 }
 
 @riverpod

@@ -3,6 +3,7 @@ class DbTables {
   static const String sessions = 'sessions';
   static const String invoices = 'invoices';
   static const String rooms = 'rooms';
+  static const String tables = 'tables';
   static const String orders = 'orders';
   static const String orderItems = 'order_items';
   static const String sessionOrders = 'session_orders';
@@ -20,4 +21,10 @@ class SessionConstants {
 class RoomConstants {
   static const String occupied = 'occupied';
   static const String available = 'available';
+}
+
+class TableConstants {
+  static const String occupied = 'occupied';
+  static const String available = 'available';
+  static const String maintenance = 'maintenance';
 }

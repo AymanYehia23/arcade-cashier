@@ -1,20 +1,16 @@
-import 'dart:async';
-
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
-
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
 import 'package:arcade_cashier/src/features/billing/domain/session_bill.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/session_completion_controller.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/product_selection_grid.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
-import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
+import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
+import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
-import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_action_buttons.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_order_list.dart';
-import 'package:arcade_cashier/src/features/sessions/presentation/widgets/session_timer_widget.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
@@ -25,68 +21,29 @@ import 'package:arcade_cashier/src/features/invoices/presentation/invoice_previe
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
 
-class ActiveSessionDialog extends ConsumerStatefulWidget {
-  const ActiveSessionDialog({super.key, this.room, this.session})
-    : assert(room != null || session != null);
+class ActiveTableSessionDialog extends ConsumerStatefulWidget {
+  const ActiveTableSessionDialog({
+    super.key,
+    required this.table,
+    required this.session,
+  });
 
-  final Room? room;
-  final Session? session;
+  final CafeTable table;
+  final Session session;
 
   @override
-  ConsumerState<ActiveSessionDialog> createState() =>
-      _ActiveSessionDialogState();
+  ConsumerState<ActiveTableSessionDialog> createState() =>
+      _ActiveTableSessionDialogState();
 }
 
-class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
-  // Timer logic moved to SessionTimerWidget
+class _ActiveTableSessionDialogState
+    extends ConsumerState<ActiveTableSessionDialog> {
   final FocusNode _productGridFocusNode = FocusNode();
 
   @override
   void dispose() {
     _productGridFocusNode.dispose();
     super.dispose();
-  }
-
-  Future<void> _showExtendDialog(BuildContext context, int sessionId) async {
-    final loc = AppLocalizations.of(context)!;
-    return showDialog(
-      context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: Text(loc.extendTime),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Wrap(
-                spacing: 8,
-                children: [15, 30, 60]
-                    .map(
-                      (mins) => ActionChip(
-                        label: Text(loc.addMinutes(mins, loc.minutes)),
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                          ref
-                              .read(sessionsControllerProvider.notifier)
-                              .extendSession(
-                                sessionId: sessionId,
-                                additionalMinutes: mins,
-                              );
-                        },
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: Text(loc.cancel),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _showCompleteSessionDialog({
@@ -161,13 +118,13 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                             style: Theme.of(sbContext).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 12),
-                          // Summary Rows
+                          // Summary Rows (only orders for tables, no time cost)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(loc.subtotalWithColon),
                               Text(
-                                '${currentBill.subtotal.toStringAsFixed(2)} ${loc.egp}',
+                                '${currentBill.ordersTotal.toStringAsFixed(2)} ${loc.egp}',
                               ),
                             ],
                           ),
@@ -222,7 +179,9 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               ),
                               Text(
                                 '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
-                                style: Theme.of(sbContext).textTheme.titleLarge
+                                style: Theme.of(sbContext)
+                                    .textTheme
+                                    .titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(sbContext).primaryColor,
@@ -289,9 +248,10 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                             ); // Close complete session dialog
                             Navigator.of(
                               context,
-                            ).pop(); // Close ActiveSessionDialog
+                            ).pop(); // Close ActiveTableSessionDialog
 
-                            // Refresh invoices list (streams auto-update)
+                            // Refresh providers (stream auto-updates)
+                            ref.invalidate(tablesWithSessionsProvider);
                             ref.invalidate(invoicesPaginationProvider);
 
                             // Show Preview
@@ -373,10 +333,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
       }
     });
 
-    final sessionAsync = widget.room != null
-        ? ref.watch(activeSessionProvider(widget.room!.id))
-        : ref.watch(sessionByIdProvider(widget.session!.id));
-
+    final sessionAsync = ref.watch(sessionByIdProvider(widget.session.id));
     final completionState = ref.watch(sessionCompletionControllerProvider);
 
     return CallbackShortcuts(
@@ -414,7 +371,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
               vertical: 24,
             ),
             title: Text(
-              '${loc.activeSession} - ${widget.session?.isQuickOrder == true ? loc.quickOrder : widget.room?.name ?? loc.unknown}',
+              '${loc.activeSession} - ${widget.table.name}',
             ),
             content: SizedBox(
               width: isMobile ? constraints.maxWidth * 0.9 : 1000,
@@ -431,7 +388,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                   );
                   final ordersList = ordersAsync.valueOrNull ?? [];
 
-                  // Calculate Bill
+                  // Calculate Bill (for tables, timeCost is always 0)
                   final billingService = ref.watch(billingServiceProvider);
                   final bill = billingService.calculateSessionBill(
                     session,
@@ -459,14 +416,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
 
                   final sessionInfo = Column(
                     children: [
-                      if (!session.isQuickOrder) ...[
-                        SessionTimerWidget(
-                          session: session,
-                          onExtend: () =>
-                              _showExtendDialog(context, session.id),
-                        ),
-                        const Divider(),
-                      ],
+                      // No timer widget for tables
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -482,8 +432,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                         ),
                       ),
                       const Divider(),
-                      _BillSection(
-                        timeCost: bill.timeCost,
+                      _TableBillSection(
                         ordersTotal: bill.ordersTotal,
                         grandTotal: bill.totalAmount,
                         loc: loc,
@@ -542,28 +491,90 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                     orders,
                   );
 
-                  return SessionActionButtons(
-                    onCancel: () => Navigator.of(context).pop(),
-                    onCheckout: () => _showCompleteSessionDialog(
-                      context: context,
-                      session: session,
-                      orders: orders,
-                      initialBill: bill,
-                    ),
-                    isCheckoutLoading: completionState.isLoading,
-                    isQuickOrder: session.isQuickOrder,
-                    isPaused: session.status == SessionStatus.paused,
-                    onTogglePause: () {
-                      if (session.status == SessionStatus.paused) {
-                        ref
-                            .read(sessionsControllerProvider.notifier)
-                            .resumeSession(session.id, session.roomId);
-                      } else {
-                        ref
-                            .read(sessionsControllerProvider.notifier)
-                            .pauseSession(session.id, session.roomId);
-                      }
-                    },
+                  final hasOrders = bill.ordersTotal > 0;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Cancel Session button (only show if no orders)
+                      if (!hasOrders)
+                        TextButton.icon(
+                          onPressed: completionState.isLoading
+                              ? null
+                              : () async {
+                                  // Confirm cancellation
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (dialogContext) => AlertDialog(
+                                      title: Text(loc.cancelSession),
+                                      content: Text(
+                                        loc.cancelSessionConfirmation,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(dialogContext, false),
+                                          child: Text(loc.no),
+                                        ),
+                                        FilledButton(
+                                          onPressed: () =>
+                                              Navigator.pop(dialogContext, true),
+                                          child: Text(loc.yes),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirmed == true && context.mounted) {
+                                    await ref
+                                        .read(sessionsControllerProvider.notifier)
+                                        .stopSession(sessionId: session.id);
+
+                                    if (context.mounted) {
+                                      // Refresh tables (stream auto-updates)
+                                      ref.invalidate(tablesWithSessionsProvider);
+
+                                      // Close dialog
+                                      Navigator.of(context).pop();
+                                    }
+                                  }
+                                },
+                          icon: const Icon(Icons.close),
+                          label: Text(loc.cancelSession),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+
+                      const Spacer(),
+
+                      // Close button
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(loc.close),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // Checkout button (disabled if no orders)
+                      FilledButton(
+                        onPressed: hasOrders && !completionState.isLoading
+                            ? () => _showCompleteSessionDialog(
+                                  context: context,
+                                  session: session,
+                                  orders: orders,
+                                  initialBill: bill,
+                                )
+                            : null,
+                        child: completionState.isLoading
+                            ? const SizedBox(
+                                height: 16,
+                                width: 16,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : Text(loc.checkout),
+                      ),
+                    ],
                   );
                 },
                 orElse: () => TextButton(
@@ -579,14 +590,12 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
   }
 }
 
-class _BillSection extends StatelessWidget {
-  final double timeCost;
+class _TableBillSection extends StatelessWidget {
   final double ordersTotal;
   final double grandTotal;
   final AppLocalizations loc;
 
-  const _BillSection({
-    required this.timeCost,
+  const _TableBillSection({
     required this.ordersTotal,
     required this.grandTotal,
     required this.loc,
@@ -598,13 +607,7 @@ class _BillSection extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(loc.timeCost),
-              Text('${timeCost.toStringAsFixed(2)} ${loc.egp}'),
-            ],
-          ),
+          // No time cost for tables
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

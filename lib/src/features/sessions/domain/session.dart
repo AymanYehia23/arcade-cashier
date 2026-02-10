@@ -15,6 +15,7 @@ class Session with _$Session {
   const factory Session({
     required int id,
     @JsonKey(name: 'room_id') int? roomId,
+    @JsonKey(name: 'table_id') int? tableId,
     @JsonKey(name: 'start_time') required DateTime startTime,
     @JsonKey(name: 'end_time') DateTime? endTime,
     @JsonKey(name: 'applied_hourly_rate') required double appliedHourlyRate,
@@ -34,7 +35,10 @@ class Session with _$Session {
     int totalPausedDurationSeconds,
   }) = _Session;
 
-  bool get isQuickOrder => roomId == null;
+  // Helper getters to determine session type
+  bool get isRoomSession => roomId != null;
+  bool get isTableSession => tableId != null;
+  bool get isQuickOrder => roomId == null && tableId == null;
 
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);
