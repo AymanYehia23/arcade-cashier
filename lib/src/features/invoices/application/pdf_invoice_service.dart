@@ -38,26 +38,27 @@ class PdfInvoiceService {
     required SessionBill bill,
     required AppLocalizations loc,
   }) async {
-    final pdfBytes = await generateInvoicePdf(
+    final (:bytes, :format) = await _buildInvoicePdf(
       invoice: invoice,
-      session: session,
       orders: orders,
       bill: bill,
       loc: loc,
     );
 
-    await _printPdf(pdfBytes, invoice.invoiceNumber);
+    await _printPdf(bytes, invoice.invoiceNumber, format);
 
-    return pdfBytes;
+    return bytes;
   }
 
-  Future<void> _printPdf(Uint8List pdfBytes, String invoiceNumber) async {
-    // Check if platform supports direct printing
+  Future<void> _printPdf(
+    Uint8List pdfBytes,
+    String invoiceNumber,
+    PdfPageFormat format,
+  ) async {
     final isDesktop =
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
     if (isDesktop) {
-      // Desktop: Use printer settings and direct print
       final printerRepo = _ref.read(printerRepositoryProvider);
       final defaultPrinterUrl = await printerRepo.loadDefaultPrinter();
       Printer? targetPrinter;
@@ -69,30 +70,30 @@ class PdfInvoiceService {
             (p) => p.url == defaultPrinterUrl,
           );
         } catch (_) {
-          // Printer not found in current list, fallback to dialog
           targetPrinter = null;
         }
       }
 
       if (targetPrinter != null) {
-        // Use OS PDF rendering (not printer driver) to preserve Arabic text
-        // usePrinterSettings: false ensures proper text shaping
+        // usePrinterSettings: false → OS PDF renderer (not printer driver),
+        // preserving Arabic text shaping.
+        // format holds the actual computed page height (not double.infinity),
+        // so the OS renderer knows exact receipt dimensions.
         await Printing.directPrintPdf(
           printer: targetPrinter,
-          onLayout: (format) async => pdfBytes,
+          onLayout: (_) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
-          format: PdfPageFormat.roll80,
+          format: format,
           usePrinterSettings: false,
         );
       } else {
         await Printing.layoutPdf(
-          onLayout: (format) async => pdfBytes,
+          onLayout: (_) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
-          format: PdfPageFormat.roll80,
+          format: format,
         );
       }
     } else {
-      // Mobile/Web: Share PDF for download or printing via system dialog
       await Printing.sharePdf(
         bytes: pdfBytes,
         filename: 'Invoice-$invoiceNumber.pdf',
@@ -100,28 +101,41 @@ class PdfInvoiceService {
     }
   }
 
-  /// Generates a PDF invoice optimized for 80mm thermal printer roll.
+  /// Public wrapper — returns only bytes for callers that don't need the format.
   Future<Uint8List> generateInvoicePdf({
     required Invoice invoice,
-    required Session
-    session, // Still needed for specific session details if any, but duration comes from bill
+    required Session session,
+    required List<Order> orders,
+    required SessionBill bill,
+    required AppLocalizations loc,
+  }) async {
+    final (:bytes, format: _) = await _buildInvoicePdf(
+      invoice: invoice,
+      orders: orders,
+      bill: bill,
+      loc: loc,
+    );
+    return bytes;
+  }
+
+  /// Builds the PDF and also returns the actual computed page format.
+  /// After pdf.save(), the pdf package replaces double.infinity height
+  /// with the real content height — we capture that for use in printing.
+  Future<({Uint8List bytes, PdfPageFormat format})> _buildInvoicePdf({
+    required Invoice invoice,
     required List<Order> orders,
     required SessionBill bill,
     required AppLocalizations loc,
   }) async {
     final pdf = pw.Document();
 
-    // Build invoice items list
     final items = _buildInvoiceItems(orders: orders, bill: bill, loc: loc);
 
-    // Load bundled Cairo font for Arabic + English support
     final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
     final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
     final font = pw.Font.ttf(fontData);
     final fontBold = pw.Font.ttf(fontBoldData);
 
-    // Ensure Arabic text direction is handled implicitly by the font/renderer or explicitly if needed.
-    // pdf package's textDirection depends on ThemeData.
     final textDirection = loc.localeName == 'ar'
         ? pw.TextDirection.rtl
         : pw.TextDirection.ltr;
@@ -156,7 +170,10 @@ class PdfInvoiceService {
       ),
     );
 
-    return pdf.save();
+    final bytes = await pdf.save();
+    final actualFormat = pdf.document.pdfPageList.pages.first.pageFormat;
+
+    return (bytes: bytes, format: actualFormat);
   }
 
   List<InvoiceItem> _buildInvoiceItems({
