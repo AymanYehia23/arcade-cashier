@@ -64,19 +64,18 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
 
   /// Reads the actual page dimensions from the PDF bytes.
   /// At 72 DPI, 1 raster pixel = 1 PDF point, giving exact page size.
-  /// Falls back to roll80 if rasterization fails.
+  /// Falls back to roll80 if rasterization fails or times out.
   Future<PdfPageFormat> _readPageFormat() async {
     try {
-      await for (final page in Printing.raster(
+      final page = await Printing.raster(
         widget.pdfBytes,
         pages: [0],
         dpi: 72,
-      )) {
-        return PdfPageFormat(
-          page.width.toDouble(),
-          page.height.toDouble(),
-        );
-      }
+      ).first.timeout(const Duration(seconds: 5));
+      return PdfPageFormat(
+        page.width.toDouble(),
+        page.height.toDouble(),
+      );
     } catch (_) {}
     return PdfPageFormat.roll80;
   }
@@ -167,7 +166,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
                 allowSharing: false,
                 useActions: false,
                 pdfFileName: '${widget.invoice.invoiceNumber}.pdf',
-                loadingWidget: const SizedBox.shrink(),
+                loadingWidget: const Center(child: CircularProgressIndicator()),
                 maxPageWidth: 400,
               ),
             ),
