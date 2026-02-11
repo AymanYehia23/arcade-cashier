@@ -62,6 +62,25 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
     }
   }
 
+  /// Reads the actual page dimensions from the PDF bytes.
+  /// At 72 DPI, 1 raster pixel = 1 PDF point, giving exact page size.
+  /// Falls back to roll80 if rasterization fails.
+  Future<PdfPageFormat> _readPageFormat() async {
+    try {
+      await for (final page in Printing.raster(
+        widget.pdfBytes,
+        pages: [0],
+        dpi: 72,
+      )) {
+        return PdfPageFormat(
+          page.width.toDouble(),
+          page.height.toDouble(),
+        );
+      }
+    } catch (_) {}
+    return PdfPageFormat.roll80;
+  }
+
   Future<void> _handlePrint() async {
     if (_isPrinting) return;
     final loc = AppLocalizations.of(context)!;
@@ -87,21 +106,25 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
         }
       }
 
+      // Extract actual page dimensions from the PDF (1pt = 1px at 72 DPI).
+      // This avoids passing double.infinity height (causes one-line print)
+      // or omitting format (causes A4 scale-down that makes receipt tiny).
+      final format = await _readPageFormat();
+
       if (targetPrinter != null) {
-        // Use OS PDF rendering (not printer driver) to preserve Arabic text shaping
+        // usePrinterSettings: false → OS PDF renderer, preserves Arabic shaping.
         await Printing.directPrintPdf(
           printer: targetPrinter,
           onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
-          format: PdfPageFormat.roll80,
+          format: format,
           usePrinterSettings: false,
         );
       } else {
-        // Fallback to system print dialog
         await Printing.layoutPdf(
           onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
-          format: PdfPageFormat.roll80,
+          format: format,
         );
       }
     } catch (e) {
