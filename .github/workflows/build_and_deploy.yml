@@ -43,11 +43,20 @@ jobs:
       - name: ⚙️ Enable Windows Desktop
         run: flutter config --enable-windows-desktop
 
-      # Step 4: Install project dependencies
+      # Step 4: Create .env file from GitHub Secrets
+      #         The .env is listed as an asset in pubspec.yaml but is gitignored.
+      #         We populate it with secrets so flutter_dotenv can read them at runtime.
+      - name: 📄 Create .env file
+        run: |
+          echo SUPABASE_URL=${{ secrets.SUPABASE_URL }} > .env
+          echo SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} >> .env
+        shell: cmd
+
+      # Step 5: Install project dependencies
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      # Step 5: Build the Windows release binary
+      # Step 6: Build the Windows release binary
       #         Passes Supabase credentials via --dart-define from GitHub Secrets
       - name: 🔨 Build Windows Release
         run: >
@@ -55,12 +64,12 @@ jobs:
           --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }}
           --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
-      # Step 6: Zip the release output folder for upload
+      # Step 7: Zip the release output folder for upload
       - name: 📦 Zip Release Build
         run: Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "Windows-Release-Build.zip"
         shell: pwsh
 
-      # Step 7: Upload the zipped build as a GitHub Actions artifact
+      # Step 8: Upload the zipped build as a GitHub Actions artifact
       - name: ⬆️ Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -89,11 +98,19 @@ jobs:
         with:
           channel: stable
 
-      # Step 3: Install project dependencies
+      # Step 3: Create .env file from GitHub Secrets
+      #         The .env is listed as an asset in pubspec.yaml but is gitignored.
+      #         We populate it with secrets so flutter_dotenv can read them at runtime.
+      - name: 📄 Create .env file
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+
+      # Step 4: Install project dependencies
       - name: 📦 Install dependencies
         run: flutter pub get
 
-      # Step 4: Build the Flutter Web release
+      # Step 5: Build the Flutter Web release
       #         --base-href must match your GitHub Pages repo name
       #         Replace <YOUR_REPO_NAME> with your actual repository name if different
       #         Passes Supabase credentials via --dart-define from GitHub Secrets
@@ -104,12 +121,12 @@ jobs:
           --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }}
           --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
-      # Step 5: Add .nojekyll file to prevent GitHub Pages from processing
+      # Step 6: Add .nojekyll file to prevent GitHub Pages from processing
       #         files with underscores (essential for Flutter web builds)
       - name: 📄 Add .nojekyll file
         run: touch build/web/.nojekyll
 
-      # Step 6: Deploy the build/web directory to the gh-pages branch
+      # Step 7: Deploy the build/web directory to the gh-pages branch
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
