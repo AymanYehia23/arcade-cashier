@@ -1,8 +1,0 @@
-Analyzing arcade-cashier...                                     
-
-  error • Undefined name 'invoiceHistoryStreamProvider' • lib/src/features/invoices/presentation/session_completion_controller.dart:72:22 • undefined_identifier
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/src/features/orders/presentation/product_selection_grid.dart:101:37 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/src/features/products/presentation/widgets/product_dashboard_card.dart:34:33 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/src/features/products/presentation/widgets/product_dashboard_card.dart:51:37 • deprecated_member_use
-   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/src/features/products/presentation/widgets/product_dashboard_card.dart:149:34 • deprecated_member_use
-
