@@ -7,7 +7,7 @@ import 'package:arcade_cashier/src/features/settings/data/printer_repository.dar
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pdf/pdf.dart';
+import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:printing/printing.dart';
 
 /// Dialog that displays a PDF preview with print and save functionality.
@@ -87,21 +87,25 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
         }
       }
 
+      // Pre-rasterize the PDF at the printer's native DPI for crisp output
+      final printBytes = await PdfInvoiceService.rasterizePdfForPrint(
+        widget.pdfBytes,
+      );
+
       if (targetPrinter != null) {
-        // Use OS PDF rendering (not printer driver) to preserve Arabic text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
-          onLayout: (_) async => widget.pdfBytes,
+          onLayout: (_) async => printBytes,
           name: widget.invoice.invoiceNumber,
-          format: PdfPageFormat.roll80,
+          format: PdfInvoiceService.thermalFormat,
           usePrinterSettings: false,
         );
       } else {
         // Fallback to system print dialog
         await Printing.layoutPdf(
-          onLayout: (_) async => widget.pdfBytes,
+          onLayout: (_) async => printBytes,
           name: widget.invoice.invoiceNumber,
-          format: PdfPageFormat.roll80,
+          format: PdfInvoiceService.thermalFormat,
         );
       }
     } catch (e) {
@@ -146,6 +150,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
                 pdfFileName: '${widget.invoice.invoiceNumber}.pdf',
                 loadingWidget: const SizedBox.shrink(),
                 maxPageWidth: 400,
+                dpi: 203, // Star TSP700ii native resolution
               ),
             ),
             // Custom action buttons

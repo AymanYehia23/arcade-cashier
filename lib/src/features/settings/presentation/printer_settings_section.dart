@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:printing/printing.dart';
+import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -82,6 +83,7 @@ class _PrinterSettingsSectionState
     final doc = pw.Document();
     doc.addPage(
       pw.Page(
+        pageFormat: PdfInvoiceService.thermalFormat,
         build: (pw.Context context) {
           return pw.Center(child: pw.Text(l10n.testPrintMessage));
         },
@@ -91,6 +93,7 @@ class _PrinterSettingsSectionState
     await Printing.directPrintPdf(
       printer: _selectedPrinter!,
       onLayout: (PdfPageFormat format) async => doc.save(),
+      format: PdfInvoiceService.thermalFormat,
     );
   }
 
