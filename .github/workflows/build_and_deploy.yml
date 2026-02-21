@@ -1,0 +1,117 @@
+# =============================================================================
+# CI/CD Pipeline: Build Windows Desktop App & Deploy Web to GitHub Pages
+# =============================================================================
+# This workflow handles two parallel jobs:
+#   1. Building a Windows .exe release and uploading it as an artifact.
+#   2. Building the Flutter Web app and deploying it to GitHub Pages.
+# =============================================================================
+
+name: Build & Deploy
+
+# -----------------------------------------------------------------------------
+# Triggers
+# -----------------------------------------------------------------------------
+on:
+  # Allow manual triggering from the GitHub Actions UI
+  workflow_dispatch:
+
+  # Automatically run on pushes to the main branch
+  push:
+    branches:
+      - main
+
+# =============================================================================
+# Job 1: Build Windows Desktop Application
+# =============================================================================
+jobs:
+  build-windows:
+    name: 🖥️ Build Windows Desktop App
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Flutter SDK (stable channel)
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      # Step 3: Enable Windows desktop support
+      - name: ⚙️ Enable Windows Desktop
+        run: flutter config --enable-windows-desktop
+
+      # Step 4: Install project dependencies
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # Step 5: Build the Windows release binary
+      #         Passes Supabase credentials via --dart-define from GitHub Secrets
+      - name: 🔨 Build Windows Release
+        run: >
+          flutter build windows --release
+          --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+
+      # Step 6: Zip the release output folder for upload
+      - name: 📦 Zip Release Build
+        run: Compress-Archive -Path "build\windows\x64\runner\Release\*" -DestinationPath "Windows-Release-Build.zip"
+        shell: pwsh
+
+      # Step 7: Upload the zipped build as a GitHub Actions artifact
+      - name: ⬆️ Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Windows-Release-Build
+          path: Windows-Release-Build.zip
+
+  # =============================================================================
+  # Job 2: Build & Deploy Flutter Web to GitHub Pages
+  # =============================================================================
+  deploy-web:
+    name: 🌐 Build & Deploy Web to GitHub Pages
+    runs-on: ubuntu-latest
+
+    # Required permissions to push to the gh-pages branch
+    permissions:
+      contents: write
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Flutter SDK (stable channel)
+      - name: 🐦 Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      # Step 3: Install project dependencies
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      # Step 4: Build the Flutter Web release
+      #         --base-href must match your GitHub Pages repo name
+      #         Replace <YOUR_REPO_NAME> with your actual repository name if different
+      #         Passes Supabase credentials via --dart-define from GitHub Secrets
+      - name: 🔨 Build Web Release
+        run: >
+          flutter build web --release
+          --base-href "/arcade-cashier/"
+          --dart-define=SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          --dart-define=SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+
+      # Step 5: Add .nojekyll file to prevent GitHub Pages from processing
+      #         files with underscores (essential for Flutter web builds)
+      - name: 📄 Add .nojekyll file
+        run: touch build/web/.nojekyll
+
+      # Step 6: Deploy the build/web directory to the gh-pages branch
+      - name: 🚀 Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web

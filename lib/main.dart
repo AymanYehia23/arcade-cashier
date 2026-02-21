@@ -13,7 +13,11 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint("Note: .env file not found (Normal for Web Release)");
+  }
   usePathUrlStrategy();
   if (!kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.windows ||
@@ -37,9 +41,14 @@ void main() async {
   final http.Client? httpClient = kDebugMode ? LoggingClient() : null;
   final sharedPrefs = await SharedPreferences.getInstance();
 
+  const webUrl = String.fromEnvironment('SUPABASE_URL');
+  const webKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: webUrl.isNotEmpty ? webUrl : (dotenv.env['SUPABASE_URL'] ?? ''),
+    anonKey: webKey.isNotEmpty
+        ? webKey
+        : (dotenv.env['SUPABASE_ANON_KEY'] ?? ''),
     httpClient: httpClient,
   );
 

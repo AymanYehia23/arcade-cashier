@@ -28,6 +28,16 @@ PdfInvoiceService pdfInvoiceService(Ref ref) {
 class PdfInvoiceService {
   final Ref _ref;
 
+  /// Custom page format for 80mm thermal receipt paper.
+  /// Width: 80mm (standard thermal roll).
+  /// Height: infinite (continuous roll, no page breaks).
+  /// Margins: 2mm on each side (tight fit for thermal printers).
+  static const thermalFormat = PdfPageFormat(
+    80 * PdfPageFormat.mm,
+    double.infinity,
+    marginAll: 2 * PdfPageFormat.mm,
+  );
+
   PdfInvoiceService(this._ref);
 
   /// Generates invoice PDF and handles printing (silent if default set, else dialog).
@@ -56,6 +66,12 @@ class PdfInvoiceService {
     final isDesktop =
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
+    // On desktop, pre-rasterize the PDF at the printer's native DPI to bypass
+    // pdfium's poor Arabic font rendering on Windows.
+    final printBytes = isDesktop
+        ? await rasterizePdfForPrint(pdfBytes)
+        : pdfBytes;
+
     if (isDesktop) {
       // Desktop: Use printer settings and direct print
       final printerRepo = _ref.read(printerRepositoryProvider);
@@ -75,29 +91,52 @@ class PdfInvoiceService {
       }
 
       if (targetPrinter != null) {
-        // Use OS PDF rendering (not printer driver) to preserve Arabic text
-        // usePrinterSettings: false ensures proper text shaping
         await Printing.directPrintPdf(
           printer: targetPrinter,
-          onLayout: (format) async => pdfBytes,
+          onLayout: (format) async => printBytes,
           name: 'Invoice-$invoiceNumber',
-          format: PdfPageFormat.roll80,
+          format: thermalFormat,
           usePrinterSettings: false,
         );
       } else {
         await Printing.layoutPdf(
-          onLayout: (format) async => pdfBytes,
+          onLayout: (format) async => printBytes,
           name: 'Invoice-$invoiceNumber',
-          format: PdfPageFormat.roll80,
+          format: thermalFormat,
         );
       }
     } else {
       // Mobile/Web: Share PDF for download or printing via system dialog
       await Printing.sharePdf(
-        bytes: pdfBytes,
+        bytes: printBytes,
         filename: 'Invoice-$invoiceNumber.pdf',
       );
     }
+  }
+
+  /// DPI matching the Star TSP700ii thermal printer's native resolution.
+  static const _printDpi = 203.0;
+
+  /// Pre-rasterizes a vector PDF at [_printDpi] and wraps the resulting
+  /// images back into a new PDF. This ensures crisp output by avoiding
+  /// pdfium's poor handling of custom embedded fonts on Windows.
+  static Future<Uint8List> rasterizePdfForPrint(Uint8List vectorPdf) async {
+    final imagePdf = pw.Document();
+
+    await for (final page in Printing.raster(vectorPdf, dpi: _printDpi)) {
+      final pngBytes = await page.toPng();
+      final image = pw.MemoryImage(pngBytes);
+
+      imagePdf.addPage(
+        pw.Page(
+          pageFormat: thermalFormat,
+          build: (context) =>
+              pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
+        ),
+      );
+    }
+
+    return imagePdf.save();
   }
 
   /// Generates a PDF invoice optimized for 80mm thermal printer roll.
@@ -128,8 +167,7 @@ class PdfInvoiceService {
 
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.roll80,
-        margin: const pw.EdgeInsets.all(8),
+        pageFormat: thermalFormat,
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(
@@ -393,8 +431,7 @@ class PdfInvoiceService {
 
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.roll80,
-        margin: const pw.EdgeInsets.all(8),
+        pageFormat: thermalFormat,
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(
