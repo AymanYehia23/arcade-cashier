@@ -114,8 +114,9 @@ class PdfInvoiceService {
     }
   }
 
-  /// DPI matching the Star TSP700ii thermal printer's native resolution.
-  static const _printDpi = 203.0;
+  /// High DPI for rasterization. Over-sampling at 600 DPI ensures crisp output
+  /// when the printer downsamples to its native resolution (e.g., 203 DPI).
+  static const _printDpi = 600.0;
 
   /// Pre-rasterizes a vector PDF at [_printDpi] and wraps the resulting
   /// images back into a new PDF. This ensures crisp output by avoiding
@@ -123,15 +124,28 @@ class PdfInvoiceService {
   static Future<Uint8List> rasterizePdfForPrint(Uint8List vectorPdf) async {
     final imagePdf = pw.Document();
 
+    // Page format for the image PDF: same width as thermal paper, NO margins.
+    // The rasterized image already has the original margins baked in.
+    const imagePageWidth = 80 * PdfPageFormat.mm;
+
     await for (final page in Printing.raster(vectorPdf, dpi: _printDpi)) {
       final pngBytes = await page.toPng();
       final image = pw.MemoryImage(pngBytes);
 
+      // Compute the image height in PDF points to maintain aspect ratio.
+      final aspectRatio = page.height / page.width;
+      final imageHeight = imagePageWidth * aspectRatio;
+
       imagePdf.addPage(
         pw.Page(
-          pageFormat: thermalFormat,
-          build: (context) =>
-              pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
+          pageFormat: PdfPageFormat(imagePageWidth, imageHeight),
+          margin: pw.EdgeInsets.zero,
+          build: (context) => pw.Image(
+            image,
+            width: imagePageWidth,
+            height: imageHeight,
+            fit: pw.BoxFit.fill,
+          ),
         ),
       );
     }
