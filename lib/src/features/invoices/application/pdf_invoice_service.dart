@@ -122,10 +122,8 @@ class PdfInvoiceService {
     // Build invoice items list
     final items = _buildInvoiceItems(orders: orders, bill: bill, loc: loc);
 
-    // Load bundled Cairo font for Arabic + English support
-    final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
+    // Load Cairo Bold font for thermal printing clarity
     final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
-    final font = pw.Font.ttf(fontData);
     final fontBold = pw.Font.ttf(fontBoldData);
 
     final textDirection = loc.localeName == 'ar'
@@ -136,10 +134,10 @@ class PdfInvoiceService {
       pw.Page(
         pageFormat: thermalFormat,
         margin: const pw.EdgeInsets.symmetric(
-          horizontal: 7 * PdfPageFormat.mm,
+          horizontal: 9 * PdfPageFormat.mm,
           vertical: 5 * PdfPageFormat.mm,
         ),
-        theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+        theme: pw.ThemeData.withFont(base: fontBold, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
@@ -423,10 +421,8 @@ class PdfInvoiceService {
   ) async {
     final pdf = pw.Document();
 
-    // Load bundled Cairo font for Arabic + English support
-    final fontData = await rootBundle.load('fonts/Cairo-Regular.ttf');
+    // Load Cairo Bold font for thermal printing clarity
     final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
-    final font = pw.Font.ttf(fontData);
     final fontBold = pw.Font.ttf(fontBoldData);
 
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
@@ -440,10 +436,10 @@ class PdfInvoiceService {
       pw.Page(
         pageFormat: thermalFormat,
         margin: const pw.EdgeInsets.symmetric(
-          horizontal: 7 * PdfPageFormat.mm,
+          horizontal: 9 * PdfPageFormat.mm,
           vertical: 5 * PdfPageFormat.mm,
         ),
-        theme: pw.ThemeData.withFont(base: font, bold: fontBold),
+        theme: pw.ThemeData.withFont(base: fontBold, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.stretch,
