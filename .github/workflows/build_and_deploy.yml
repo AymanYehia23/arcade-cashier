@@ -126,6 +126,12 @@ jobs:
       - name: 📄 Add .nojekyll file
         run: touch build/web/.nojekyll
 
+      # Step 6.5: Copy index.html to 404.html for SPA deep-link support
+      #           GitHub Pages serves 404.html for any unknown path, which
+      #           boots the Flutter app and lets go_router handle the route.
+      - name: 🔀 Create 404.html for SPA routing
+        run: cp build/web/index.html build/web/404.html
+
       # Step 7: Deploy the build/web directory to the gh-pages branch
       - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
