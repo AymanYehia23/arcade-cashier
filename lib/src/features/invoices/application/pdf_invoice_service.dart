@@ -66,12 +66,6 @@ class PdfInvoiceService {
     final isDesktop =
         !kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
-    // On desktop, pre-rasterize the PDF at the printer's native DPI to bypass
-    // pdfium's poor Arabic font rendering on Windows.
-    final printBytes = isDesktop
-        ? await rasterizePdfForPrint(pdfBytes)
-        : pdfBytes;
-
     if (isDesktop) {
       // Desktop: Use printer settings and direct print
       final printerRepo = _ref.read(printerRepositoryProvider);
@@ -93,14 +87,14 @@ class PdfInvoiceService {
       if (targetPrinter != null) {
         await Printing.directPrintPdf(
           printer: targetPrinter,
-          onLayout: (format) async => printBytes,
+          onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
           format: thermalFormat,
           usePrinterSettings: false,
         );
       } else {
         await Printing.layoutPdf(
-          onLayout: (format) async => printBytes,
+          onLayout: (format) async => pdfBytes,
           name: 'Invoice-$invoiceNumber',
           format: thermalFormat,
         );
@@ -108,49 +102,10 @@ class PdfInvoiceService {
     } else {
       // Mobile/Web: Share PDF for download or printing via system dialog
       await Printing.sharePdf(
-        bytes: printBytes,
+        bytes: pdfBytes,
         filename: 'Invoice-$invoiceNumber.pdf',
       );
     }
-  }
-
-  /// High DPI for rasterization. Over-sampling at 600 DPI ensures crisp output
-  /// when the printer downsamples to its native resolution (e.g., 203 DPI).
-  static const _printDpi = 600.0;
-
-  /// Pre-rasterizes a vector PDF at [_printDpi] and wraps the resulting
-  /// images back into a new PDF. This ensures crisp output by avoiding
-  /// pdfium's poor handling of custom embedded fonts on Windows.
-  static Future<Uint8List> rasterizePdfForPrint(Uint8List vectorPdf) async {
-    final imagePdf = pw.Document();
-
-    // Page format for the image PDF: same width as thermal paper, NO margins.
-    // The rasterized image already has the original margins baked in.
-    const imagePageWidth = 80 * PdfPageFormat.mm;
-
-    await for (final page in Printing.raster(vectorPdf, dpi: _printDpi)) {
-      final pngBytes = await page.toPng();
-      final image = pw.MemoryImage(pngBytes);
-
-      // Compute the image height in PDF points to maintain aspect ratio.
-      final aspectRatio = page.height / page.width;
-      final imageHeight = imagePageWidth * aspectRatio;
-
-      imagePdf.addPage(
-        pw.Page(
-          pageFormat: PdfPageFormat(imagePageWidth, imageHeight),
-          margin: pw.EdgeInsets.zero,
-          build: (context) => pw.Image(
-            image,
-            width: imagePageWidth,
-            height: imageHeight,
-            fit: pw.BoxFit.fill,
-          ),
-        ),
-      );
-    }
-
-    return imagePdf.save();
   }
 
   /// Generates a PDF invoice optimized for 80mm thermal printer roll.
@@ -173,8 +128,6 @@ class PdfInvoiceService {
     final font = pw.Font.ttf(fontData);
     final fontBold = pw.Font.ttf(fontBoldData);
 
-    // Ensure Arabic text direction is handled implicitly by the font/renderer or explicitly if needed.
-    // pdf package's textDirection depends on ThemeData.
     final textDirection = loc.localeName == 'ar'
         ? pw.TextDirection.rtl
         : pw.TextDirection.ltr;
@@ -182,6 +135,10 @@ class PdfInvoiceService {
     pdf.addPage(
       pw.Page(
         pageFormat: thermalFormat,
+        margin: const pw.EdgeInsets.symmetric(
+          horizontal: 7 * PdfPageFormat.mm,
+          vertical: 5 * PdfPageFormat.mm,
+        ),
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(
@@ -290,27 +247,54 @@ class PdfInvoiceService {
   pw.Widget _buildItemsTable(List<InvoiceItem> items, AppLocalizations loc) {
     return pw.Table(
       columnWidths: {
-        0: const pw.FlexColumnWidth(3),
-        1: const pw.FlexColumnWidth(1),
-        2: const pw.FlexColumnWidth(1.5),
+        0: const pw.FlexColumnWidth(3), // Item Name
+        1: const pw.FlexColumnWidth(1.5), // Quantity
+        2: const pw.FlexColumnWidth(1.5), // Amount
       },
       children: [
         // Header row
         pw.TableRow(
           children: [
-            pw.Text(
-              loc.tableItem,
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 2,
+                vertical: 2,
+              ),
+              child: pw.Text(
+                loc.tableItem,
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  fontSize: 9,
+                ),
+              ),
             ),
-            pw.Text(
-              loc.tableQty,
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
-              textAlign: pw.TextAlign.center,
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 2,
+                vertical: 2,
+              ),
+              child: pw.Text(
+                loc.tableQty,
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  fontSize: 9,
+                ),
+                textAlign: pw.TextAlign.center,
+              ),
             ),
-            pw.Text(
-              loc.tableAmount,
-              style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
-              textAlign: pw.TextAlign.right,
+            pw.Padding(
+              padding: const pw.EdgeInsets.symmetric(
+                horizontal: 2,
+                vertical: 2,
+              ),
+              child: pw.Text(
+                loc.tableAmount,
+                style: pw.TextStyle(
+                  fontWeight: pw.FontWeight.bold,
+                  fontSize: 9,
+                ),
+                textAlign: pw.TextAlign.right,
+              ),
             ),
           ],
         ),
@@ -319,14 +303,20 @@ class PdfInvoiceService {
           (item) => pw.TableRow(
             children: [
               pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(vertical: 2),
+                padding: const pw.EdgeInsets.symmetric(
+                  horizontal: 2,
+                  vertical: 2,
+                ),
                 child: pw.Text(
                   item.name,
                   style: const pw.TextStyle(fontSize: 9),
                 ),
               ),
               pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(vertical: 2),
+                padding: const pw.EdgeInsets.symmetric(
+                  horizontal: 2,
+                  vertical: 2,
+                ),
                 child: pw.Text(
                   '${item.quantity}',
                   style: const pw.TextStyle(fontSize: 9),
@@ -334,7 +324,10 @@ class PdfInvoiceService {
                 ),
               ),
               pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(vertical: 2),
+                padding: const pw.EdgeInsets.symmetric(
+                  horizontal: 2,
+                  vertical: 2,
+                ),
                 child: pw.Text(
                   item.totalPrice.toStringAsFixed(2),
                   style: const pw.TextStyle(fontSize: 9),
@@ -446,6 +439,10 @@ class PdfInvoiceService {
     pdf.addPage(
       pw.Page(
         pageFormat: thermalFormat,
+        margin: const pw.EdgeInsets.symmetric(
+          horizontal: 7 * PdfPageFormat.mm,
+          vertical: 5 * PdfPageFormat.mm,
+        ),
         theme: pw.ThemeData.withFont(base: font, bold: fontBold),
         textDirection: textDirection,
         build: (context) => pw.Column(

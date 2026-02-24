@@ -87,15 +87,10 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
         }
       }
 
-      // Pre-rasterize the PDF at the printer's native DPI for crisp output
-      final printBytes = await PdfInvoiceService.rasterizePdfForPrint(
-        widget.pdfBytes,
-      );
-
       if (targetPrinter != null) {
         await Printing.directPrintPdf(
           printer: targetPrinter,
-          onLayout: (_) async => printBytes,
+          onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
           format: PdfInvoiceService.thermalFormat,
           usePrinterSettings: false,
@@ -103,7 +98,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
       } else {
         // Fallback to system print dialog
         await Printing.layoutPdf(
-          onLayout: (_) async => printBytes,
+          onLayout: (_) async => widget.pdfBytes,
           name: widget.invoice.invoiceNumber,
           format: PdfInvoiceService.thermalFormat,
         );
