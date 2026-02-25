@@ -56,6 +56,22 @@ jobs:
       - name: 📦 Install dependencies
         run: flutter pub get
 
+      # Step 5.5: Patch printing plugin to disable text anti-aliasing (for thermal printers)
+      #           pdfium renders anti-aliased text by default, which gets dithered into
+      #           fuzzy dots on 1-bit thermal printers. This adds FPDF_RENDER_NO_SMOOTHTEXT.
+      - name: 🔧 Patch printing plugin for thermal printer
+        run: |
+          $pubCache = "$env:LOCALAPPDATA\Pub\Cache\hosted\pub.dev"
+          $printingDir = Get-ChildItem -Path $pubCache -Directory -Filter "printing-*" | Select-Object -First 1
+          $file = Join-Path $printingDir.FullName "windows\print_job.cpp"
+          if (Test-Path $file) {
+            (Get-Content $file) -replace 'FPDF_ANNOT \| FPDF_PRINTING\)', 'FPDF_ANNOT | FPDF_PRINTING | FPDF_RENDER_NO_SMOOTHTEXT)' | Set-Content $file
+            Write-Host "Patched $file with FPDF_RENDER_NO_SMOOTHTEXT"
+          } else {
+            Write-Host "WARNING: print_job.cpp not found at $file"
+          }
+        shell: pwsh
+
       # Step 6: Build the Windows release binary
       #         Passes Supabase credentials via --dart-define from GitHub Secrets
       - name: 🔨 Build Windows Release
