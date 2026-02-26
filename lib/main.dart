@@ -16,14 +16,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Load the appropriate env file based on the backend toggle.
-  // Both files are gitignored — no secrets ever live in source code.
-  final envFile = AppEnv.useTestBackend ? '.env.test' : '.env';
+  // Skip if --dart-define already provided credentials (CI/CD builds).
   bool envLoaded = false;
-  try {
-    await dotenv.load(fileName: envFile);
-    envLoaded = true;
-  } catch (e) {
-    debugPrint("Note: $envFile not found (normal for CI/CD builds)");
+  if (AppEnv.supabaseUrl.isEmpty) {
+    final envFile = AppEnv.useTestBackend ? '.env.test' : '.env';
+    try {
+      await dotenv.load(fileName: envFile);
+      envLoaded = true;
+    } catch (e) {
+      debugPrint("Note: $envFile not found (normal for CI/CD builds)");
+    }
   }
 
   usePathUrlStrategy();
