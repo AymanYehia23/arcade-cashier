@@ -282,5 +282,6 @@
   "paymentDigital": "إلكتروني",
   "source": "المصدر",
   "paymentMethodLabel": "طريقة الدفع",
-  "clear": "مسح"
+  "clear": "مسح",
+  "skipShift": "تخطي"
 }

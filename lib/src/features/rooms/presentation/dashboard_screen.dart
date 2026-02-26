@@ -1,6 +1,7 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
+import 'package:arcade_cashier/src/core/app_router.dart';
 //import 'package:arcade_cashier/src/features/reports/presentation/shift_report_dialog.dart';
 import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 import 'package:arcade_cashier/src/features/shifts/presentation/end_shift_dialog.dart';
@@ -48,7 +49,24 @@ class DashboardScreen extends ConsumerWidget {
                 final shiftAsync = ref.watch(currentShiftProvider);
                 return shiftAsync.maybeWhen(
                   data: (shift) {
-                    if (shift == null) return const SizedBox.shrink();
+                    if (shift == null) {
+                      // Admin skipped — show a Start Shift button
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: ActionChip(
+                          avatar: const Icon(Icons.play_arrow, size: 18),
+                          label: Text(
+                            loc.startShift,
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          onPressed: () {
+                            ref.read(adminSkippedShiftProvider.notifier).state =
+                                false;
+                            context.go(AppRoutes.startShift);
+                          },
+                        ),
+                      );
+                    }
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: ActionChip(

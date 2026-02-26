@@ -911,4 +911,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clear => 'C';
+
+  @override
+  String get skipShift => 'Skip';
 }

@@ -443,5 +443,6 @@
   "paymentDigital": "DIGITAL",
   "source": "Source",
   "paymentMethodLabel": "Payment Method",
-  "clear": "C"
+  "clear": "C",
+  "skipShift": "Skip"
 }

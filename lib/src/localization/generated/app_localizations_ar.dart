@@ -911,4 +911,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get clear => 'مسح';
+
+  @override
+  String get skipShift => 'تخطي';
 }

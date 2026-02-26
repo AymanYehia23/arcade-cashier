@@ -12,7 +12,7 @@ class AppEnv {
   AppEnv._();
 
   /// 🔴 Set to `true` for Test backend, `false` for Production.
-  static const bool useTestBackend = true;
+  static const bool useTestBackend = false;
 
   // ---------------------------------------------------------------------------
   // Test credentials — loaded from gitignored `.env.test` in main.dart.

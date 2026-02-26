@@ -1,5 +1,7 @@
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
+import 'package:arcade_cashier/src/core/app_router.dart';
+import 'package:arcade_cashier/src/features/authentication/data/auth_repository.dart';
 import 'package:arcade_cashier/src/features/shifts/data/cashier_repository.dart';
 import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 import 'package:arcade_cashier/src/features/shifts/domain/cashier.dart';
@@ -26,6 +28,22 @@ class _StartShiftScreenState extends ConsumerState<StartShiftScreen> {
   String? _pinError;
   final _cashController = TextEditingController();
   bool _isStarting = false;
+  bool _isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAdmin();
+  }
+
+  Future<void> _checkAdmin() async {
+    final user = await ref.read(authRepositoryProvider).getCurrentUser();
+    if (mounted) {
+      setState(() {
+        _isAdmin = user?.isAdmin ?? false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -151,8 +169,8 @@ class _StartShiftScreenState extends ConsumerState<StartShiftScreen> {
                     ),
                   ),
                 ),
-                // Manage Cashiers button — visible on step 0
-                if (_step == 0) ...[
+                // Manage Cashiers button — visible on step 0 for admin only
+                if (_step == 0 && _isAdmin) ...[
                   const SizedBox(height: 16),
                   TextButton.icon(
                     onPressed: () {
@@ -164,6 +182,25 @@ class _StartShiftScreenState extends ConsumerState<StartShiftScreen> {
                     label: Text(loc.manageCashiers),
                   ),
                 ],
+                // Skip button — visible only for admin users
+                if (_isAdmin) ...[
+                  const SizedBox(height: 8),
+                  TextButton.icon(
+                    onPressed: () {
+                      ref.read(adminSkippedShiftProvider.notifier).state = true;
+                      context.go(AppRoutes.rooms);
+                    },
+                    icon: const Icon(Icons.skip_next),
+                    label: Text(loc.skipShift),
+                  ),
+                ],
+                // Logout button
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: () => ref.read(authRepositoryProvider).signOut(),
+                  icon: const Icon(Icons.logout),
+                  label: Text(loc.logout),
+                ),
               ],
             ),
           ),

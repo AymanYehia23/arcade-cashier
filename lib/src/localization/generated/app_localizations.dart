@@ -1789,6 +1789,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'C'**
   String get clear;
+
+  /// No description provided for @skipShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get skipShift;
 }
 
 class _AppLocalizationsDelegate

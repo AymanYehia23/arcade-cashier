@@ -26,6 +26,9 @@ import 'package:rxdart/rxdart.dart';
 
 part 'app_router.g.dart';
 
+/// Tracks whether an admin explicitly skipped starting a shift.
+final adminSkippedShiftProvider = StateProvider<bool>((ref) => false);
+
 @riverpod
 GoRouter goRouter(Ref ref) {
   final authRepository = ref.watch(authRepositoryProvider);
@@ -54,20 +57,25 @@ GoRouter goRouter(Ref ref) {
         return isLoggingIn ? null : AppRoutes.login;
       }
 
-      if (isLoggingIn) {
-        return AppRoutes.rooms;
-      }
-
       // --- Shift lock: If logged in but no open shift, redirect to start-shift ---
       final shiftAsync = ref.read(currentShiftProvider);
       final hasOpenShift = shiftAsync.valueOrNull != null;
 
-      if (!hasOpenShift &&
-          !isStartShift &&
-          state.uri.path != AppRoutes.manageCashiers) {
-        // Allow router to settle — if shift is still loading, don't redirect
-        if (shiftAsync.isLoading) return null;
-        return AppRoutes.startShift;
+      if (!hasOpenShift && !isStartShift) {
+        // Allow manage cashiers page
+        if (state.uri.path == AppRoutes.manageCashiers) {
+          // fall through
+        } else {
+          // Admin can skip the shift lock only after explicitly pressing Skip
+          final adminSkipped = ref.read(adminSkippedShiftProvider);
+          if (!adminSkipped) {
+            return AppRoutes.startShift;
+          }
+        }
+      }
+
+      if (isLoggingIn) {
+        return hasOpenShift ? AppRoutes.rooms : AppRoutes.startShift;
       }
 
       if (hasOpenShift && isStartShift) {
