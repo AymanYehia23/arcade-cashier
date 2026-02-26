@@ -107,6 +107,7 @@ class SessionsController extends _$SessionsController {
     String? customerName,
     String shopName = 'Arcade',
     int? shiftId,
+    String? sourceName,
   }) async {
     state = const AsyncLoading();
     try {
@@ -122,6 +123,7 @@ class SessionsController extends _$SessionsController {
             customerName: customerName,
             shopName: shopName,
             shiftId: shiftId,
+            sourceName: sourceName,
           );
       state = const AsyncData(null);
       return invoiceId;

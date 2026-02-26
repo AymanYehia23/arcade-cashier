@@ -1759,6 +1759,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No invoices for this shift'**
   String get noInvoicesForShift;
+
+  /// No description provided for @digital.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital'**
+  String get digital;
+
+  /// No description provided for @paymentDigital.
+  ///
+  /// In en, this message translates to:
+  /// **'DIGITAL'**
+  String get paymentDigital;
+
+  /// No description provided for @source.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get source;
+
+  /// No description provided for @paymentMethodLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Method'**
+  String get paymentMethodLabel;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'C'**
+  String get clear;
 }
 
 class _AppLocalizationsDelegate

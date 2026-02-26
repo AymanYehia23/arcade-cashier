@@ -27,6 +27,7 @@ _$InvoiceImpl _$$InvoiceImplFromJson(Map<String, dynamic> json) =>
       customerId: (json['customer_id'] as num?)?.toInt(),
       customerName: json['customer_name'] as String?,
       shiftId: (json['shift_id'] as num?)?.toInt(),
+      sourceName: json['source_name'] as String?,
     );
 
 Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
@@ -44,4 +45,5 @@ Map<String, dynamic> _$$InvoiceImplToJson(_$InvoiceImpl instance) =>
       'customer_id': instance.customerId,
       'customer_name': instance.customerName,
       'shift_id': instance.shiftId,
+      'source_name': instance.sourceName,
     };

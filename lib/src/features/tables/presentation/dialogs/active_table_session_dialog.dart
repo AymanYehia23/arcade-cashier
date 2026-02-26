@@ -1,4 +1,6 @@
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+import 'package:arcade_cashier/src/features/invoices/domain/payment_method.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/widgets/payment_method_selector.dart';
 import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
@@ -60,6 +62,7 @@ class _ActiveTableSessionDialogState
     // Variable to hold the bill as it gets recalculated
     SessionBill currentBill = initialBill;
     Customer? selectedCustomer;
+    PaymentMethod selectedPaymentMethod = PaymentMethod.cash;
 
     await showDialog<void>(
       context: context,
@@ -189,6 +192,20 @@ class _ActiveTableSessionDialogState
                               ),
                             ],
                           ),
+
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+
+                          // Section 3: Payment Method
+                          PaymentMethodSelector(
+                            selected: selectedPaymentMethod,
+                            onSelectionChanged: (method) {
+                              setState(() {
+                                selectedPaymentMethod = method;
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -208,10 +225,11 @@ class _ActiveTableSessionDialogState
                               discountAmount: currentBill.discountAmount,
                               discountPercentage:
                                   currentBill.discountPercentage,
-                              paymentMethod: 'cash',
+                              paymentMethod: selectedPaymentMethod.name,
                               customerId: selectedCustomer?.id,
                               customerName: selectedCustomer?.name,
                               shopName: 'Arcade',
+                              sourceName: '${loc.table} ${widget.table.name}',
                               shiftId: ref
                                   .read(currentShiftProvider)
                                   .valueOrNull

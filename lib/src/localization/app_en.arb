@@ -438,5 +438,10 @@
   "notes": "Notes",
   "invoicesForShift": "Invoices",
   "failedToLoadInvoices": "Failed to load invoices",
-  "noInvoicesForShift": "No invoices for this shift"
+  "noInvoicesForShift": "No invoices for this shift",
+  "digital": "Digital",
+  "paymentDigital": "DIGITAL",
+  "source": "Source",
+  "paymentMethodLabel": "Payment Method",
+  "clear": "C"
 }

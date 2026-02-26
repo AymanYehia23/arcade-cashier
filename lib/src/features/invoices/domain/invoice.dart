@@ -24,6 +24,7 @@ class Invoice with _$Invoice {
     @JsonKey(name: 'customer_id') int? customerId,
     @JsonKey(name: 'customer_name') String? customerName,
     @JsonKey(name: 'shift_id') int? shiftId,
+    @JsonKey(name: 'source_name') String? sourceName,
   }) = _Invoice;
 
   const Invoice._();

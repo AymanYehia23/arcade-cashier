@@ -896,4 +896,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noInvoicesForShift => 'لا توجد فواتير لهذه الوردية';
+
+  @override
+  String get digital => 'إلكتروني';
+
+  @override
+  String get paymentDigital => 'إلكتروني';
+
+  @override
+  String get source => 'المصدر';
+
+  @override
+  String get paymentMethodLabel => 'طريقة الدفع';
+
+  @override
+  String get clear => 'مسح';
 }

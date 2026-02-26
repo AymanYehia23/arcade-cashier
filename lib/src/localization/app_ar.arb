@@ -277,5 +277,10 @@
   "notes": "ملاحظات",
   "invoicesForShift": "الفواتير",
   "failedToLoadInvoices": "فشل تحميل الفواتير",
-  "noInvoicesForShift": "لا توجد فواتير لهذه الوردية"
+  "noInvoicesForShift": "لا توجد فواتير لهذه الوردية",
+  "digital": "إلكتروني",
+  "paymentDigital": "إلكتروني",
+  "source": "المصدر",
+  "paymentMethodLabel": "طريقة الدفع",
+  "clear": "مسح"
 }

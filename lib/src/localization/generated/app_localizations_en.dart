@@ -896,4 +896,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noInvoicesForShift => 'No invoices for this shift';
+
+  @override
+  String get digital => 'Digital';
+
+  @override
+  String get paymentDigital => 'DIGITAL';
+
+  @override
+  String get source => 'Source';
+
+  @override
+  String get paymentMethodLabel => 'Payment Method';
+
+  @override
+  String get clear => 'C';
 }

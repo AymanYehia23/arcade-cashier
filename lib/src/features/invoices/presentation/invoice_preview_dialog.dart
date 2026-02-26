@@ -132,7 +132,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
         child: Column(
           children: [
             _DialogHeader(
-              invoiceNumber: widget.invoice.invoiceNumber,
+              invoice: widget.invoice,
               loc: loc,
               onClose: () => Navigator.of(context).pop(),
             ),
@@ -203,28 +203,83 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
 
 class _DialogHeader extends StatelessWidget {
   const _DialogHeader({
-    required this.invoiceNumber,
+    required this.invoice,
     required this.loc,
     required this.onClose,
   });
 
-  final String invoiceNumber;
+  final Invoice invoice;
   final AppLocalizations loc;
   final VoidCallback onClose;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final paymentMethodRaw = invoice.paymentMethod.toLowerCase();
+    final (
+      String label,
+      IconData icon,
+      Color color,
+    ) = switch (paymentMethodRaw) {
+      'cash' => (loc.paymentCash, Icons.money, Colors.green),
+      'digital' => (loc.paymentDigital, Icons.credit_card, Colors.blue),
+      'card' => (loc.paymentCard, Icons.credit_card, Colors.blue),
+      _ => (
+        paymentMethodRaw.toUpperCase(),
+        Icons.payment,
+        theme.colorScheme.onSurface,
+      ),
+    };
+
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Text(
-              '${loc.invoiceNumber}: $invoiceNumber',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${loc.invoiceNumber}: ${invoice.invoiceNumber}',
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+              IconButton(icon: const Icon(Icons.close), onPressed: onClose),
+            ],
           ),
-          IconButton(icon: const Icon(Icons.close), onPressed: onClose),
+          const SizedBox(height: 8),
+          // Source row
+          if (invoice.sourceName != null && invoice.sourceName!.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.place,
+                    size: 16,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${loc.source}: ${invoice.sourceName}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          // Payment method row
+          Row(
+            children: [
+              Icon(icon, size: 16, color: color),
+              const SizedBox(width: 4),
+              Text(
+                '${loc.paymentMethodLabel}: $label',
+                style: theme.textTheme.bodySmall?.copyWith(color: color),
+              ),
+            ],
+          ),
         ],
       ),
     );

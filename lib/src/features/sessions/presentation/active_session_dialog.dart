@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/invoices/domain/payment_method.dart';
+import 'package:arcade_cashier/src/features/invoices/presentation/widgets/payment_method_selector.dart';
+
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
@@ -103,6 +106,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     // Variable to hold the bill as it gets recalculated
     SessionBill currentBill = initialBill;
     Customer? selectedCustomer;
+    PaymentMethod selectedPaymentMethod = PaymentMethod.cash;
 
     await showDialog<void>(
       context: context,
@@ -232,6 +236,20 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               ),
                             ],
                           ),
+
+                          const SizedBox(height: 16),
+                          const Divider(),
+                          const SizedBox(height: 16),
+
+                          // Section 3: Payment Method
+                          PaymentMethodSelector(
+                            selected: selectedPaymentMethod,
+                            onSelectionChanged: (method) {
+                              setState(() {
+                                selectedPaymentMethod = method;
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -251,10 +269,13 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                               discountAmount: currentBill.discountAmount,
                               discountPercentage:
                                   currentBill.discountPercentage,
-                              paymentMethod: 'cash',
+                              paymentMethod: selectedPaymentMethod.name,
                               customerId: selectedCustomer?.id,
                               customerName: selectedCustomer?.name,
                               shopName: 'Arcade',
+                              sourceName: widget.room != null
+                                  ? '${loc.room} ${widget.room!.name}'
+                                  : loc.quickOrder,
                               shiftId: ref
                                   .read(currentShiftProvider)
                                   .valueOrNull

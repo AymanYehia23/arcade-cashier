@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 
 /// A secure 4-digit PIN entry keypad widget.
 /// Displays dots for each entered digit and a numeric grid.
@@ -76,9 +77,21 @@ class _PinKeypadWidgetState extends State<PinKeypadWidget>
     setState(() => _pin = '');
   }
 
+  /// Converts a Western digit character to its Arabic-Indic equivalent.
+  String _localizeDigit(String digit, bool isArabic) {
+    if (!isArabic) return digit;
+    const western = '0123456789';
+    const arabic = '٠١٢٣٤٥٦٧٨٩';
+    final index = western.indexOf(digit);
+    return index >= 0 ? arabic[index] : digit;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final loc = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -147,13 +160,13 @@ class _PinKeypadWidgetState extends State<PinKeypadWidget>
           width: 280,
           child: Column(
             children: [
-              _buildRow(['1', '2', '3']),
+              _buildRow(['1', '2', '3'], isArabic, isRtl, loc),
               const SizedBox(height: 12),
-              _buildRow(['4', '5', '6']),
+              _buildRow(['4', '5', '6'], isArabic, isRtl, loc),
               const SizedBox(height: 12),
-              _buildRow(['7', '8', '9']),
+              _buildRow(['7', '8', '9'], isArabic, isRtl, loc),
               const SizedBox(height: 12),
-              _buildRow(['C', '0', '⌫']),
+              _buildRow(['C', '0', '⌫'], isArabic, isRtl, loc),
             ],
           ),
         ),
@@ -161,21 +174,30 @@ class _PinKeypadWidgetState extends State<PinKeypadWidget>
     );
   }
 
-  Widget _buildRow(List<String> keys) {
+  Widget _buildRow(
+    List<String> keys,
+    bool isArabic,
+    bool isRtl,
+    AppLocalizations loc,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: keys.map((key) {
         if (key == '⌫') {
           return _KeyButton(
             onTap: _onBackspace,
-            child: const Icon(Icons.backspace_outlined, size: 22),
+            child: Icon(
+              isRtl ? Icons.backspace_outlined : Icons.backspace_outlined,
+              size: 22,
+              textDirection: isRtl ? TextDirection.ltr : null,
+            ),
           );
         }
         if (key == 'C') {
           return _KeyButton(
             onTap: _onClear,
             child: Text(
-              key,
+              isArabic ? loc.clear : key,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
             ),
           );
@@ -183,7 +205,7 @@ class _PinKeypadWidgetState extends State<PinKeypadWidget>
         return _KeyButton(
           onTap: () => _onDigitPressed(key),
           child: Text(
-            key,
+            _localizeDigit(key, isArabic),
             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
           ),
         );

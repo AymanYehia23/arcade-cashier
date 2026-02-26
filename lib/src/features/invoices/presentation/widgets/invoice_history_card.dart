@@ -18,16 +18,25 @@ class InvoiceHistoryCard extends ConsumerWidget {
     final controllerState = ref.watch(invoiceReprintControllerProvider);
     final theme = Theme.of(context);
 
-    // Localize payment method
+    // Determine payment method label, icon, and color
     final paymentMethodRaw = invoice.paymentMethod
         .toString()
         .split('.')
         .last
         .toLowerCase();
-    final paymentMethodLabel = switch (paymentMethodRaw) {
-      'cash' => loc.paymentCash,
-      'card' => loc.paymentCard,
-      _ => paymentMethodRaw.toUpperCase(),
+    final (
+      String label,
+      IconData icon,
+      Color color,
+    ) = switch (paymentMethodRaw) {
+      'cash' => (loc.paymentCash, Icons.money, Colors.green),
+      'digital' => (loc.paymentDigital, Icons.credit_card, Colors.blue),
+      'card' => (loc.paymentCard, Icons.credit_card, Colors.blue),
+      _ => (
+        paymentMethodRaw.toUpperCase(),
+        Icons.payment,
+        theme.colorScheme.onSecondaryContainer,
+      ),
     };
 
     return Card(
@@ -57,22 +66,56 @@ class InvoiceHistoryCard extends ConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      paymentMethodLabel,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Source name chip
+                      if (invoice.sourceName != null &&
+                          invoice.sourceName!.isNotEmpty)
+                        Container(
+                          margin: const EdgeInsetsDirectional.only(end: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            invoice.sourceName!,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onTertiaryContainer,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      // Payment method badge with icon
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(icon, size: 14, color: color),
+                            const SizedBox(width: 4),
+                            Text(
+                              label,
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: color,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
