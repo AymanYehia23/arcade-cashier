@@ -843,4 +843,57 @@ class AppLocalizationsAr extends AppLocalizations {
   String currentCashier(String name) {
     return 'كاشير: $name';
   }
+
+  @override
+  String get shiftReports => 'تقارير الورديات';
+
+  @override
+  String shiftNumber(int id) {
+    return 'وردية #$id';
+  }
+
+  @override
+  String get failedToLoadShiftReports => 'فشل تحميل تقارير الورديات';
+
+  @override
+  String get noShiftReportsYet => 'لا توجد تقارير ورديات بعد';
+
+  @override
+  String get totalRevenue => 'إجمالي الإيرادات';
+
+  @override
+  String get variance => 'الفرق';
+
+  @override
+  String get startingCash => 'رصيد البداية';
+
+  @override
+  String get cashDropped => 'النقدية المودعة';
+
+  @override
+  String get cashRevenue => 'إيرادات نقدية';
+
+  @override
+  String get digitalRevenue => 'إيرادات إلكترونية';
+
+  @override
+  String get expectedEndingCash => 'الرصيد المتوقع';
+
+  @override
+  String get actualEndingCash => 'الرصيد الفعلي';
+
+  @override
+  String get cashLeftInDrawerLabel => 'النقدية المتبقية في الدرج';
+
+  @override
+  String get notes => 'ملاحظات';
+
+  @override
+  String get invoicesForShift => 'الفواتير';
+
+  @override
+  String get failedToLoadInvoices => 'فشل تحميل الفواتير';
+
+  @override
+  String get noInvoicesForShift => 'لا توجد فواتير لهذه الوردية';
 }

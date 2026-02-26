@@ -260,5 +260,22 @@
   "active": "نشط",
   "inactive": "غير نشط",
   "back": "رجوع",
-  "currentCashier": "كاشير: {name}"
+  "currentCashier": "كاشير: {name}",
+  "shiftReports": "تقارير الورديات",
+  "shiftNumber": "وردية #{id}",
+  "failedToLoadShiftReports": "فشل تحميل تقارير الورديات",
+  "noShiftReportsYet": "لا توجد تقارير ورديات بعد",
+  "totalRevenue": "إجمالي الإيرادات",
+  "variance": "الفرق",
+  "startingCash": "رصيد البداية",
+  "cashDropped": "النقدية المودعة",
+  "cashRevenue": "إيرادات نقدية",
+  "digitalRevenue": "إيرادات إلكترونية",
+  "expectedEndingCash": "الرصيد المتوقع",
+  "actualEndingCash": "الرصيد الفعلي",
+  "cashLeftInDrawerLabel": "النقدية المتبقية في الدرج",
+  "notes": "ملاحظات",
+  "invoicesForShift": "الفواتير",
+  "failedToLoadInvoices": "فشل تحميل الفواتير",
+  "noInvoicesForShift": "لا توجد فواتير لهذه الوردية"
 }

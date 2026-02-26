@@ -1,6 +1,8 @@
 import 'package:arcade_cashier/src/constants/db_constants.dart';
 import 'package:arcade_cashier/src/core/supabase_provider.dart';
+import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/shifts/domain/shift.dart';
+import 'package:arcade_cashier/src/features/shifts/domain/shift_report_summary.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -87,6 +89,26 @@ class ShiftRepository {
         })
         .eq('id', shiftId);
   }
+
+  /// Fetch all shift reports from the shift_reports_summary view.
+  Future<List<ShiftReportSummary>> fetchShiftReports() async {
+    final data = await _supabase
+        .from(DbTables.shiftReportsSummary)
+        .select()
+        .order('opened_at', ascending: false);
+
+    return (data as List).map((e) => ShiftReportSummary.fromJson(e)).toList();
+  }
+
+  /// Fetch all invoices for a specific shift.
+  Future<List<Invoice>> fetchInvoicesForShift(int shiftId) async {
+    final data = await _supabase
+        .from(DbTables.invoices)
+        .select()
+        .eq('shift_id', shiftId);
+
+    return (data as List).map((e) => Invoice.fromJson(e)).toList();
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -99,4 +121,16 @@ ShiftRepository shiftRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 Stream<Shift?> currentShift(Ref ref) {
   return ref.watch(shiftRepositoryProvider).watchCurrentOpenShift();
+}
+
+/// Fetches the list of all shift report summaries.
+@riverpod
+Future<List<ShiftReportSummary>> shiftReports(Ref ref) {
+  return ref.watch(shiftRepositoryProvider).fetchShiftReports();
+}
+
+/// Fetches all invoices for a given shift ID.
+@riverpod
+Future<List<Invoice>> shiftInvoices(Ref ref, int shiftId) {
+  return ref.watch(shiftRepositoryProvider).fetchInvoicesForShift(shiftId);
 }

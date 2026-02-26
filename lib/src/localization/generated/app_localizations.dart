@@ -1657,6 +1657,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cashier: {name}'**
   String currentCashier(String name);
+
+  /// No description provided for @shiftReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift Reports'**
+  String get shiftReports;
+
+  /// No description provided for @shiftNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Shift #{id}'**
+  String shiftNumber(int id);
+
+  /// No description provided for @failedToLoadShiftReports.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load shift reports'**
+  String get failedToLoadShiftReports;
+
+  /// No description provided for @noShiftReportsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No shift reports yet'**
+  String get noShiftReportsYet;
+
+  /// No description provided for @totalRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Revenue'**
+  String get totalRevenue;
+
+  /// No description provided for @variance.
+  ///
+  /// In en, this message translates to:
+  /// **'Variance'**
+  String get variance;
+
+  /// No description provided for @startingCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting Cash'**
+  String get startingCash;
+
+  /// No description provided for @cashDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Dropped'**
+  String get cashDropped;
+
+  /// No description provided for @cashRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Revenue'**
+  String get cashRevenue;
+
+  /// No description provided for @digitalRevenue.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Revenue'**
+  String get digitalRevenue;
+
+  /// No description provided for @expectedEndingCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected Ending Cash'**
+  String get expectedEndingCash;
+
+  /// No description provided for @actualEndingCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual Ending Cash'**
+  String get actualEndingCash;
+
+  /// No description provided for @cashLeftInDrawerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Left in Drawer'**
+  String get cashLeftInDrawerLabel;
+
+  /// No description provided for @notes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get notes;
+
+  /// No description provided for @invoicesForShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoices'**
+  String get invoicesForShift;
+
+  /// No description provided for @failedToLoadInvoices.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load invoices'**
+  String get failedToLoadInvoices;
+
+  /// No description provided for @noInvoicesForShift.
+  ///
+  /// In en, this message translates to:
+  /// **'No invoices for this shift'**
+  String get noInvoicesForShift;
 }
 
 class _AppLocalizationsDelegate

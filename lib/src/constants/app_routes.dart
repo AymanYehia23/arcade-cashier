@@ -12,4 +12,6 @@ class AppRoutes {
   static const String analytics = '/analytics';
   static const String startShift = '/start-shift';
   static const String manageCashiers = '/settings/cashiers';
+  static const String shiftReports = '/shift-reports';
+  static const String shiftDetails = '/shift-reports/details';
 }

@@ -10,6 +10,7 @@ class DbTables {
   static const String profiles = 'profiles';
   static const String cashiers = 'cashiers';
   static const String shifts = 'shifts';
+  static const String shiftReportsSummary = 'shift_reports_summary';
 }
 
 class SessionConstants {

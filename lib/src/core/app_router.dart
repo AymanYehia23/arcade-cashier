@@ -15,6 +15,9 @@ import 'package:arcade_cashier/src/features/reports/presentation/reports_screen.
 import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
 import 'package:arcade_cashier/src/features/shifts/presentation/start_shift_screen.dart';
 import 'package:arcade_cashier/src/features/shifts/presentation/manage_cashiers_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/presentation/shifts_history_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/presentation/shift_details_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/domain/shift_report_summary.dart';
 import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 
 import 'package:arcade_cashier/src/utils/go_router_refresh_stream.dart';
@@ -98,6 +101,17 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.startShift,
         builder: (context, state) => const StartShiftScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.shiftReports,
+        builder: (context, state) => const ShiftsHistoryScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.shiftDetails,
+        builder: (context, state) {
+          final report = state.extra as ShiftReportSummary;
+          return ShiftDetailsScreen(report: report);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

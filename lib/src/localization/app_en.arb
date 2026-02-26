@@ -414,5 +414,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "shiftReports": "Shift Reports",
+  "shiftNumber": "Shift #{id}",
+  "@shiftNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "failedToLoadShiftReports": "Failed to load shift reports",
+  "noShiftReportsYet": "No shift reports yet",
+  "totalRevenue": "Total Revenue",
+  "variance": "Variance",
+  "startingCash": "Starting Cash",
+  "cashDropped": "Cash Dropped",
+  "cashRevenue": "Cash Revenue",
+  "digitalRevenue": "Digital Revenue",
+  "expectedEndingCash": "Expected Ending Cash",
+  "actualEndingCash": "Actual Ending Cash",
+  "cashLeftInDrawerLabel": "Cash Left in Drawer",
+  "notes": "Notes",
+  "invoicesForShift": "Invoices",
+  "failedToLoadInvoices": "Failed to load invoices",
+  "noInvoicesForShift": "No invoices for this shift"
 }

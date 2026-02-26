@@ -843,4 +843,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String currentCashier(String name) {
     return 'Cashier: $name';
   }
+
+  @override
+  String get shiftReports => 'Shift Reports';
+
+  @override
+  String shiftNumber(int id) {
+    return 'Shift #$id';
+  }
+
+  @override
+  String get failedToLoadShiftReports => 'Failed to load shift reports';
+
+  @override
+  String get noShiftReportsYet => 'No shift reports yet';
+
+  @override
+  String get totalRevenue => 'Total Revenue';
+
+  @override
+  String get variance => 'Variance';
+
+  @override
+  String get startingCash => 'Starting Cash';
+
+  @override
+  String get cashDropped => 'Cash Dropped';
+
+  @override
+  String get cashRevenue => 'Cash Revenue';
+
+  @override
+  String get digitalRevenue => 'Digital Revenue';
+
+  @override
+  String get expectedEndingCash => 'Expected Ending Cash';
+
+  @override
+  String get actualEndingCash => 'Actual Ending Cash';
+
+  @override
+  String get cashLeftInDrawerLabel => 'Cash Left in Drawer';
+
+  @override
+  String get notes => 'Notes';
+
+  @override
+  String get invoicesForShift => 'Invoices';
+
+  @override
+  String get failedToLoadInvoices => 'Failed to load invoices';
+
+  @override
+  String get noInvoicesForShift => 'No invoices for this shift';
 }

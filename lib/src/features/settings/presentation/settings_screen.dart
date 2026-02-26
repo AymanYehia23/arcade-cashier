@@ -56,6 +56,12 @@ class SettingsScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () => context.push(AppRoutes.manageCashiers),
               ),
+              ListTile(
+                leading: const Icon(Icons.assignment),
+                title: Text(loc.shiftReports),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.push(AppRoutes.shiftReports),
+              ),
               const Divider(),
             ],
             const PrinterSettingsSection(),
