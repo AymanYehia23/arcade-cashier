@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/constants/app_env.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:arcade_cashier/src/app.dart';
 import 'package:flutter/foundation.dart';
@@ -13,11 +14,18 @@ import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load the appropriate env file based on the backend toggle.
+  // Both files are gitignored — no secrets ever live in source code.
+  final envFile = AppEnv.useTestBackend ? '.env.test' : '.env';
+  bool envLoaded = false;
   try {
-    await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: envFile);
+    envLoaded = true;
   } catch (e) {
-    debugPrint("Note: .env file not found (Normal for Web Release)");
+    debugPrint("Note: $envFile not found (normal for CI/CD builds)");
   }
+
   usePathUrlStrategy();
   if (!kIsWeb &&
       (defaultTargetPlatform == TargetPlatform.windows ||
@@ -41,14 +49,19 @@ void main() async {
   final http.Client? httpClient = kDebugMode ? LoggingClient() : null;
   final sharedPrefs = await SharedPreferences.getInstance();
 
-  const webUrl = String.fromEnvironment('SUPABASE_URL');
-  const webKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+  // Credential priority:
+  //   1. AppEnv (--dart-define for CI/CD, or useTestBackend flag)
+  //   2. dotenv values from envFile — only accessed if load() succeeded
+  String resolvedUrl = AppEnv.supabaseUrl;
+  String resolvedKey = AppEnv.supabaseAnonKey;
+  if (resolvedUrl.isEmpty && envLoaded) {
+    resolvedUrl = dotenv.env['SUPABASE_URL'] ?? '';
+    resolvedKey = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+  }
 
   await Supabase.initialize(
-    url: webUrl.isNotEmpty ? webUrl : (dotenv.env['SUPABASE_URL'] ?? ''),
-    anonKey: webKey.isNotEmpty
-        ? webKey
-        : (dotenv.env['SUPABASE_ANON_KEY'] ?? ''),
+    url: resolvedUrl,
+    anonKey: resolvedKey,
     httpClient: httpClient,
   );
 
