@@ -64,7 +64,11 @@ class _StartShiftScreenState extends ConsumerState<StartShiftScreen> {
     try {
       await ref
           .read(shiftRepositoryProvider)
-          .startShift(cashierId: _selectedCashier!.id!, startingCash: cash);
+          .startShift(
+            cashierId: _selectedCashier!.id!,
+            startingCash: cash,
+            cashierName: _selectedCashier!.name,
+          );
       // Router redirect will automatically unlock the app
     } catch (e) {
       if (mounted) {

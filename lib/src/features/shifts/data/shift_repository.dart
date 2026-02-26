@@ -53,6 +53,7 @@ class ShiftRepository {
   Future<Shift> startShift({
     required int cashierId,
     required double startingCash,
+    required String cashierName,
   }) async {
     final data = await _supabase
         .from(DbTables.shifts)
@@ -61,6 +62,7 @@ class ShiftRepository {
           'status': 'open',
           'opened_at': DateTime.now().toUtc().toIso8601String(),
           'starting_cash': startingCash,
+          'cashier_name': cashierName,
         })
         .select()
         .single();
