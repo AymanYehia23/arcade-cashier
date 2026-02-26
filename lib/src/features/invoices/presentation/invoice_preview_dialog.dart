@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+
 import 'package:arcade_cashier/src/features/invoices/data/invoices_repository.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
@@ -161,10 +163,7 @@ class _InvoicePreviewDialogState extends ConsumerState<InvoicePreviewDialog> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
+                            child: LogoLoadingIndicator(size: 20),
                           )
                         : const Icon(Icons.print, color: Colors.white),
                   ),

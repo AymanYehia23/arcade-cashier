@@ -1,5 +1,6 @@
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/constants/app_sizes.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
 import 'package:arcade_cashier/src/features/products/application/products_search_provider.dart';
@@ -134,8 +135,7 @@ class ProductsDashboardScreen extends ConsumerWidget {
                       ],
                     );
                   },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                  loading: () => const Center(child: LogoLoadingIndicator()),
                   error: (e, st) => ErrorStateWidget(
                     message: getUserFriendlyErrorMessage(e, context),
                     onRetry: () {

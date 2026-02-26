@@ -1,5 +1,7 @@
 import 'dart:io' show Platform;
 
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -105,7 +107,7 @@ class _PrinterSettingsSectionState
     }
 
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: LogoLoadingIndicator());
     }
 
     final l10n = AppLocalizations.of(context)!;

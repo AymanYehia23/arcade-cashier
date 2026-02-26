@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
@@ -225,7 +226,7 @@ class _ProductFormDialogState extends ConsumerState<ProductFormDialog> {
                     FilledButton(
                       onPressed: state.isLoading ? null : _submit,
                       child: state.isLoading
-                          ? const CircularProgressIndicator.adaptive()
+                          ? const LogoLoadingIndicator(size: 24)
                           : Text(loc.save),
                     ),
                   ],

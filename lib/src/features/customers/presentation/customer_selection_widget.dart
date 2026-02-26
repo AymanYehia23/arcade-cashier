@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+
 import 'package:arcade_cashier/src/features/customers/data/customers_repository.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -203,7 +205,7 @@ class _CustomerSelectionWidgetState
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
+                          child: LogoLoadingIndicator(size: 16),
                         )
                       : null,
                   border: const OutlineInputBorder(),

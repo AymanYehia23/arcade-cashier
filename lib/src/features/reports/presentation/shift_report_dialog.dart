@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/features/invoices/application/pdf_invoice_service.dart';
 import 'package:arcade_cashier/src/features/reports/data/reports_repository.dart';
@@ -40,7 +41,7 @@ class ShiftReportDialog extends ConsumerWidget {
             loading: () => const Center(
               child: Padding(
                 padding: EdgeInsets.all(48.0),
-                child: CircularProgressIndicator(),
+                child: LogoLoadingIndicator(),
               ),
             ),
             error: (error, stack) => _buildError(context, error),
@@ -210,7 +211,8 @@ class ShiftReportDialog extends ConsumerWidget {
       }
 
       // Check if platform supports direct printing
-      final isDesktop = !kIsWeb &&
+      final isDesktop =
+          !kIsWeb &&
           (Platform.isWindows || Platform.isMacOS || Platform.isLinux);
 
       if (isDesktop) {

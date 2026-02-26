@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
@@ -41,7 +42,7 @@ class _StartSessionDialogState extends ConsumerState<StartSessionDialog> {
         child: state.isLoading
             ? const SizedBox(
                 height: 150,
-                child: Center(child: CircularProgressIndicator()),
+                child: Center(child: LogoLoadingIndicator()),
               )
             : SingleChildScrollView(
                 child: Column(

@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/rooms/data/rooms_repository.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_form_controller.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_form_dialog.dart';
@@ -136,7 +137,7 @@ class ManageRoomsScreen extends ConsumerWidget {
             message: getUserFriendlyErrorMessage(e, context),
             onRetry: () => ref.refresh(roomsValuesProvider),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: LogoLoadingIndicator()),
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/widgets/table_card.dart';
@@ -54,8 +55,8 @@ class TablesDashboardScreen extends ConsumerWidget {
                   Text(
                     loc.addTablesFromSettings,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey.shade600,
-                        ),
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ],
               ),
@@ -82,11 +83,7 @@ class TablesDashboardScreen extends ConsumerWidget {
                   return TableCard(
                     table: table,
                     activeSession: activeSession,
-                    onTap: () => _handleTableTap(
-                      context,
-                      table,
-                      activeSession,
-                    ),
+                    onTap: () => _handleTableTap(context, table, activeSession),
                   );
                 },
               );
@@ -97,16 +94,12 @@ class TablesDashboardScreen extends ConsumerWidget {
           message: getUserFriendlyErrorMessage(e, context),
           onRetry: () => ref.invalidate(tablesWithSessionsProvider),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: LogoLoadingIndicator()),
       ),
     );
   }
 
-  void _handleTableTap(
-    BuildContext context,
-    table,
-    activeSession,
-  ) async {
+  void _handleTableTap(BuildContext context, table, activeSession) async {
     if (table.currentStatus == TableStatus.maintenance) {
       // Don't allow interaction with tables in maintenance
       return;
@@ -116,10 +109,8 @@ class TablesDashboardScreen extends ConsumerWidget {
       // Show active session dialog
       await showDialog(
         context: context,
-        builder: (context) => ActiveTableSessionDialog(
-          table: table,
-          session: activeSession,
-        ),
+        builder: (context) =>
+            ActiveTableSessionDialog(table: table, session: activeSession),
       );
     } else {
       // Show start session dialog
@@ -132,10 +123,8 @@ class TablesDashboardScreen extends ConsumerWidget {
       if (session != null && context.mounted) {
         await showDialog(
           context: context,
-          builder: (context) => ActiveTableSessionDialog(
-            table: table,
-            session: session,
-          ),
+          builder: (context) =>
+              ActiveTableSessionDialog(table: table, session: session),
         );
       }
     }

@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -91,7 +92,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: LogoLoadingIndicator(size: 20),
                           )
                         : const Icon(Icons.refresh),
                     onPressed: _isRefreshing ? null : _handleRefresh,

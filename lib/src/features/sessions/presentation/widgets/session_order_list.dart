@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -51,7 +52,7 @@ class SessionOrderList extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LogoLoadingIndicator()),
       error: (e, s) => Center(child: Text(loc.errorLoadingOrders)),
     );
   }

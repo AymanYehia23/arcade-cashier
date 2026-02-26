@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/authentication/presentation/auth_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/async_value_ui.dart';
@@ -120,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       child: FilledButton(
                         onPressed: state.isLoading ? null : _submit,
                         child: state.isLoading
-                            ? const CircularProgressIndicator.adaptive()
+                            ? const LogoLoadingIndicator(size: 24)
                             : Text(loc.loginButton),
                       ),
                     ),

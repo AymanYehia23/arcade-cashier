@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/common_widgets/responsive_center.dart';
 import 'package:arcade_cashier/src/features/tables/data/tables_repository.dart';
 import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
@@ -64,9 +65,7 @@ class ManageTablesScreen extends ConsumerWidget {
                       children: [
                         Text(
                           table.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge
+                          style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
@@ -97,10 +96,12 @@ class ManageTablesScreen extends ConsumerWidget {
                             const SizedBox(width: 12),
                             FilledButton.icon(
                               style: FilledButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.error,
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.onError,
+                                backgroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.error,
+                                foregroundColor: Theme.of(
+                                  context,
+                                ).colorScheme.onError,
                               ),
                               icon: const Icon(Icons.delete),
                               label: Text(loc.deleteTable),
@@ -145,7 +146,7 @@ class ManageTablesScreen extends ConsumerWidget {
             message: getUserFriendlyErrorMessage(e, context),
             onRetry: () => ref.refresh(tablesValuesProvider),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: LogoLoadingIndicator()),
         ),
       ),
     );

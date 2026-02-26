@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/device_type.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_form_controller.dart';
@@ -204,9 +205,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
                   controller: _otherRateController,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _submit(),
-                  decoration: InputDecoration(
-                    labelText: loc.otherRate,
-                  ),
+                  decoration: InputDecoration(labelText: loc.otherRate),
                   keyboardType: const TextInputType.numberWithOptions(
                     decimal: true,
                   ),
@@ -236,7 +235,7 @@ class _RoomFormDialogState extends ConsumerState<RoomFormDialog> {
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(),
+                  child: LogoLoadingIndicator(size: 20),
                 )
               : Text(loc.save),
         ),

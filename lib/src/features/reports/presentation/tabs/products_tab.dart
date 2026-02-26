@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,7 @@ class ProductsTab extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LogoLoadingIndicator()),
       error: (err, stack) => ErrorStateWidget(
         message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(topProductsProvider),

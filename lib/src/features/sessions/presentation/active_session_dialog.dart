@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
 
@@ -524,7 +526,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                 error: (e, st) => Center(
                   child: Text(getUserFriendlyErrorMessage(e, context)),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: LogoLoadingIndicator()),
               ),
             ),
             actions: [

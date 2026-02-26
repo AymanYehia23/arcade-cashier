@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_search_controller.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/widgets/date_filter_chips.dart';
 import 'package:arcade_cashier/src/features/invoices/presentation/widgets/invoice_history_card.dart';
@@ -89,7 +90,7 @@ class _InvoicesHistoryScreenState extends ConsumerState<InvoicesHistoryScreen> {
               const SliverToBoxAdapter(
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
-                  child: Center(child: CircularProgressIndicator()),
+                  child: Center(child: LogoLoadingIndicator()),
                 ),
               ),
             if (invoicesState.hasError && !invoicesState.isLoading)

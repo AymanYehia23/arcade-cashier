@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/orders/presentation/session_orders_controller.dart';
 import 'package:arcade_cashier/src/features/products/domain/product.dart';
 import 'package:arcade_cashier/src/features/products/presentation/products_controller.dart';
@@ -75,7 +76,9 @@ class ProductSelectionGrid extends ConsumerWidget {
                   LayoutBuilder(
                     builder: (context, constraints) {
                       final crossAxisCount = constraints.maxWidth < 600 ? 2 : 3;
-                      final itemWidth = (constraints.maxWidth - ((crossAxisCount - 1) * 10)) / crossAxisCount;
+                      final itemWidth =
+                          (constraints.maxWidth - ((crossAxisCount - 1) * 10)) /
+                          crossAxisCount;
 
                       return Wrap(
                         spacing: 10,
@@ -96,7 +99,7 @@ class ProductSelectionGrid extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LogoLoadingIndicator()),
       error: (err, st) => ErrorStateWidget(
         message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(productsProvider),

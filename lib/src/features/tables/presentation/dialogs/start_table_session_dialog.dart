@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
 import 'package:arcade_cashier/src/features/sessions/presentation/sessions_controller.dart';
@@ -7,10 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class StartTableSessionDialog extends ConsumerWidget {
-  const StartTableSessionDialog({
-    super.key,
-    required this.table,
-  });
+  const StartTableSessionDialog({super.key, required this.table});
 
   final CafeTable table;
 
@@ -84,7 +82,7 @@ class StartTableSessionDialog extends ConsumerWidget {
               ? const SizedBox(
                   height: 16,
                   width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: LogoLoadingIndicator(size: 16),
                 )
               : Text(loc.startSession),
         ),

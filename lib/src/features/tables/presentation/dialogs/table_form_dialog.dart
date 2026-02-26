@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/tables/domain/cafe_table.dart';
 import 'package:arcade_cashier/src/features/tables/presentation/tables_controller.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -42,17 +43,15 @@ class _TableFormDialogState extends ConsumerState<TableFormDialog> {
     if (_formKey.currentState!.validate()) {
       final name = _nameController.text.trim();
       final tableNumberText = _tableNumberController.text.trim();
-      final tableNumber =
-          tableNumberText.isEmpty ? null : int.parse(tableNumberText);
+      final tableNumber = tableNumberText.isEmpty
+          ? null
+          : int.parse(tableNumberText);
 
       final controller = ref.read(tablesControllerProvider.notifier);
 
       if (widget.table == null) {
         // Creating new table (status defaults to available)
-        await controller.createTable(
-          name: name,
-          tableNumber: tableNumber,
-        );
+        await controller.createTable(name: name, tableNumber: tableNumber);
       } else {
         // Updating existing table
         await controller.updateTableDetails(
@@ -108,9 +107,7 @@ class _TableFormDialogState extends ConsumerState<TableFormDialog> {
                   labelText: '${loc.tableNumber} (${loc.optional})',
                 ),
                 keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 onFieldSubmitted: (_) => _submit(),
               ),
               const SizedBox(height: 16),
@@ -148,7 +145,7 @@ class _TableFormDialogState extends ConsumerState<TableFormDialog> {
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: LogoLoadingIndicator(size: 20),
                 )
               : Text(loc.save),
         ),

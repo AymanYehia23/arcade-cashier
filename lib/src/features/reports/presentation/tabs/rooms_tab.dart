@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:arcade_cashier/src/utils/error_messages.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -68,8 +69,7 @@ class RoomsTab extends ConsumerWidget {
               children: data.asMap().entries.map((entry) {
                 final index = entry.key;
                 final item = entry.value;
-                final color =
-                    Colors.primaries[index % Colors.primaries.length];
+                final color = Colors.primaries[index % Colors.primaries.length];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Row(
@@ -100,11 +100,7 @@ class RoomsTab extends ConsumerWidget {
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  children: [
-                    pieChart,
-                    const SizedBox(height: 24),
-                    legend,
-                  ],
+                  children: [pieChart, const SizedBox(height: 24), legend],
                 ),
               );
             } else {
@@ -123,7 +119,7 @@ class RoomsTab extends ConsumerWidget {
           },
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: LogoLoadingIndicator()),
       error: (err, stack) => ErrorStateWidget(
         message: getUserFriendlyErrorMessage(err, context),
         onRetry: () => ref.invalidate(roomUsageProvider),

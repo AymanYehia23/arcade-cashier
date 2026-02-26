@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -73,7 +74,7 @@ class _OfflineScreenState extends ConsumerState<OfflineScreen> {
 
               // Retry Button
               _isRetrying
-                  ? const CircularProgressIndicator()
+                  ? const LogoLoadingIndicator()
                   : ElevatedButton.icon(
                       onPressed: _retryConnection,
                       icon: const Icon(Icons.refresh),

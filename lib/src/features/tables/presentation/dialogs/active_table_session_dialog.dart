@@ -1,3 +1,4 @@
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
@@ -179,9 +180,7 @@ class _ActiveTableSessionDialogState
                               ),
                               Text(
                                 '${currentBill.totalAmount.toStringAsFixed(2)} ${loc.egp}',
-                                style: Theme.of(sbContext)
-                                    .textTheme
-                                    .titleLarge
+                                style: Theme.of(sbContext).textTheme.titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(sbContext).primaryColor,
@@ -370,9 +369,7 @@ class _ActiveTableSessionDialogState
               horizontal: 24,
               vertical: 24,
             ),
-            title: Text(
-              '${loc.activeSession} - ${widget.table.name}',
-            ),
+            title: Text('${loc.activeSession} - ${widget.table.name}'),
             content: SizedBox(
               width: isMobile ? constraints.maxWidth * 0.9 : 1000,
               height: isMobile ? constraints.maxHeight * 0.7 : 600,
@@ -473,7 +470,7 @@ class _ActiveTableSessionDialogState
                 error: (e, st) => Center(
                   child: Text(getUserFriendlyErrorMessage(e, context)),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const Center(child: LogoLoadingIndicator()),
               ),
             ),
             actions: [
@@ -512,13 +509,17 @@ class _ActiveTableSessionDialogState
                                       ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(dialogContext, false),
+                                          onPressed: () => Navigator.pop(
+                                            dialogContext,
+                                            false,
+                                          ),
                                           child: Text(loc.no),
                                         ),
                                         FilledButton(
-                                          onPressed: () =>
-                                              Navigator.pop(dialogContext, true),
+                                          onPressed: () => Navigator.pop(
+                                            dialogContext,
+                                            true,
+                                          ),
                                           child: Text(loc.yes),
                                         ),
                                       ],
@@ -527,12 +528,16 @@ class _ActiveTableSessionDialogState
 
                                   if (confirmed == true && context.mounted) {
                                     await ref
-                                        .read(sessionsControllerProvider.notifier)
+                                        .read(
+                                          sessionsControllerProvider.notifier,
+                                        )
                                         .stopSession(sessionId: session.id);
 
                                     if (context.mounted) {
                                       // Refresh tables (stream auto-updates)
-                                      ref.invalidate(tablesWithSessionsProvider);
+                                      ref.invalidate(
+                                        tablesWithSessionsProvider,
+                                      );
 
                                       // Close dialog
                                       Navigator.of(context).pop();
@@ -542,7 +547,9 @@ class _ActiveTableSessionDialogState
                           icon: const Icon(Icons.close),
                           label: Text(loc.cancelSession),
                           style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(context).colorScheme.error,
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.error,
                           ),
                         ),
 
@@ -559,18 +566,17 @@ class _ActiveTableSessionDialogState
                       FilledButton(
                         onPressed: hasOrders && !completionState.isLoading
                             ? () => _showCompleteSessionDialog(
-                                  context: context,
-                                  session: session,
-                                  orders: orders,
-                                  initialBill: bill,
-                                )
+                                context: context,
+                                session: session,
+                                orders: orders,
+                                initialBill: bill,
+                              )
                             : null,
                         child: completionState.isLoading
                             ? const SizedBox(
                                 height: 16,
                                 width: 16,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: LogoLoadingIndicator(size: 16),
                               )
                             : Text(loc.checkout),
                       ),

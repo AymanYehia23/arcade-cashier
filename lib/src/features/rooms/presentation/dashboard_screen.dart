@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
+import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/reports/presentation/shift_report_dialog.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
@@ -105,7 +106,7 @@ class DashboardScreen extends ConsumerWidget {
             message: getUserFriendlyErrorMessage(e, context),
             onRetry: () => ref.invalidate(roomsWithSessionsProvider),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: LogoLoadingIndicator()),
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () async {
