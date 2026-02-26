@@ -10,4 +10,6 @@ class AppRoutes {
   static const String products = '/products';
   static const String invoices = '/invoices';
   static const String analytics = '/analytics';
+  static const String startShift = '/start-shift';
+  static const String manageCashiers = '/settings/cashiers';
 }

@@ -8,6 +8,8 @@ class DbTables {
   static const String orderItems = 'order_items';
   static const String sessionOrders = 'session_orders';
   static const String profiles = 'profiles';
+  static const String cashiers = 'cashiers';
+  static const String shifts = 'shifts';
 }
 
 class SessionConstants {

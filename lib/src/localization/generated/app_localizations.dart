@@ -1501,6 +1501,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'optional'**
   String get optional;
+
+  /// No description provided for @selectCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Cashier'**
+  String get selectCashier;
+
+  /// No description provided for @enterPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter PIN'**
+  String get enterPin;
+
+  /// No description provided for @wrongPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong PIN. Try again.'**
+  String get wrongPin;
+
+  /// No description provided for @verifyStartingCash.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Starting Cash in Drawer'**
+  String get verifyStartingCash;
+
+  /// No description provided for @startingCashAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting Cash Amount'**
+  String get startingCashAmount;
+
+  /// No description provided for @startShift.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Shift'**
+  String get startShift;
+
+  /// No description provided for @shiftStartedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Started at'**
+  String get shiftStartedAt;
+
+  /// No description provided for @startingCashLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting Cash'**
+  String get startingCashLabel;
+
+  /// No description provided for @countTheDrawer.
+  ///
+  /// In en, this message translates to:
+  /// **'Count the Drawer'**
+  String get countTheDrawer;
+
+  /// No description provided for @totalCashCounted.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Cash Counted'**
+  String get totalCashCounted;
+
+  /// No description provided for @cashDroppedToSafe.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Dropped to Safe'**
+  String get cashDroppedToSafe;
+
+  /// No description provided for @cashLeftInDrawer.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash Left in Drawer'**
+  String get cashLeftInDrawer;
+
+  /// No description provided for @manageCashiers.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage Cashiers'**
+  String get manageCashiers;
+
+  /// No description provided for @cashierName.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier Name'**
+  String get cashierName;
+
+  /// No description provided for @pinCode.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN Code'**
+  String get pinCode;
+
+  /// No description provided for @pinCodeHelper.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be exactly 4 digits'**
+  String get pinCodeHelper;
+
+  /// No description provided for @pinCodeValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN must be 4 digits'**
+  String get pinCodeValidation;
+
+  /// No description provided for @addCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Cashier'**
+  String get addCashier;
+
+  /// No description provided for @editCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Cashier'**
+  String get editCashier;
+
+  /// No description provided for @deactivateCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Deactivate Cashier'**
+  String get deactivateCashier;
+
+  /// No description provided for @activateCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Cashier'**
+  String get activateCashier;
+
+  /// No description provided for @noCashiersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No cashiers found. Add one to get started.'**
+  String get noCashiersFound;
+
+  /// No description provided for @active.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active;
+
+  /// No description provided for @inactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get inactive;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @currentCashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier: {name}'**
+  String currentCashier(String name);
 }
 
 class _AppLocalizationsDelegate

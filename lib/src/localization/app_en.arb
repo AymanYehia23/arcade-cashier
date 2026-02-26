@@ -381,5 +381,38 @@
   "ordersOnly": "Orders Only",
   "noTimerForTables": "Tables are billed by orders only",
   "optional": "optional",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "selectCashier": "Select Cashier",
+  "enterPin": "Enter PIN",
+  "wrongPin": "Wrong PIN. Try again.",
+  "verifyStartingCash": "Verify Starting Cash in Drawer",
+  "startingCashAmount": "Starting Cash Amount",
+  "startShift": "Start Shift",
+  "shiftStartedAt": "Started at",
+  "startingCashLabel": "Starting Cash",
+  "countTheDrawer": "Count the Drawer",
+  "totalCashCounted": "Total Cash Counted",
+  "cashDroppedToSafe": "Cash Dropped to Safe",
+  "cashLeftInDrawer": "Cash Left in Drawer",
+  "manageCashiers": "Manage Cashiers",
+  "cashierName": "Cashier Name",
+  "pinCode": "PIN Code",
+  "pinCodeHelper": "Must be exactly 4 digits",
+  "pinCodeValidation": "PIN must be 4 digits",
+  "addCashier": "Add Cashier",
+  "editCashier": "Edit Cashier",
+  "deactivateCashier": "Deactivate Cashier",
+  "activateCashier": "Activate Cashier",
+  "noCashiersFound": "No cashiers found. Add one to get started.",
+  "active": "Active",
+  "inactive": "Inactive",
+  "back": "Back",
+  "currentCashier": "Cashier: {name}",
+  "@currentCashier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

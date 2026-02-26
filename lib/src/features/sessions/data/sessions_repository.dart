@@ -40,6 +40,7 @@ abstract class SessionsRepository {
     int? customerId,
     String? customerName,
     String shopName = 'Arcade',
+    int? shiftId,
   });
 }
 
@@ -252,6 +253,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
     int? customerId,
     String? customerName,
     String shopName = 'Arcade Station',
+    int? shiftId,
   }) async {
     final response = await _supabase.rpc<int>(
       'checkout_session',
@@ -264,6 +266,7 @@ class SupabaseSessionsRepository implements SessionsRepository {
         'p_total_amount': totalAmount,
         'p_payment_method': paymentMethod,
         'p_shop_name': shopName,
+        'p_shift_id': shiftId,
       },
     );
     return response;

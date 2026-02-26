@@ -1,4 +1,5 @@
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
+import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 import 'package:arcade_cashier/src/features/customers/domain/customer.dart';
 import 'package:arcade_cashier/src/features/customers/presentation/customer_selection_widget.dart';
 import 'package:arcade_cashier/src/features/billing/application/billing_service.dart';
@@ -211,6 +212,10 @@ class _ActiveTableSessionDialogState
                               customerId: selectedCustomer?.id,
                               customerName: selectedCustomer?.name,
                               shopName: 'Arcade',
+                              shiftId: ref
+                                  .read(currentShiftProvider)
+                                  .valueOrNull
+                                  ?.id,
                             );
 
                         if (!context.mounted) return;

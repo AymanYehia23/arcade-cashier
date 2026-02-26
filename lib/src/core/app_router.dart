@@ -13,22 +13,35 @@ import 'package:arcade_cashier/src/features/products/presentation/products_dashb
 import 'package:arcade_cashier/src/features/invoices/presentation/invoices_history_screen.dart';
 import 'package:arcade_cashier/src/features/reports/presentation/reports_screen.dart';
 import 'package:arcade_cashier/src/features/settings/presentation/settings_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/presentation/start_shift_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/presentation/manage_cashiers_screen.dart';
+import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
 
 import 'package:arcade_cashier/src/utils/go_router_refresh_stream.dart';
 import 'package:arcade_cashier/src/common_widgets/scaffold_with_navigation.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'app_router.g.dart';
 
 @riverpod
 GoRouter goRouter(Ref ref) {
   final authRepository = ref.watch(authRepositoryProvider);
+
+  // Merge auth state and shift state streams so the router refreshes on both.
+  final combinedStream = Rx.merge([
+    authRepository.authStateChanges(),
+    // ignore: deprecated_member_use
+    ref.watch(currentShiftProvider.stream),
+  ]);
+
   return GoRouter(
     initialLocation: '/splash',
-    refreshListenable: GoRouterRefreshStream(authRepository.authStateChanges()),
+    refreshListenable: GoRouterRefreshStream(combinedStream),
     redirect: (context, state) async {
       final isLoggedIn = authRepository.isAuthenticated;
       final isLoggingIn = state.uri.path == AppRoutes.login;
       final isSplash = state.uri.path == '/splash';
+      final isStartShift = state.uri.path == AppRoutes.startShift;
 
       if (isSplash) {
         return isLoggedIn ? AppRoutes.rooms : AppRoutes.login;
@@ -42,6 +55,22 @@ GoRouter goRouter(Ref ref) {
         return AppRoutes.rooms;
       }
 
+      // --- Shift lock: If logged in but no open shift, redirect to start-shift ---
+      final shiftAsync = ref.read(currentShiftProvider);
+      final hasOpenShift = shiftAsync.valueOrNull != null;
+
+      if (!hasOpenShift &&
+          !isStartShift &&
+          state.uri.path != AppRoutes.manageCashiers) {
+        // Allow router to settle — if shift is still loading, don't redirect
+        if (shiftAsync.isLoading) return null;
+        return AppRoutes.startShift;
+      }
+
+      if (hasOpenShift && isStartShift) {
+        return AppRoutes.rooms;
+      }
+
       // Route guard for admin-only routes
       final currentUser = await authRepository.getCurrentUser();
       final isAdmin = currentUser?.isAdmin ?? false;
@@ -50,7 +79,8 @@ GoRouter goRouter(Ref ref) {
       if (!isAdmin &&
           (path.startsWith(AppRoutes.analytics) ||
               path == AppRoutes.manageRooms ||
-              path == AppRoutes.manageTables)) {
+              path == AppRoutes.manageTables ||
+              path == AppRoutes.manageCashiers)) {
         return AppRoutes.rooms;
       }
 
@@ -64,6 +94,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.startShift,
+        builder: (context, state) => const StartShiftScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -132,6 +166,10 @@ GoRouter goRouter(Ref ref) {
                   GoRoute(
                     path: 'tables',
                     builder: (context, state) => const ManageTablesScreen(),
+                  ),
+                  GoRoute(
+                    path: 'cashiers',
+                    builder: (context, state) => const ManageCashiersScreen(),
                   ),
                 ],
               ),

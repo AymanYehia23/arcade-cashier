@@ -23,6 +23,7 @@ class Invoice with _$Invoice {
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
     @JsonKey(name: 'customer_id') int? customerId,
     @JsonKey(name: 'customer_name') String? customerName,
+    @JsonKey(name: 'shift_id') int? shiftId,
   }) = _Invoice;
 
   const Invoice._();

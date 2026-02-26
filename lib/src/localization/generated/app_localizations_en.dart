@@ -763,4 +763,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get optional => 'optional';
+
+  @override
+  String get selectCashier => 'Select Cashier';
+
+  @override
+  String get enterPin => 'Enter PIN';
+
+  @override
+  String get wrongPin => 'Wrong PIN. Try again.';
+
+  @override
+  String get verifyStartingCash => 'Verify Starting Cash in Drawer';
+
+  @override
+  String get startingCashAmount => 'Starting Cash Amount';
+
+  @override
+  String get startShift => 'Start Shift';
+
+  @override
+  String get shiftStartedAt => 'Started at';
+
+  @override
+  String get startingCashLabel => 'Starting Cash';
+
+  @override
+  String get countTheDrawer => 'Count the Drawer';
+
+  @override
+  String get totalCashCounted => 'Total Cash Counted';
+
+  @override
+  String get cashDroppedToSafe => 'Cash Dropped to Safe';
+
+  @override
+  String get cashLeftInDrawer => 'Cash Left in Drawer';
+
+  @override
+  String get manageCashiers => 'Manage Cashiers';
+
+  @override
+  String get cashierName => 'Cashier Name';
+
+  @override
+  String get pinCode => 'PIN Code';
+
+  @override
+  String get pinCodeHelper => 'Must be exactly 4 digits';
+
+  @override
+  String get pinCodeValidation => 'PIN must be 4 digits';
+
+  @override
+  String get addCashier => 'Add Cashier';
+
+  @override
+  String get editCashier => 'Edit Cashier';
+
+  @override
+  String get deactivateCashier => 'Deactivate Cashier';
+
+  @override
+  String get activateCashier => 'Activate Cashier';
+
+  @override
+  String get noCashiersFound => 'No cashiers found. Add one to get started.';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String currentCashier(String name) {
+    return 'Cashier: $name';
+  }
 }

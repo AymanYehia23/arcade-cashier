@@ -46,6 +46,8 @@ mixin _$Invoice {
   int? get customerId => throw _privateConstructorUsedError;
   @JsonKey(name: 'customer_name')
   String? get customerName => throw _privateConstructorUsedError;
+  @JsonKey(name: 'shift_id')
+  int? get shiftId => throw _privateConstructorUsedError;
 
   /// Serializes this Invoice to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -75,6 +77,7 @@ abstract class $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
     @JsonKey(name: 'customer_id') int? customerId,
     @JsonKey(name: 'customer_name') String? customerName,
+    @JsonKey(name: 'shift_id') int? shiftId,
   });
 }
 
@@ -106,6 +109,7 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
     Object? cancelledAt = freezed,
     Object? customerId = freezed,
     Object? customerName = freezed,
+    Object? shiftId = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -161,6 +165,10 @@ class _$InvoiceCopyWithImpl<$Res, $Val extends Invoice>
                 ? _value.customerName
                 : customerName // ignore: cast_nullable_to_non_nullable
                       as String?,
+            shiftId: freezed == shiftId
+                ? _value.shiftId
+                : shiftId // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -189,6 +197,7 @@ abstract class _$$InvoiceImplCopyWith<$Res> implements $InvoiceCopyWith<$Res> {
     @JsonKey(name: 'cancelled_at') DateTime? cancelledAt,
     @JsonKey(name: 'customer_id') int? customerId,
     @JsonKey(name: 'customer_name') String? customerName,
+    @JsonKey(name: 'shift_id') int? shiftId,
   });
 }
 
@@ -219,6 +228,7 @@ class __$$InvoiceImplCopyWithImpl<$Res>
     Object? cancelledAt = freezed,
     Object? customerId = freezed,
     Object? customerName = freezed,
+    Object? shiftId = freezed,
   }) {
     return _then(
       _$InvoiceImpl(
@@ -274,6 +284,10 @@ class __$$InvoiceImplCopyWithImpl<$Res>
             ? _value.customerName
             : customerName // ignore: cast_nullable_to_non_nullable
                   as String?,
+        shiftId: freezed == shiftId
+            ? _value.shiftId
+            : shiftId // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -296,6 +310,7 @@ class _$InvoiceImpl extends _Invoice {
     @JsonKey(name: 'cancelled_at') this.cancelledAt,
     @JsonKey(name: 'customer_id') this.customerId,
     @JsonKey(name: 'customer_name') this.customerName,
+    @JsonKey(name: 'shift_id') this.shiftId,
   }) : super._();
 
   factory _$InvoiceImpl.fromJson(Map<String, dynamic> json) =>
@@ -340,10 +355,13 @@ class _$InvoiceImpl extends _Invoice {
   @override
   @JsonKey(name: 'customer_name')
   final String? customerName;
+  @override
+  @JsonKey(name: 'shift_id')
+  final int? shiftId;
 
   @override
   String toString() {
-    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, discountAmount: $discountAmount, discountPercentage: $discountPercentage, issuedAt: $issuedAt, status: $status, cancelledAt: $cancelledAt, customerId: $customerId, customerName: $customerName)';
+    return 'Invoice(id: $id, sessionId: $sessionId, invoiceNumber: $invoiceNumber, shopName: $shopName, totalAmount: $totalAmount, paymentMethod: $paymentMethod, discountAmount: $discountAmount, discountPercentage: $discountPercentage, issuedAt: $issuedAt, status: $status, cancelledAt: $cancelledAt, customerId: $customerId, customerName: $customerName, shiftId: $shiftId)';
   }
 
   @override
@@ -374,7 +392,8 @@ class _$InvoiceImpl extends _Invoice {
             (identical(other.customerId, customerId) ||
                 other.customerId == customerId) &&
             (identical(other.customerName, customerName) ||
-                other.customerName == customerName));
+                other.customerName == customerName) &&
+            (identical(other.shiftId, shiftId) || other.shiftId == shiftId));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -394,6 +413,7 @@ class _$InvoiceImpl extends _Invoice {
     cancelledAt,
     customerId,
     customerName,
+    shiftId,
   );
 
   /// Create a copy of Invoice
@@ -425,6 +445,7 @@ abstract class _Invoice extends Invoice {
     @JsonKey(name: 'cancelled_at') final DateTime? cancelledAt,
     @JsonKey(name: 'customer_id') final int? customerId,
     @JsonKey(name: 'customer_name') final String? customerName,
+    @JsonKey(name: 'shift_id') final int? shiftId,
   }) = _$InvoiceImpl;
   const _Invoice._() : super._();
 
@@ -468,6 +489,9 @@ abstract class _Invoice extends Invoice {
   @override
   @JsonKey(name: 'customer_name')
   String? get customerName;
+  @override
+  @JsonKey(name: 'shift_id')
+  int? get shiftId;
 
   /// Create a copy of Invoice
   /// with the given fields replaced by the non-null parameter values.

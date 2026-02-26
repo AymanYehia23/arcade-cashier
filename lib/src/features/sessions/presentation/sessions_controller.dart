@@ -41,9 +41,7 @@ class SessionsController extends _$SessionsController {
     }
   }
 
-  Future<Session?> startTableSession({
-    required int tableId,
-  }) async {
+  Future<Session?> startTableSession({required int tableId}) async {
     state = const AsyncLoading();
     try {
       final session = await ref
@@ -108,6 +106,7 @@ class SessionsController extends _$SessionsController {
     int? customerId,
     String? customerName,
     String shopName = 'Arcade',
+    int? shiftId,
   }) async {
     state = const AsyncLoading();
     try {
@@ -122,6 +121,7 @@ class SessionsController extends _$SessionsController {
             customerId: customerId,
             customerName: customerName,
             shopName: shopName,
+            shiftId: shiftId,
           );
       state = const AsyncData(null);
       return invoiceId;

@@ -406,7 +406,7 @@ final activeSessionsProvider =
 // ignore: unused_element
 typedef ActiveSessionsRef = AutoDisposeStreamProviderRef<List<Session>>;
 String _$sessionsControllerHash() =>
-    r'd0d159272eebb46be15e4cc984a29ea5be0c6a7f';
+    r'0ac4fd2fda666400dfde70d2578c82800f95abfe';
 
 /// See also [SessionsController].
 @ProviderFor(SessionsController)

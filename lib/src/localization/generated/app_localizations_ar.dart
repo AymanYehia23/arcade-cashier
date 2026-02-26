@@ -763,4 +763,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get optional => 'اختياري';
+
+  @override
+  String get selectCashier => 'اختر الكاشير';
+
+  @override
+  String get enterPin => 'أدخل الرقم السري';
+
+  @override
+  String get wrongPin => 'رقم سري خاطئ. حاول مرة أخرى.';
+
+  @override
+  String get verifyStartingCash => 'تأكد من المبلغ في الدرج';
+
+  @override
+  String get startingCashAmount => 'مبلغ البداية';
+
+  @override
+  String get startShift => 'بدء الوردية';
+
+  @override
+  String get shiftStartedAt => 'بدأت في';
+
+  @override
+  String get startingCashLabel => 'رصيد البداية';
+
+  @override
+  String get countTheDrawer => 'عد النقدية في الدرج';
+
+  @override
+  String get totalCashCounted => 'إجمالي النقدية المعدودة';
+
+  @override
+  String get cashDroppedToSafe => 'النقدية المودعة في الخزنة';
+
+  @override
+  String get cashLeftInDrawer => 'النقدية المتبقية في الدرج';
+
+  @override
+  String get manageCashiers => 'إدارة الكاشيرات';
+
+  @override
+  String get cashierName => 'اسم الكاشير';
+
+  @override
+  String get pinCode => 'الرقم السري';
+
+  @override
+  String get pinCodeHelper => 'يجب أن يكون 4 أرقام بالضبط';
+
+  @override
+  String get pinCodeValidation => 'الرقم السري يجب أن يكون 4 أرقام';
+
+  @override
+  String get addCashier => 'إضافة كاشير';
+
+  @override
+  String get editCashier => 'تعديل كاشير';
+
+  @override
+  String get deactivateCashier => 'تعطيل كاشير';
+
+  @override
+  String get activateCashier => 'تفعيل كاشير';
+
+  @override
+  String get noCashiersFound => 'لا يوجد كاشيرات. أضف واحداً للبدء.';
+
+  @override
+  String get active => 'نشط';
+
+  @override
+  String get inactive => 'غير نشط';
+
+  @override
+  String get back => 'رجوع';
+
+  @override
+  String currentCashier(String name) {
+    return 'كاشير: $name';
+  }
 }

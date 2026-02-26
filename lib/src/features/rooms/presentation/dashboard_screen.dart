@@ -2,6 +2,8 @@ import 'package:arcade_cashier/src/common_widgets/error_state_widget.dart';
 import 'package:arcade_cashier/src/common_widgets/logo_loading_indicator.dart';
 import 'package:arcade_cashier/src/constants/app_routes.dart';
 import 'package:arcade_cashier/src/features/reports/presentation/shift_report_dialog.dart';
+import 'package:arcade_cashier/src/features/shifts/data/shift_repository.dart';
+import 'package:arcade_cashier/src/features/shifts/presentation/end_shift_dialog.dart';
 import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/room_card.dart';
 import 'package:arcade_cashier/src/features/rooms/presentation/rooms_controller.dart';
@@ -40,10 +42,33 @@ class DashboardScreen extends ConsumerWidget {
         appBar: AppBar(
           title: Text(loc.dashboardTitle),
           actions: [
+            // Current shift / cashier chip
+            Consumer(
+              builder: (context, ref, _) {
+                final shiftAsync = ref.watch(currentShiftProvider);
+                return shiftAsync.maybeWhen(
+                  data: (shift) {
+                    if (shift == null) return const SizedBox.shrink();
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: ActionChip(
+                        avatar: const Icon(Icons.person, size: 18),
+                        label: Text(
+                          shift.cashierName ?? loc.unknown,
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: () => EndShiftDialog.show(context, shift),
+                      ),
+                    );
+                  },
+                  orElse: () => const SizedBox.shrink(),
+                );
+              },
+            ),
             IconButton(
               icon: const Icon(Icons.assessment),
               onPressed: () => ShiftReportDialog.show(context),
-              tooltip: loc.endShift,
+              tooltip: loc.endOfShiftReport,
             ),
             IconButton(
               icon: const Icon(Icons.settings),
