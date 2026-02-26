@@ -52,6 +52,9 @@ class DashboardScreen extends ConsumerWidget {
           ],
         ),
         body: roomsWithSessionsValue.when(
+          // Skip showing error during initial stream connection to prevent
+          // a brief "Something Went Wrong" flash on app startup.
+          skipError: true,
           data: (roomsWithSessions) {
             if (roomsWithSessions.isEmpty) {
               return Center(child: Text(loc.noRoomsFound));
