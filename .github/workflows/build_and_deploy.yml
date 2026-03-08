@@ -50,6 +50,7 @@ jobs:
         run: |
           echo SUPABASE_URL=${{ secrets.SUPABASE_URL }} > .env
           echo SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }} >> .env
+          echo. > .env.test
         shell: cmd
 
       # Step 5: Install project dependencies
@@ -121,6 +122,7 @@ jobs:
         run: |
           echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+          touch .env.test
 
       # Step 4: Install project dependencies
       - name: 📦 Install dependencies
