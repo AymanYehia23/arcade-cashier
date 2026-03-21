@@ -1795,6 +1795,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Skip'**
   String get skipShift;
+
+  /// No description provided for @switchMatchType.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Match Type'**
+  String get switchMatchType;
+
+  /// No description provided for @resumeBeforeSwitching.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume session before switching match type'**
+  String get resumeBeforeSwitching;
 }
 
 class _AppLocalizationsDelegate

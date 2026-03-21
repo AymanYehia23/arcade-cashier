@@ -914,4 +914,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get skipShift => 'Skip';
+
+  @override
+  String get switchMatchType => 'Switch Match Type';
+
+  @override
+  String get resumeBeforeSwitching =>
+      'Resume session before switching match type';
 }
