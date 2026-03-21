@@ -116,12 +116,24 @@ Two new string keys added in English and Arabic:
 | `billing/application/billing_service.dart` | Updated cost calculation |
 | `sessions/presentation/widgets/switch_match_type_chips.dart` | New file |
 | `sessions/presentation/widgets/session_timer_widget.dart` | Accept room, show switch chips |
-| `sessions/presentation/active_session_dialog.dart` | Pass room to timer widget |
+| `sessions/presentation/active_session_dialog.dart` | Pass room to timer widget, fix stale bill on checkout |
 | `invoices/application/pdf_invoice_service.dart` | Split time line on invoice |
 | `localization/app_en.arb` | +2 keys |
 | `localization/app_ar.arb` | +2 keys |
 | `core/app_router.dart` | keepAlive + GlobalKey fix |
 | `app.dart` | Offline screen overlay fix |
+
+---
+
+## Additional Bug Fix — Stale Bill on Checkout
+
+**Problem:** If the active session dialog was left open for a period of time without any orders being added or other provider changes triggering a rebuild, the bill passed to the checkout dialog was computed at the time the dialog first rendered — not at the moment the cashier pressed checkout. This caused the invoice to show an incorrect (often 0 or outdated) total.
+
+**Root cause:** The bill was calculated inside the `build` method and passed as `initialBill` to `_showCompleteSessionDialog`. Flutter only re-runs `build` when a watched provider changes. A session left idle with no new orders never triggered a rebuild, so the captured bill was stale.
+
+**Fix:** Removed the `initialBill` parameter from `_showCompleteSessionDialog`. The bill is now computed at the instant the checkout dialog opens using `DateTime.now()`, always reflecting the true elapsed time at that moment.
+
+**File changed:** `sessions/presentation/active_session_dialog.dart`
 
 ---
 
