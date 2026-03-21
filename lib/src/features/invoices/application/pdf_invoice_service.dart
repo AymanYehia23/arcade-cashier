@@ -5,6 +5,7 @@ import 'package:arcade_cashier/src/features/invoices/domain/invoice.dart';
 import 'package:arcade_cashier/src/features/invoices/domain/invoice_item.dart';
 import 'package:arcade_cashier/src/features/orders/domain/order.dart';
 import 'package:arcade_cashier/src/features/reports/domain/shift_report.dart';
+import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/settings/data/printer_repository.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
@@ -120,7 +121,7 @@ class PdfInvoiceService {
     final pdf = pw.Document();
 
     // Build invoice items list
-    final items = _buildInvoiceItems(orders: orders, bill: bill, loc: loc);
+    final items = _buildInvoiceItems(orders: orders, bill: bill, session: session, loc: loc);
 
     // Load Cairo Bold font for thermal printing clarity
     final fontBoldData = await rootBundle.load('fonts/Cairo-Bold.ttf');
@@ -169,18 +170,45 @@ class PdfInvoiceService {
   List<InvoiceItem> _buildInvoiceItems({
     required List<Order> orders,
     required SessionBill bill,
+    required Session session,
     required AppLocalizations loc,
   }) {
     final items = <InvoiceItem>[];
 
-    // Add time duration as first item
+    // Add time duration — split into two lines if a match type switch occurred
     if (bill.timeCost > 0) {
-      items.add(
-        InvoiceItem.timeDuration(
-          durationFormatted: _formatDuration(bill.duration),
-          totalCost: bill.timeCost,
-        ),
-      );
+      if (session.rateChangedAt != null && session.previousMatchType != null) {
+        // Period 2: from switch until end
+        final rateChangedAtLocal = session.rateChangedAt!.toLocal();
+        final period2Duration = bill.duration - (rateChangedAtLocal.difference(session.startTime.toLocal()) - Duration(seconds: session.totalPausedDurationSeconds));
+        final period1Duration = bill.duration - (period2Duration.isNegative ? Duration.zero : period2Duration);
+
+        final period1Cost = session.accumulatedTimeCost;
+        final period2Cost = bill.timeCost - period1Cost;
+
+        final label1 = _matchTypeLabel(session.previousMatchType!, loc);
+        final label2 = _matchTypeLabel(session.matchType, loc);
+
+        items.add(InvoiceItem(
+          name: 'Time $label1 (${_formatDuration(period1Duration.isNegative ? Duration.zero : period1Duration)})',
+          quantity: 1,
+          unitPrice: period1Cost,
+          totalPrice: period1Cost,
+        ));
+        items.add(InvoiceItem(
+          name: 'Time $label2 (${_formatDuration(period2Duration.isNegative ? Duration.zero : period2Duration)})',
+          quantity: 1,
+          unitPrice: period2Cost,
+          totalPrice: period2Cost,
+        ));
+      } else {
+        items.add(
+          InvoiceItem.timeDuration(
+            durationFormatted: _formatDuration(bill.duration),
+            totalCost: bill.timeCost,
+          ),
+        );
+      }
     }
 
     // Add product orders
@@ -197,6 +225,13 @@ class PdfInvoiceService {
 
     return items;
   }
+
+  String _matchTypeLabel(MatchType matchType, AppLocalizations loc) =>
+      switch (matchType) {
+        MatchType.single => loc.singleMatch,
+        MatchType.multi => loc.multiMatch,
+        MatchType.other => loc.other,
+      };
 
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
