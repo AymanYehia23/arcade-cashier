@@ -132,6 +132,58 @@ class SessionsController extends _$SessionsController {
       return null;
     }
   }
+
+  Future<void> switchMatchType({
+    required Session currentSession,
+    required MatchType newMatchType,
+    required double newRate,
+  }) async {
+    if (currentSession.status == SessionStatus.paused) {
+      throw Exception('Cannot switch match type while session is paused. Resume first.');
+    }
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final now = DateTime.now().toUtc();
+
+      Duration periodDuration;
+      if (currentSession.rateChangedAt != null) {
+        // Time since the last switch (no pause overlap to subtract — switch while paused is blocked)
+        periodDuration = now.difference(currentSession.rateChangedAt!);
+      } else {
+        // First period — subtract total paused duration from session start
+        final totalPaused =
+            Duration(seconds: currentSession.totalPausedDurationSeconds);
+        periodDuration =
+            now.difference(currentSession.startTime.toLocal()) - totalPaused;
+      }
+
+      if (periodDuration.isNegative) periodDuration = Duration.zero;
+
+      final periodCost =
+          (periodDuration.inMinutes / 60.0) * currentSession.appliedHourlyRate;
+      final newAccumulatedCost =
+          currentSession.accumulatedTimeCost + periodCost;
+
+      await ref.read(sessionsRepositoryProvider).switchMatchType(
+            sessionId: currentSession.id,
+            newMatchType: newMatchType,
+            newRate: newRate,
+            accumulatedTimeCost: newAccumulatedCost,
+            rateChangedAt: now,
+            previousMatchType: currentSession.matchType,
+          );
+    });
+
+    // Refresh the session so the dialog UI reflects the new match type/rate.
+    // Only invalidate on success — if state has an error, leave it to the UI to handle.
+    if (!state.hasError) {
+      if (currentSession.roomId != null) {
+        ref.invalidate(activeSessionProvider(currentSession.roomId!));
+      }
+      ref.invalidate(sessionByIdProvider(currentSession.id));
+    }
+  }
 }
 
 @riverpod

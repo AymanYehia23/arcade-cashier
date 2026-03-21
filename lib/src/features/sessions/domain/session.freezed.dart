@@ -46,6 +46,12 @@ mixin _$Session {
   DateTime? get pausedAt => throw _privateConstructorUsedError;
   @JsonKey(name: 'total_paused_duration_seconds')
   int get totalPausedDurationSeconds => throw _privateConstructorUsedError;
+  @JsonKey(name: 'accumulated_time_cost')
+  double get accumulatedTimeCost => throw _privateConstructorUsedError;
+  @JsonKey(name: 'rate_changed_at')
+  DateTime? get rateChangedAt => throw _privateConstructorUsedError;
+  @JsonKey(name: 'previous_match_type')
+  MatchType? get previousMatchType => throw _privateConstructorUsedError;
 
   /// Serializes this Session to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -77,6 +83,9 @@ abstract class $SessionCopyWith<$Res> {
     @JsonKey(name: 'paused_at') DateTime? pausedAt,
     @JsonKey(name: 'total_paused_duration_seconds')
     int totalPausedDurationSeconds,
+    @JsonKey(name: 'accumulated_time_cost') double accumulatedTimeCost,
+    @JsonKey(name: 'rate_changed_at') DateTime? rateChangedAt,
+    @JsonKey(name: 'previous_match_type') MatchType? previousMatchType,
   });
 }
 
@@ -109,6 +118,9 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
     Object? status = null,
     Object? pausedAt = freezed,
     Object? totalPausedDurationSeconds = null,
+    Object? accumulatedTimeCost = null,
+    Object? rateChangedAt = freezed,
+    Object? previousMatchType = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -168,6 +180,18 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
                 ? _value.totalPausedDurationSeconds
                 : totalPausedDurationSeconds // ignore: cast_nullable_to_non_nullable
                       as int,
+            accumulatedTimeCost: null == accumulatedTimeCost
+                ? _value.accumulatedTimeCost
+                : accumulatedTimeCost // ignore: cast_nullable_to_non_nullable
+                      as double,
+            rateChangedAt: freezed == rateChangedAt
+                ? _value.rateChangedAt
+                : rateChangedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime?,
+            previousMatchType: freezed == previousMatchType
+                ? _value.previousMatchType
+                : previousMatchType // ignore: cast_nullable_to_non_nullable
+                      as MatchType?,
           )
           as $Val,
     );
@@ -198,6 +222,9 @@ abstract class _$$SessionImplCopyWith<$Res> implements $SessionCopyWith<$Res> {
     @JsonKey(name: 'paused_at') DateTime? pausedAt,
     @JsonKey(name: 'total_paused_duration_seconds')
     int totalPausedDurationSeconds,
+    @JsonKey(name: 'accumulated_time_cost') double accumulatedTimeCost,
+    @JsonKey(name: 'rate_changed_at') DateTime? rateChangedAt,
+    @JsonKey(name: 'previous_match_type') MatchType? previousMatchType,
   });
 }
 
@@ -229,6 +256,9 @@ class __$$SessionImplCopyWithImpl<$Res>
     Object? status = null,
     Object? pausedAt = freezed,
     Object? totalPausedDurationSeconds = null,
+    Object? accumulatedTimeCost = null,
+    Object? rateChangedAt = freezed,
+    Object? previousMatchType = freezed,
   }) {
     return _then(
       _$SessionImpl(
@@ -288,6 +318,18 @@ class __$$SessionImplCopyWithImpl<$Res>
             ? _value.totalPausedDurationSeconds
             : totalPausedDurationSeconds // ignore: cast_nullable_to_non_nullable
                   as int,
+        accumulatedTimeCost: null == accumulatedTimeCost
+            ? _value.accumulatedTimeCost
+            : accumulatedTimeCost // ignore: cast_nullable_to_non_nullable
+                  as double,
+        rateChangedAt: freezed == rateChangedAt
+            ? _value.rateChangedAt
+            : rateChangedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime?,
+        previousMatchType: freezed == previousMatchType
+            ? _value.previousMatchType
+            : previousMatchType // ignore: cast_nullable_to_non_nullable
+                  as MatchType?,
       ),
     );
   }
@@ -312,6 +354,9 @@ class _$SessionImpl extends _Session {
     @JsonKey(name: 'paused_at') this.pausedAt,
     @JsonKey(name: 'total_paused_duration_seconds')
     this.totalPausedDurationSeconds = 0,
+    @JsonKey(name: 'accumulated_time_cost') this.accumulatedTimeCost = 0.0,
+    @JsonKey(name: 'rate_changed_at') this.rateChangedAt,
+    @JsonKey(name: 'previous_match_type') this.previousMatchType,
   }) : super._();
 
   factory _$SessionImpl.fromJson(Map<String, dynamic> json) =>
@@ -358,10 +403,19 @@ class _$SessionImpl extends _Session {
   @override
   @JsonKey(name: 'total_paused_duration_seconds')
   final int totalPausedDurationSeconds;
+  @override
+  @JsonKey(name: 'accumulated_time_cost')
+  final double accumulatedTimeCost;
+  @override
+  @JsonKey(name: 'rate_changed_at')
+  final DateTime? rateChangedAt;
+  @override
+  @JsonKey(name: 'previous_match_type')
+  final MatchType? previousMatchType;
 
   @override
   String toString() {
-    return 'Session(id: $id, roomId: $roomId, tableId: $tableId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, matchType: $matchType, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds)';
+    return 'Session(id: $id, roomId: $roomId, tableId: $tableId, startTime: $startTime, endTime: $endTime, appliedHourlyRate: $appliedHourlyRate, isMultiMatch: $isMultiMatch, matchType: $matchType, sessionType: $sessionType, plannedDurationMinutes: $plannedDurationMinutes, source: $source, status: $status, pausedAt: $pausedAt, totalPausedDurationSeconds: $totalPausedDurationSeconds, accumulatedTimeCost: $accumulatedTimeCost, rateChangedAt: $rateChangedAt, previousMatchType: $previousMatchType)';
   }
 
   @override
@@ -394,7 +448,13 @@ class _$SessionImpl extends _Session {
                   totalPausedDurationSeconds,
                 ) ||
                 other.totalPausedDurationSeconds ==
-                    totalPausedDurationSeconds));
+                    totalPausedDurationSeconds) &&
+            (identical(other.accumulatedTimeCost, accumulatedTimeCost) ||
+                other.accumulatedTimeCost == accumulatedTimeCost) &&
+            (identical(other.rateChangedAt, rateChangedAt) ||
+                other.rateChangedAt == rateChangedAt) &&
+            (identical(other.previousMatchType, previousMatchType) ||
+                other.previousMatchType == previousMatchType));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -415,6 +475,9 @@ class _$SessionImpl extends _Session {
     status,
     pausedAt,
     totalPausedDurationSeconds,
+    accumulatedTimeCost,
+    rateChangedAt,
+    previousMatchType,
   );
 
   /// Create a copy of Session
@@ -450,6 +513,9 @@ abstract class _Session extends Session {
     @JsonKey(name: 'paused_at') final DateTime? pausedAt,
     @JsonKey(name: 'total_paused_duration_seconds')
     final int totalPausedDurationSeconds,
+    @JsonKey(name: 'accumulated_time_cost') final double accumulatedTimeCost,
+    @JsonKey(name: 'rate_changed_at') final DateTime? rateChangedAt,
+    @JsonKey(name: 'previous_match_type') final MatchType? previousMatchType,
   }) = _$SessionImpl;
   const _Session._() : super._();
 
@@ -494,6 +560,15 @@ abstract class _Session extends Session {
   @override
   @JsonKey(name: 'total_paused_duration_seconds')
   int get totalPausedDurationSeconds;
+  @override
+  @JsonKey(name: 'accumulated_time_cost')
+  double get accumulatedTimeCost;
+  @override
+  @JsonKey(name: 'rate_changed_at')
+  DateTime? get rateChangedAt;
+  @override
+  @JsonKey(name: 'previous_match_type')
+  MatchType? get previousMatchType;
 
   /// Create a copy of Session
   /// with the given fields replaced by the non-null parameter values.

@@ -444,5 +444,7 @@
   "source": "Source",
   "paymentMethodLabel": "Payment Method",
   "clear": "C",
-  "skipShift": "Skip"
+  "skipShift": "Skip",
+  "switchMatchType": "Switch Match Type",
+  "resumeBeforeSwitching": "Resume session before switching match type"
 }

@@ -914,4 +914,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get skipShift => 'تخطي';
+
+  @override
+  String get switchMatchType => 'تغيير نوع اللعب';
+
+  @override
+  String get resumeBeforeSwitching => 'استأنف الجلسة قبل تغيير نوع اللعب';
 }

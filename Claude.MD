@@ -5,6 +5,8 @@
 
 **Platforms**: Web, Desktop (Windows, macOS, Linux), Mobile (iOS, Android)
 
+**Current Feature Count**: 12 features, 120+ hand-written Dart files (+ 47 generated .g.dart + 17 .freezed.dart)
+
 ## Tech Stack
 
 ### Core
@@ -24,6 +26,9 @@
 - **Persistence**: `shared_preferences` ^2.5.4
 - **Network Status**: `connectivity_plus` ^6.1.2
 - **Environment**: `flutter_dotenv` ^5.1.0
+- **Reactive Streams**: `rxdart` ^0.28.0
+- **Audio**: `audioplayers` ^6.1.0 (sound notifications)
+- **Collections**: `collection` ^1.19.1 (collection utilities)
 
 ## Architecture
 
@@ -38,6 +43,7 @@ lib/src/
 ├── features/                  # Feature modules
 │   ├── authentication/
 │   ├── rooms/
+│   ├── tables/
 │   ├── sessions/
 │   ├── customers/
 │   ├── orders/
@@ -45,6 +51,7 @@ lib/src/
 │   ├── billing/
 │   ├── invoices/
 │   ├── reports/
+│   ├── shifts/
 │   └── settings/
 ├── common_widgets/            # Reusable UI components
 ├── utils/                     # Helpers, formatters, extensions
@@ -123,34 +130,71 @@ feature_name/
 - `lib/src/constants/app_routes.dart` - Route definitions
 - `lib/src/constants/app_constants.dart` - App-wide constants (assets, etc.)
 - `lib/src/constants/app_sizes.dart` - Spacing/sizing constants
-- `lib/src/constants/app_theme.dart` - Theme configuration
+- `lib/src/constants/app_theme.dart` - Theme configuration (dark, PS Blue + Neon Green)
 - `lib/src/constants/db_constants.dart` - Database table/column names
+- `lib/src/constants/app_env.dart` - Environment config with test/prod backend switching
 
 ### Core Providers
 - `lib/src/core/supabase_provider.dart` - Supabase client
 - `lib/src/core/dio_provider.dart` - HTTP client
-- `lib/src/core/app_router.dart` - Navigation configuration
-- `lib/src/core/connectivity_provider.dart` - Network status monitoring
+- `lib/src/core/app_router.dart` - Navigation configuration with auth/shift/admin guards
+- `lib/src/core/connectivity_provider.dart` - Network status monitoring (debounced stream version)
+- `lib/src/core/logging_client.dart` - HTTP request/response logging wrapper
 
 ### Localization
-- `lib/src/localization/app_en.arb` - English strings
+- `lib/src/localization/app_en.arb` - English strings (100+ keys)
 - `lib/src/localization/app_ar.arb` - Arabic strings
 - Generated: `lib/src/localization/app_localizations.dart` (auto-generated)
+
+### Common Widgets
+- `lib/src/common_widgets/logo_loading_indicator.dart` - Branded loading state
+- `lib/src/common_widgets/offline_screen.dart` - Network offline handling
+- `lib/src/common_widgets/error_state_widget.dart` - Consistent error UI with retry
+
+### Utils & Extensions
+- `lib/src/utils/go_router_refresh_stream.dart` - Stream-based router refresh
+- `lib/src/utils/localization_utils.dart` - Localization helpers
+- `lib/src/utils/double_extension.dart` - Number formatting
+- `lib/src/utils/error_messages.dart` - User-friendly error message translation
 
 ## Features Overview
 
 | Feature | Description |
 |---------|-------------|
-| **authentication** | User login, auth state management |
-| **rooms** | Manage arcade gaming rooms |
-| **sessions** | Track and manage gaming sessions |
+| **authentication** | User login, auth state management, role-based access (admin/cashier) |
+| **rooms** | Manage arcade gaming rooms with hourly rates and device types (PS4/PS5) |
+| **tables** | Manage cafe/game tables with session tracking (parallel to rooms) |
+| **sessions** | Track gaming sessions — room-based, table-based, or quick order (no location) |
 | **customers** | Customer database and management |
-| **orders** | Order processing and tracking |
-| **products** | Product catalog management |
-| **billing** | Payment processing and billing |
-| **invoices** | Invoice generation (with PDF support) |
-| **reports** | Analytics dashboard with charts |
-| **settings** | App settings, locale preferences |
+| **orders** | Order processing and tracking within sessions |
+| **products** | Product catalog with dual-language names (EN + AR) |
+| **billing** | Pricing/billing logic for open (hourly) and fixed sessions |
+| **invoices** | Invoice generation with PDF support, payment method tracking, discounts |
+| **reports** | Analytics dashboard with charts — revenue, room usage, products, financial breakdown |
+| **shifts** | Shift management with cashier assignment, PIN security, cash reconciliation |
+| **settings** | App settings, locale preferences, printer configuration |
+
+### Session Types
+- **Room session**: Linked to a specific arcade room
+- **Table session**: Linked to a cafe/game table
+- **Quick order**: No location, direct order only
+- **Session type**: `open` (hourly billing) or `fixed` (preset duration)
+- **Match type**: `single`, `multi`, or `other` (affects pricing)
+
+### Routing & Navigation Guards
+The router (`app_router.dart`) enforces a three-level guard chain:
+1. **Auth guard**: Unauthenticated → `/login`
+2. **Shift guard**: No active shift → `/start-shift` (skippable by admin)
+3. **Admin guard**: Non-admin users cannot access analytics or management routes
+
+Navigation uses a `StatefulShellRoute` with 6 branches; the analytics branch is conditionally hidden for non-admin users.
+
+### Database Schema
+Tables in Supabase:
+- `products`, `sessions`, `invoices`, `rooms`, `tables`
+- `orders`, `order_items`, `session_orders`
+- `profiles` (Supabase auth extension)
+- `cashiers`, `shifts`, `shift_reports_summary`
 
 ## Common Tasks
 
@@ -218,6 +262,10 @@ SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your-anon-key
 ```
 
+For test/staging environments, a `.env.test` file is also supported. The `AppEnv` class in `lib/src/constants/app_env.dart` manages backend switching:
+- Priority order: CI/CD environment variables → `useTestBackend` flag → fallback defaults
+- `.env` and `.env.test` are loaded as Flutter assets and are gitignored
+
 ## Code References Format
 
 When referencing code locations, use:
@@ -251,7 +299,7 @@ When referencing code locations, use:
 
 ## Git Info
 - **Main branch**: `main`
-- **Recent focus**: App icons and logo updates, translations
+- **Recent focus**: Shifts feature, tables feature, test backend support, invoice payment methods
 
 ## Additional Resources
 - Full coding standards: `project_rules.md`

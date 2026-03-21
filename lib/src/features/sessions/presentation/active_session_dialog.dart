@@ -98,13 +98,14 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
     required BuildContext context,
     required Session session,
     required List<Order> orders,
-    required SessionBill initialBill,
   }) async {
     final loc = AppLocalizations.of(context)!;
     final discountController = TextEditingController();
 
-    // Variable to hold the bill as it gets recalculated
-    SessionBill currentBill = initialBill;
+    // Always compute the bill fresh at the moment checkout is triggered,
+    // not from a stale build-time value.
+    SessionBill currentBill =
+        ref.read(billingServiceProvider).calculateSessionBill(session, orders);
     Customer? selectedCustomer;
     PaymentMethod selectedPaymentMethod = PaymentMethod.cash;
 
@@ -420,13 +421,10 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
             if (session == null) return;
             final ordersAsync = ref.read(sessionOrdersProvider(session.id));
             final orders = ordersAsync.valueOrNull ?? [];
-            final billingService = ref.read(billingServiceProvider);
-            final bill = billingService.calculateSessionBill(session, orders);
             _showCompleteSessionDialog(
               context: context,
               session: session,
               orders: orders,
-              initialBill: bill,
             );
           });
         },
@@ -489,6 +487,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       if (!session.isQuickOrder) ...[
                         SessionTimerWidget(
                           session: session,
+                          room: widget.room,
                           onExtend: () =>
                               _showExtendDialog(context, session.id),
                         ),
@@ -563,11 +562,6 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                     sessionOrdersProvider(session.id),
                   );
                   final orders = ordersAsync.valueOrNull ?? [];
-                  final billingService = ref.watch(billingServiceProvider);
-                  final bill = billingService.calculateSessionBill(
-                    session,
-                    orders,
-                  );
 
                   return SessionActionButtons(
                     onCancel: () => Navigator.of(context).pop(),
@@ -575,7 +569,6 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       context: context,
                       session: session,
                       orders: orders,
-                      initialBill: bill,
                     ),
                     isCheckoutLoading: completionState.isLoading,
                     isQuickOrder: session.isQuickOrder,

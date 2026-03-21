@@ -283,5 +283,7 @@
   "source": "المصدر",
   "paymentMethodLabel": "طريقة الدفع",
   "clear": "مسح",
-  "skipShift": "تخطي"
+  "skipShift": "تخطي",
+  "switchMatchType": "تغيير نوع اللعب",
+  "resumeBeforeSwitching": "استأنف الجلسة قبل تغيير نوع اللعب"
 }
