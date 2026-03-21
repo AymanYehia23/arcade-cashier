@@ -48,8 +48,20 @@ class BillingService {
     // 2. Calculate Raw Time Cost
     double rawTimeCost = 0.0;
     if (session.sessionType == SessionType.open) {
-      final hours = duration.inMinutes / 60.0;
-      rawTimeCost = hours * session.appliedHourlyRate;
+      double currentPeriodHours;
+      if (session.rateChangedAt != null) {
+        // Time since the last match type switch
+        final endPoint = session.pausedAt ?? now;
+        final periodDuration =
+            endPoint.difference(session.rateChangedAt!.toLocal());
+        currentPeriodHours =
+            periodDuration.isNegative ? 0.0 : periodDuration.inMinutes / 60.0;
+      } else {
+        // No switch has occurred — full session duration
+        currentPeriodHours = duration.inMinutes / 60.0;
+      }
+      rawTimeCost = session.accumulatedTimeCost +
+          (currentPeriodHours * session.appliedHourlyRate);
     } else {
       // Fixed
       final plannedHours = (session.plannedDurationMinutes ?? 0) / 60.0;
