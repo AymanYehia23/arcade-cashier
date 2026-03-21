@@ -184,7 +184,9 @@ class PdfInvoiceService {
         final period1Duration = bill.duration - (period2Duration.isNegative ? Duration.zero : period2Duration);
 
         final period1Cost = session.accumulatedTimeCost;
-        final period2Cost = bill.timeCost - period1Cost;
+        final period2Cost = (period2Duration.isNegative ? Duration.zero : period2Duration).inSeconds /
+            3600.0 *
+            session.appliedHourlyRate;
 
         final label1 = _matchTypeLabel(session.previousMatchType!, loc);
         final label2 = _matchTypeLabel(session.matchType, loc);
