@@ -1,18 +1,22 @@
 import 'dart:async';
 
+import 'package:arcade_cashier/src/features/rooms/domain/room.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/match_type.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session.dart';
 import 'package:arcade_cashier/src/features/sessions/domain/session_type.dart';
+import 'package:arcade_cashier/src/features/sessions/presentation/widgets/switch_match_type_chips.dart';
 import 'package:arcade_cashier/src/localization/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SessionTimerWidget extends StatefulWidget {
   final Session session;
+  final Room? room;
   final VoidCallback onExtend;
 
   const SessionTimerWidget({
     super.key,
     required this.session,
+    this.room,
     required this.onExtend,
   });
 
@@ -115,28 +119,41 @@ class _SessionTimerWidgetState extends State<SessionTimerWidget> {
           '${loc.rateLabel}: ${widget.session.appliedHourlyRate} ${loc.egp}${loc.perHour}',
         ),
         const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Chip(
-              label: Text(
-                widget.session.matchType == MatchType.single
-                    ? loc.singleMatch
-                    : widget.session.matchType == MatchType.multi
+        if (widget.room != null &&
+            widget.session.sessionType == SessionType.open)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: SwitchMatchTypeChips(
+              session: widget.session,
+              room: widget.room!,
+            ),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Chip(
+                  label: Text(
+                    widget.session.matchType == MatchType.single
+                        ? loc.singleMatch
+                        : widget.session.matchType == MatchType.multi
                         ? loc.multiMatch
                         : loc.other,
-              ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Chip(
+                  label: Text(
+                    widget.session.sessionType == SessionType.open
+                        ? loc.openTime
+                        : loc.fixedTime,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Chip(
-              label: Text(
-                widget.session.sessionType == SessionType.open
-                    ? loc.openTime
-                    : loc.fixedTime,
-              ),
-            ),
-          ],
-        ),
+          ),
       ],
     );
   }

@@ -489,6 +489,7 @@ class _ActiveSessionDialogState extends ConsumerState<ActiveSessionDialog> {
                       if (!session.isQuickOrder) ...[
                         SessionTimerWidget(
                           session: session,
+                          room: widget.room,
                           onExtend: () =>
                               _showExtendDialog(context, session.id),
                         ),
