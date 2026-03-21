@@ -33,6 +33,13 @@ class Session with _$Session {
     @JsonKey(name: 'total_paused_duration_seconds')
     @Default(0)
     int totalPausedDurationSeconds,
+    @JsonKey(name: 'accumulated_time_cost')
+    @Default(0.0)
+    double accumulatedTimeCost,
+    @JsonKey(name: 'rate_changed_at')
+    DateTime? rateChangedAt,
+    @JsonKey(name: 'previous_match_type')
+    MatchType? previousMatchType,
   }) = _Session;
 
   // Helper getters to determine session type

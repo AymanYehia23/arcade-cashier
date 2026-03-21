@@ -34,6 +34,15 @@ _$SessionImpl _$$SessionImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['paused_at'] as String),
       totalPausedDurationSeconds:
           (json['total_paused_duration_seconds'] as num?)?.toInt() ?? 0,
+      accumulatedTimeCost:
+          (json['accumulated_time_cost'] as num?)?.toDouble() ?? 0.0,
+      rateChangedAt: json['rate_changed_at'] == null
+          ? null
+          : DateTime.parse(json['rate_changed_at'] as String),
+      previousMatchType: $enumDecodeNullable(
+        _$MatchTypeEnumMap,
+        json['previous_match_type'],
+      ),
     );
 
 Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
@@ -52,6 +61,9 @@ Map<String, dynamic> _$$SessionImplToJson(_$SessionImpl instance) =>
       'status': _$SessionStatusEnumMap[instance.status]!,
       'paused_at': instance.pausedAt?.toIso8601String(),
       'total_paused_duration_seconds': instance.totalPausedDurationSeconds,
+      'accumulated_time_cost': instance.accumulatedTimeCost,
+      'rate_changed_at': instance.rateChangedAt?.toIso8601String(),
+      'previous_match_type': _$MatchTypeEnumMap[instance.previousMatchType],
     };
 
 const _$MatchTypeEnumMap = {

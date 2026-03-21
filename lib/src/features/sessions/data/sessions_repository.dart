@@ -43,6 +43,14 @@ abstract class SessionsRepository {
     int? shiftId,
     String? sourceName,
   });
+  Future<void> switchMatchType({
+    required int sessionId,
+    required MatchType newMatchType,
+    required double newRate,
+    required double accumulatedTimeCost,
+    required DateTime rateChangedAt,
+    required MatchType previousMatchType,
+  });
 }
 
 class SupabaseSessionsRepository implements SessionsRepository {
@@ -242,6 +250,28 @@ class SupabaseSessionsRepository implements SessionsRepository {
               .map((e) => domain.Session.fromJson(e))
               .toList(),
         );
+  }
+
+  @override
+  Future<void> switchMatchType({
+    required int sessionId,
+    required MatchType newMatchType,
+    required double newRate,
+    required double accumulatedTimeCost,
+    required DateTime rateChangedAt,
+    required MatchType previousMatchType,
+  }) async {
+    await _supabase
+        .from(DbTables.sessions)
+        .update({
+          'match_type': newMatchType.name,
+          'is_multi_match': newMatchType == MatchType.multi,
+          'applied_hourly_rate': newRate,
+          'accumulated_time_cost': accumulatedTimeCost,
+          'rate_changed_at': rateChangedAt.toIso8601String(),
+          'previous_match_type': previousMatchType.name,
+        })
+        .match({'id': sessionId});
   }
 
   @override
